@@ -26,3 +26,4 @@ Desktop.ini
 *.sql.zip
 *.bak
 *.dump
+/database/seed-inicial.sql

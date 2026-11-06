@@ -36,6 +36,66 @@ if (! file_exists($configPath)) {
 $config = require $configPath;
 
 /* ============================================================
+   SELECIONA O AMBIENTE DE EXECUÇÃO
+============================================================ */
+
+function resolverConfiguracaoBanco(array $config): array
+{
+    /*
+     * Mantém compatibilidade com o formato antigo, que continha
+     * diretamente host, database, username e password.
+     */
+    if (!isset($config['environments'])) {
+        return $config;
+    }
+
+    $ambiente = strtolower(trim((string) getenv('APP_ENV')));
+
+    if ($ambiente === '') {
+        $host = strtolower((string) (
+            $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? ''
+        ));
+
+        $host = preg_replace('/:\\d+$/', '', $host) ?? $host;
+        $ambiente = in_array(
+            $host,
+            ['localhost', '127.0.0.1', '::1'],
+            true
+        )
+            ? 'local'
+            : 'production';
+    }
+
+    $aliases = [
+        'dev' => 'local',
+        'development' => 'local',
+        'prod' => 'production',
+        'production' => 'production',
+        'local' => 'local',
+    ];
+
+    $ambiente = $aliases[$ambiente] ?? $ambiente;
+
+    if (!isset($config['environments'][$ambiente])) {
+        throw new RuntimeException(
+            'Ambiente de banco de dados não configurado: ' . $ambiente
+        );
+    }
+
+    $ambienteConfig = $config['environments'][$ambiente];
+
+    if (!is_array($ambienteConfig)) {
+        throw new RuntimeException(
+            'Configuração do ambiente de banco inválida.'
+        );
+    }
+
+    return $ambienteConfig;
+}
+
+$config = resolverConfiguracaoBanco($config);
+
+/* ============================================================
    VALIDA ESTRUTURA DA CONFIGURAÇÃO
 ============================================================ */
 
@@ -112,7 +172,7 @@ function conectarBanco(): PDO
         );
     }
 
-    $config = require $configPath;
+    $config = resolverConfiguracaoBanco(require $configPath);
 
     /* ========================================================
        MONTA DSN

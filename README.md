@@ -375,6 +375,11 @@ config/database.php
 > Somente a pasta `public/` contém recursos acessíveis pelo navegador.
 > Copie `config/database.example.php` para `config/database.php`, preencha
 > as credenciais do servidor e mantenha esse arquivo fora do Git.
+
+O arquivo aceita duas conexões: `local` e `production`. A escolha é
+automática: `localhost` usa `local` e o domínio publicado usa `production`.
+Se necessário, defina a variável `APP_ENV` como `local` ou `production` para
+forçar um ambiente.
 ```
 
 ### 6️⃣ Abra no navegador
