@@ -6,8 +6,10 @@ RewriteOptions inherit
 # Impede acesso direto aos arquivos internos do projeto.
 RewriteRule ^(?:includes|config|database|dados)(?:/|$) - [F,L]
 
-# A raiz do repositório sempre aponta para a área pública.
-RewriteRule ^$ public/ [R=302,L]
+# A raiz do repositório sempre aponta para a área pública. A URL é
+# construída a partir da requisição para funcionar em localhost e produção.
+RewriteCond %{REQUEST_URI} ^(.+[^/])/?$
+RewriteRule ^$ %1/public/ [R=302,L,NE]
 
 # Mantém compatibilidade com rotas antigas sem expor arquivos internos.
 RewriteRule ^(?!public(?:/|$))(.*)$ public/$1 [L]
