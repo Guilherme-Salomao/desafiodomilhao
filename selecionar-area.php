@@ -36,7 +36,7 @@ $retorno = trim(
 if ($slug === '') {
 
     header(
-        'Location: /desafiodomilhao/areas.php',
+        'Location: /github/desafiodomilhao/public/areas.php',
         true,
         302
     );
@@ -86,7 +86,7 @@ try {
     if ($area === null) {
 
         header(
-            'Location: /desafiodomilhao/areas.php?retorno=' .
+            'Location: /github/desafiodomilhao/public/areas.php?retorno=' .
             urlencode($retorno),
             true,
             302
@@ -126,7 +126,7 @@ try {
         case 'inicio':
 
             header(
-                'Location: /desafiodomilhao/',
+                'Location: /github/desafiodomilhao/public/',
                 true,
                 302
             );
@@ -138,7 +138,7 @@ try {
         case 'competicao':
 
             header(
-                'Location: /desafiodomilhao/configurar-partida.php?modo=competicao',
+                'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=competicao',
                 true,
                 302
             );
@@ -152,7 +152,7 @@ try {
         default:
 
             header(
-                'Location: /desafiodomilhao/configurar-partida.php?modo=individual',
+                'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=individual',
                 true,
                 302
             );
@@ -171,7 +171,7 @@ try {
     );
 
     header(
-        'Location: /desafiodomilhao/areas.php?retorno=' .
+        'Location: /github/desafiodomilhao/public/areas.php?retorno=' .
         urlencode($retorno),
         true,
         302

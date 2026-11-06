@@ -24,7 +24,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/',
+        'Location: /github/desafiodomilhao/public/',
         true,
         303
     );
@@ -110,7 +110,7 @@ if ($perguntaAtualId > 0) {
 if ($perguntaAtual >= $quantidadePerguntas) {
 
     header(
-        'Location: /desafiodomilhao/jogo.php',
+        'Location: /github/desafiodomilhao/public/jogo.php',
         true,
         303
     );
@@ -142,7 +142,7 @@ unset(
 ========================================================= */
 
 header(
-    'Location: /desafiodomilhao/jogo.php',
+    'Location: /github/desafiodomilhao/public/jogo.php',
     true,
     303
 );

@@ -38,7 +38,7 @@
 
     if ($perguntaEdicao === null) {
         $_SESSION['erro_pergunta'] = 'Questão não encontrada ou sem acesso autorizado.';
-        header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+        header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
         exit;
     }
     }
@@ -91,13 +91,13 @@
     'Cadastre uma nova questão no Banco de Questões do Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/admin/pergunta-cadastrar.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/admin/pergunta-cadastrar.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/pergunta-cadastrar.css';
+    '/github/desafiodomilhao/public/assets/css/pergunta-cadastrar.css';
 
     /* =========================================================
    HEADER
@@ -114,7 +114,7 @@
 
   <section class="cabecalho-pergunta">
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-pergunta">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-pergunta">
 
     <span class="rotulo-pergunta">
       <i class="fa-solid fa-circle-question"></i>
@@ -244,7 +244,7 @@
       </div>
     </div>
 
-    <form action="/desafiodomilhao/admin/processar-pergunta.php" method="POST" class="formulario-pergunta"
+    <form action="/github/desafiodomilhao/public/admin/processar-pergunta.php" method="POST" class="formulario-pergunta"
       id="formularioPergunta">
 
       <?php if ($modoEdicao): ?>
@@ -432,7 +432,7 @@
 
       <div class="acoes-formulario-pergunta">
 
-        <a href="/desafiodomilhao/admin/perguntas.php" class="botao-voltar-pergunta">
+        <a href="/github/desafiodomilhao/public/admin/perguntas.php" class="botao-voltar-pergunta">
           <i class="fa-solid fa-arrow-left"></i>
           VOLTAR
         </a>
@@ -459,7 +459,7 @@
     require_once __DIR__ . '/../includes/footer.php';
 ?>
 
-<script src="/desafiodomilhao/assets/js/pergunta-cadastrar.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/pergunta-cadastrar.js"></script>
 
 </body>
 

@@ -29,13 +29,13 @@
     'Escolha uma área de conhecimento para iniciar o Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/areas.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/areas.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/areas.css';
+    '/github/desafiodomilhao/public/assets/css/areas.css';
 
     /* =========================================================
    DESTINO APÓS A ESCOLHA
@@ -116,7 +116,7 @@
 
   <section class="cabecalho-areas">
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-areas">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-areas">
 
     <h1>
       ESCOLHA SUA ÁREA
@@ -145,7 +145,7 @@
         ); ?>
       </strong>
 
-      <a href="/desafiodomilhao/limpar-area.php?retorno=areas" class="trocar-area">
+      <a href="/github/desafiodomilhao/public/limpar-area.php?retorno=areas" class="trocar-area">
 
         <i class="fa-solid fa-xmark"></i>
 
@@ -221,7 +221,7 @@
     ?>
 
 
-    <a href="/desafiodomilhao/selecionar-area.php?area=<?php
+    <a href="/github/desafiodomilhao/public/selecionar-area.php?area=<?php
                                                            echo urlencode(
                                                                (string) $area['slug']
                                                        );
@@ -296,7 +296,7 @@
 
   <section class="area-voltar">
 
-    <a href="/desafiodomilhao/" class="botao-voltar" onclick="history.back(); return false;">
+    <a href="/github/desafiodomilhao/public/" class="botao-voltar" onclick="history.back(); return false;">
 
       <i class="fa-solid fa-arrow-left"></i>
 

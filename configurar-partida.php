@@ -24,7 +24,7 @@
     ) {
 
     header(
-        'Location: /desafiodomilhao/areas.php?retorno=jogo',
+        'Location: /github/desafiodomilhao/public/areas.php?retorno=jogo',
         true,
         302
     );
@@ -63,13 +63,13 @@
     'Configure sua partida no Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/configurar-partida.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/configurar-partida.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/configurar-partida.css';
+    '/github/desafiodomilhao/public/assets/css/configurar-partida.css';
 
     /* =========================================================
    HEADER
@@ -95,7 +95,7 @@
 
     <!-- LOGO -->
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-configuracao">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-configuracao">
 
 
     <!-- =================================================
@@ -156,7 +156,7 @@
 
     <section class="painel-formulario">
 
-      <form id="formConfigurarPartida" action="/desafiodomilhao/iniciar-partida.php" method="POST" autocomplete="off">
+      <form id="formConfigurarPartida" action="/github/desafiodomilhao/public/iniciar-partida.php" method="POST" autocomplete="off">
 
 
         <!-- =================================================
@@ -539,7 +539,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/desafiodomilhao/assets/js/configurar-partida.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/configurar-partida.js"></script>
 
 
 </body>

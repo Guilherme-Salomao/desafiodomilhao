@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            "/desafiodomilhao/proxima-pergunta.php";
+            "/github/desafiodomilhao/public/proxima-pergunta.php";
 
         /*
          * Mantém o título JOGAR.
@@ -463,7 +463,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            "/desafiodomilhao/configurar-partida.php?modo=individual";
+            "/github/desafiodomilhao/public/configurar-partida.php?modo=individual";
 
         botaoJogar.dataset.novaPartida =
             "true";
@@ -1724,7 +1724,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const resposta =
                             await fetch(
-                                "/desafiodomilhao/api/jogo.php",
+                                "/github/desafiodomilhao/public/api/jogo.php",
                                 {
 
                                     method:

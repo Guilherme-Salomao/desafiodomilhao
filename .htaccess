@@ -1,0 +1,13 @@
+Options -Indexes
+
+RewriteEngine On
+RewriteOptions inherit
+
+# Impede acesso direto aos arquivos internos do projeto.
+RewriteRule ^(?:includes|config|database|dados)(?:/|$) - [F,L]
+
+# A raiz do repositório sempre aponta para a área pública.
+RewriteRule ^$ public/ [R=302,L]
+
+# Mantém compatibilidade com rotas antigas sem expor arquivos internos.
+RewriteRule ^(?!public(?:/|$))(.*)$ public/$1 [L]

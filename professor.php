@@ -53,13 +53,13 @@
     'Crie um quiz coletivo para utilizar com toda a turma.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/professor.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/professor.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/professor.css';
+    '/github/desafiodomilhao/public/assets/css/professor.css';
 
     /* =========================================================
    HEADER
@@ -84,7 +84,7 @@
   <section class="cabecalho-professor">
 
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-professor">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-professor">
 
 
     <div class="identificacao-professor">
@@ -119,7 +119,7 @@
   <section class="painel-professor">
 
 
-    <form id="formProfessor" action="/desafiodomilhao/iniciar-quiz-professor.php" method="POST" autocomplete="off">
+    <form id="formProfessor" action="/github/desafiodomilhao/public/iniciar-quiz-professor.php" method="POST" autocomplete="off">
 
 
       <!-- =================================================
@@ -561,7 +561,7 @@
       <div class="acoes-professor">
 
 
-        <a href="/desafiodomilhao/" class="botao-voltar-professor">
+        <a href="/github/desafiodomilhao/public/" class="botao-voltar-professor">
 
           <i class="fa-solid fa-arrow-left"></i>
 
@@ -606,7 +606,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/desafiodomilhao/assets/js/professor.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/professor.js"></script>
 
 
 </body>

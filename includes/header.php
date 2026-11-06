@@ -40,10 +40,10 @@
     $siteSubtitulo . '.';
 
     $paginaImagem = $paginaImagem ??
-    '/desafiodomilhao/assets/img/logo/logo-compartilhamento.png';
+    '/github/desafiodomilhao/public/assets/img/logo/logo-compartilhamento.png';
 
     $paginaUrl = $paginaUrl ??
-    'http://localhost/desafiodomilhao/';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/';
 
     $paginaTipo = $paginaTipo ?? 'website';
 
@@ -53,10 +53,10 @@
    Exemplos:
 
    areas.php
-   $paginaCss = '/desafiodomilhao/assets/css/areas.css';
+   $paginaCss = '/github/desafiodomilhao/public/assets/css/areas.css';
 
    jogo.php
-   $paginaCss = '/desafiodomilhao/assets/css/jogo.css';
+   $paginaCss = '/github/desafiodomilhao/public/assets/css/jogo.css';
 
    Se não for informado, somente style.css será carregado.
 */
@@ -200,18 +200,18 @@
          FAVICON
     ====================================================== -->
 
-  <link rel="icon" type="image/jpeg" sizes="32x32" href="/desafiodomilhao/assets/img/logo/favicon-32x32.jpeg">
+  <link rel="icon" type="image/jpeg" sizes="32x32" href="/github/desafiodomilhao/public/assets/img/logo/favicon-32x32.jpeg">
 
-  <link rel="icon" type="image/jpeg" sizes="16x16" href="/desafiodomilhao/assets/img/logo/favicon-16x16.jpeg">
+  <link rel="icon" type="image/jpeg" sizes="16x16" href="/github/desafiodomilhao/public/assets/img/logo/favicon-16x16.jpeg">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/desafiodomilhao/assets/img/logo/apple-touch-icon.jpeg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/github/desafiodomilhao/public/assets/img/logo/apple-touch-icon.jpeg">
 
 
   <!-- =====================================================
          CSS PRINCIPAL
     ====================================================== -->
 
-  <link rel="stylesheet" href="/desafiodomilhao/assets/css/style.css">
+  <link rel="stylesheet" href="/github/desafiodomilhao/public/assets/css/style.css">
 
 
   <!-- =====================================================
@@ -229,7 +229,7 @@
          FONT AWESOME LOCAL
     ====================================================== -->
 
-  <link rel="stylesheet" href="/desafiodomilhao/assets/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/github/desafiodomilhao/public/assets/fontawesome/css/all.min.css">
 
 
   <!-- =====================================================

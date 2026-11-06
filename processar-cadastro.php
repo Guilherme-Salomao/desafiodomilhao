@@ -19,7 +19,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/configuracoes.php',
+        'Location: /github/desafiodomilhao/public/configuracoes.php',
         true,
         302
     );
@@ -75,7 +75,7 @@ function retornarCadastroComErro(
     );
 
     header(
-        'Location: /desafiodomilhao/configuracoes.php',
+        'Location: /github/desafiodomilhao/public/configuracoes.php',
         true,
         303
     );
@@ -376,7 +376,7 @@ try {
     ===================================================== */
 
     header(
-        'Location: /desafiodomilhao/configuracoes.php',
+        'Location: /github/desafiodomilhao/public/configuracoes.php',
         true,
         303
     );

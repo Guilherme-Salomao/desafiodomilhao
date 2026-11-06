@@ -1,0 +1,28 @@
+# Configurações locais e credenciais
+/config/database.php
+/.env
+/.env.*
+!.env.example
+
+# Arquivos gerados por ferramentas e servidores locais
+/vendor/
+/node_modules/
+/storage/logs/
+/logs/
+/tmp/
+/cache/
+
+# Arquivos de ambiente Windows/XAMPP e editores
+/.idea/
+/.vscode/
+*.log
+*.local.php
+*.local.json
+Thumbs.db
+Desktop.ini
+
+# Exportações e cópias locais do banco de dados
+*.sql.gz
+*.sql.zip
+*.bak
+*.dump

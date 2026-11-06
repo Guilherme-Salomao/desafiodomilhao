@@ -9,7 +9,7 @@ $usuarioId = (int) ($_SESSION['usuario']['id'] ?? 0);
 $perguntaId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if ($usuarioId <= 0 || $perguntaId === false || $perguntaId === null || $perguntaId <= 0) {
-    header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+    header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
     exit;
 }
 
@@ -18,14 +18,14 @@ $pergunta = $repository->buscarPorIdAutorizado((int) $perguntaId, $usuarioId);
 
 if ($pergunta === null) {
     $_SESSION['erro_pergunta'] = 'Questão não encontrada ou sem acesso autorizado.';
-    header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+    header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
     exit;
 }
 
 $siteSubtitulo = 'Detalhes da Questão';
 $paginaTitulo = 'Detalhes da Questão - Desafio do Milhão';
 $paginaDescricao = 'Visualize os detalhes de uma questão.';
-$paginaCss = '/desafiodomilhao/assets/css/perguntas.css';
+$paginaCss = '/github/desafiodomilhao/public/assets/css/perguntas.css';
 
 require_once __DIR__ . '/../includes/header.php';
 ?>
@@ -65,8 +65,8 @@ require_once __DIR__ . '/../includes/header.php';
       </section>
 
       <div class="acoes-card-questao">
-        <a href="/desafiodomilhao/admin/pergunta-cadastrar.php?id=<?php echo (int) $pergunta['id']; ?>" class="acao-editar-questao"><i class="fa-solid fa-pen"></i> EDITAR</a>
-        <a href="/desafiodomilhao/admin/perguntas.php" class="acao-detalhes-questao"><i class="fa-solid fa-arrow-left"></i> VOLTAR</a>
+        <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php?id=<?php echo (int) $pergunta['id']; ?>" class="acao-editar-questao"><i class="fa-solid fa-pen"></i> EDITAR</a>
+        <a href="/github/desafiodomilhao/public/admin/perguntas.php" class="acao-detalhes-questao"><i class="fa-solid fa-arrow-left"></i> VOLTAR</a>
       </div>
     </div>
   </section>

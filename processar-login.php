@@ -19,7 +19,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         302
     );
@@ -72,7 +72,7 @@ function retornarLoginComErro(
     );
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );
@@ -96,7 +96,7 @@ function retornarLoginComAviso(
     );
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );
@@ -317,7 +317,7 @@ try {
     ===================================================== */
 
     header(
-        'Location: /desafiodomilhao/admin/perguntas.php',
+        'Location: /github/desafiodomilhao/public/admin/perguntas.php',
         true,
         303
     );

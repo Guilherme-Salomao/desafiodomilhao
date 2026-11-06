@@ -107,13 +107,13 @@
     'Solicite acesso ao Banco de Questões do Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/cadastro.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/cadastro.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/cadastro.css';
+    '/github/desafiodomilhao/public/assets/css/cadastro.css';
 
     /* =========================================================
    HEADER
@@ -141,7 +141,7 @@
 
     <!-- LOGO -->
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-cadastro">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-cadastro">
 
 
     <!-- IDENTIFICAÇÃO -->
@@ -222,7 +222,7 @@
              FORMULÁRIO
         ================================================== -->
 
-    <form id="formCadastroUsuario" action="/desafiodomilhao/processar-cadastro.php" method="POST" autocomplete="off">
+    <form id="formCadastroUsuario" action="/github/desafiodomilhao/public/processar-cadastro.php" method="POST" autocomplete="off">
 
 
       <!-- =================================================
@@ -734,7 +734,7 @@
 
         <!-- VOLTAR -->
 
-        <a href="/desafiodomilhao/configuracoes.php" class="botao-voltar-cadastro">
+        <a href="/github/desafiodomilhao/public/configuracoes.php" class="botao-voltar-cadastro">
 
           <i class="fa-solid fa-arrow-left"></i>
 
@@ -775,7 +775,7 @@
       </span>
 
 
-      <a href="/desafiodomilhao/login.php">
+      <a href="/github/desafiodomilhao/public/login.php">
 
         <i class="fa-solid fa-right-to-bracket"></i>
 
@@ -809,7 +809,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/desafiodomilhao/assets/js/cadastro.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/cadastro.js"></script>
 
 
 </body>

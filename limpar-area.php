@@ -23,7 +23,7 @@ unset($_SESSION['partida']);
 ========================================================= */
 
 header(
-    'Location: /desafiodomilhao/',
+    'Location: /github/desafiodomilhao/public/',
     true,
     302
 );

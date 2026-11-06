@@ -31,7 +31,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/',
+        'Location: /github/desafiodomilhao/public/',
         true,
         303
     );
@@ -229,7 +229,7 @@ if (
     ) {
 
         $imagemPergunta =
-            '/desafiodomilhao/' .
+            '/github/desafiodomilhao/public/' .
             ltrim(
                 $imagemPergunta,
                 '/'
@@ -283,7 +283,7 @@ $paginaDescricao =
     'Partida em andamento no Desafio do Milhão.';
 
 $paginaCss =
-    '/desafiodomilhao/assets/css/jogo.css';
+    '/github/desafiodomilhao/public/assets/css/jogo.css';
 
 /* =========================================================
    HEADER
@@ -307,7 +307,7 @@ require_once __DIR__ .
         <div class="marca-jogo">
 
             <img
-                src="/desafiodomilhao/assets/img/logo/favicon.png"
+                src="/github/desafiodomilhao/public/assets/img/logo/favicon.png"
                 alt="Desafio do Milhão"
                 class="logo-jogo"
             >
@@ -383,7 +383,7 @@ require_once __DIR__ .
             </a>
 
             <a
-                href="/desafiodomilhao/configurar-partida.php?modo=competicao"
+                href="/github/desafiodomilhao/public/configurar-partida.php?modo=competicao"
             >
 
                 <span class="icone-menu-jogo">
@@ -406,7 +406,7 @@ require_once __DIR__ .
 
             </a>
 
-            <a href="/desafiodomilhao/professor.php">
+            <a href="/github/desafiodomilhao/public/professor.php">
 
                 <span class="icone-menu-jogo">
 
@@ -428,7 +428,7 @@ require_once __DIR__ .
 
             </a>
 
-            <a href="/desafiodomilhao/login.php">
+            <a href="/github/desafiodomilhao/public/login.php">
 
                 <span class="icone-menu-jogo">
 
@@ -450,7 +450,7 @@ require_once __DIR__ .
 
             </a>
 
-            <a href="/desafiodomilhao/ranking.php">
+            <a href="/github/desafiodomilhao/public/ranking.php">
 
                 <span class="icone-menu-jogo">
 
@@ -472,7 +472,7 @@ require_once __DIR__ .
 
             </a>
 
-            <a href="/desafiodomilhao/configuracoes.php">
+            <a href="/github/desafiodomilhao/public/configuracoes.php">
 
                 <span class="icone-menu-jogo">
 
@@ -499,7 +499,7 @@ require_once __DIR__ .
         <!-- SAIR -->
 
         <a
-            href="/desafiodomilhao/"
+            href="/github/desafiodomilhao/public/"
             class="botao-sair-jogo"
         >
 
@@ -687,7 +687,7 @@ require_once __DIR__ .
 
                 </p>
 
-                <a href="/desafiodomilhao/">
+                <a href="/github/desafiodomilhao/public/">
 
                     VOLTAR AO INÍCIO
 
@@ -889,7 +889,7 @@ require_once __DIR__ .
 
 $arquivoJs =
     __DIR__ .
-    '/assets/js/jogo.js';
+    '/public/assets/js/jogo.js';
 
 $versaoJs =
     is_file($arquivoJs)
@@ -901,7 +901,7 @@ $versaoJs =
 ?>
 
 <script
-    src="/desafiodomilhao/assets/js/jogo.js?v=<?php echo $versaoJs; ?>"
+    src="/github/desafiodomilhao/public/assets/js/jogo.js?v=<?php echo $versaoJs; ?>"
 ></script>
 
 </body>

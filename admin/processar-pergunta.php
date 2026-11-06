@@ -19,7 +19,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/admin/pergunta-cadastrar.php',
+        'Location: /github/desafiodomilhao/public/admin/pergunta-cadastrar.php',
         true,
         302
     );
@@ -39,7 +39,7 @@ if (
         'Faça login para acessar o Banco de Questões.';
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );
@@ -60,8 +60,8 @@ $urlRetornoPergunta =
 $perguntaIdEdicao !== false &&
 $perguntaIdEdicao !== null &&
 $perguntaIdEdicao > 0
-    ? '/desafiodomilhao/admin/pergunta-cadastrar.php?id=' . (int) $perguntaIdEdicao
-    : '/desafiodomilhao/admin/pergunta-cadastrar.php';
+    ? '/github/desafiodomilhao/public/admin/pergunta-cadastrar.php?id=' . (int) $perguntaIdEdicao
+    : '/github/desafiodomilhao/public/admin/pergunta-cadastrar.php';
 
 function retornarPerguntaComErro(
     string $mensagem
@@ -322,7 +322,7 @@ try {
             'Seu acesso foi desativado pelo administrador.';
 
         header(
-            'Location: /desafiodomilhao/login.php',
+            'Location: /github/desafiodomilhao/public/login.php',
             true,
             303
         );
@@ -375,7 +375,7 @@ try {
         $_SESSION['sucesso_pergunta'] =
             'A questão foi atualizada com sucesso.';
 
-        header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+        header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
         exit;
     }
 
@@ -544,7 +544,7 @@ try {
         'A questão foi cadastrada com sucesso.';
 
     header(
-        'Location: /desafiodomilhao/admin/perguntas.php',
+        'Location: /github/desafiodomilhao/public/admin/perguntas.php',
         true,
         303
     );

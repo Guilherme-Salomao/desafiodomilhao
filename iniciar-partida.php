@@ -19,7 +19,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/',
+        'Location: /github/desafiodomilhao/public/',
         true,
         302
     );
@@ -41,7 +41,7 @@ if (
 ) {
 
     header(
-        'Location: /desafiodomilhao/areas.php?retorno=jogo',
+        'Location: /github/desafiodomilhao/public/areas.php?retorno=jogo',
         true,
         302
     );
@@ -280,7 +280,7 @@ if ($modo === 'individual') {
     ) {
 
         header(
-            'Location: /desafiodomilhao/configurar-partida.php?modo=individual',
+            'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=individual',
             true,
             303
         );
@@ -329,7 +329,7 @@ if ($modo === 'competicao') {
     ) {
 
         header(
-            'Location: /desafiodomilhao/configurar-partida.php?modo=competicao',
+            'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=competicao',
             true,
             303
         );
@@ -347,7 +347,7 @@ if ($modo === 'competicao') {
     ) {
 
         header(
-            'Location: /desafiodomilhao/configurar-partida.php?modo=competicao',
+            'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=competicao',
             true,
             303
         );
@@ -545,7 +545,7 @@ session_regenerate_id(true);
 ============================================================ */
 
 header(
-    'Location: /desafiodomilhao/jogo.php',
+    'Location: /github/desafiodomilhao/public/jogo.php',
     true,
     303
 );

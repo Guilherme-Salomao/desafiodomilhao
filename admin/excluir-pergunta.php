@@ -6,7 +6,7 @@ require_once __DIR__ . '/../includes/autenticacao.php';
 require_once __DIR__ . '/../includes/repositories/PerguntaRepository.php';
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+    header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
     exit;
 }
 
@@ -15,7 +15,7 @@ $perguntaId = filter_var($_POST['pergunta_id'] ?? null, FILTER_VALIDATE_INT);
 
 if ($usuarioId <= 0 || $perguntaId === false || $perguntaId === null || $perguntaId <= 0) {
     $_SESSION['erro_pergunta'] = 'Não foi possível identificar a questão para exclusão.';
-    header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+    header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
     exit;
 }
 
@@ -34,5 +34,5 @@ try {
     $_SESSION['erro_pergunta'] = 'Não foi possível excluir a questão. Tente novamente.';
 }
 
-header('Location: /desafiodomilhao/admin/perguntas.php', true, 303);
+header('Location: /github/desafiodomilhao/public/admin/perguntas.php', true, 303);
 exit;

@@ -11,7 +11,7 @@ declare (strict_types = 1);
    CAMINHO DO ARQUIVO DE CONFIGURAÇÃO
 ============================================================ */
 
-$configPath = 'D:/xampp/config/desafiodomilhao-db.php';
+$configPath = getenv('APP_DB_CONFIG') ?: dirname(__DIR__) . '/config/database.php';
 
 /* ============================================================
    VERIFICA SE O ARQUIVO EXISTE
@@ -99,7 +99,7 @@ function conectarBanco(): PDO
        CARREGA A CONFIGURAÇÃO EXTERNA
     ======================================================== */
 
-    $configPath = 'D:/xampp/config/desafiodomilhao-db.php';
+    $configPath = getenv('APP_DB_CONFIG') ?: dirname(__DIR__) . '/config/database.php';
 
     if (! file_exists($configPath)) {
 

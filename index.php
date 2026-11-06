@@ -32,8 +32,8 @@
  */
 
     $urlUmPlayer = $areaSelecionada
-    ? '/desafiodomilhao/configurar-partida.php?modo=individual'
-    : '/desafiodomilhao/areas.php?retorno=jogo';
+    ? '/github/desafiodomilhao/public/configurar-partida.php?modo=individual'
+    : '/github/desafiodomilhao/public/areas.php?retorno=jogo';
 
     /*
  * 2 PLAYERS
@@ -44,8 +44,8 @@
  */
 
     $urlDoisPlayers = $areaSelecionada
-    ? '/desafiodomilhao/configurar-partida.php?modo=competicao'
-    : '/desafiodomilhao/areas.php?retorno=competicao';
+    ? '/github/desafiodomilhao/public/configurar-partida.php?modo=competicao'
+    : '/github/desafiodomilhao/public/areas.php?retorno=competicao';
 
     /* =========================================================
    CONFIGURAÇÕES DA PÁGINA
@@ -60,7 +60,7 @@
     'Escolha uma área de conhecimento e desafie seus conhecimentos no Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/';
 
     $paginaTipo =
     'website';
@@ -82,7 +82,7 @@
 
   <div class="conteudo-inicial-audio">
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-inicial-audio">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-inicial-audio">
 
     <button id="btnIniciarExperiencia" type="button">
 
@@ -124,14 +124,14 @@
                      LOGO
                 ================================================== -->
 
-        <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-principal">
+        <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-principal">
 
 
         <!-- =================================================
                      ÁREA SELECIONADA / ESCOLHER ÁREA
                 ================================================== -->
 
-        <a href="/desafiodomilhao/areas.php?retorno=inicio"
+        <a href="/github/desafiodomilhao/public/areas.php?retorno=inicio"
           class="subtitulo link-desafio <?php echo $areaSelecionada ? 'area-definida' : ''; ?>">
 
           <?php if ($areaSelecionada): ?>
@@ -186,7 +186,7 @@
                              TROCAR ÁREA
                         ========================================== -->
 
-          <a href="/desafiodomilhao/areas.php?retorno=inicio" class="trocar-area">
+          <a href="/github/desafiodomilhao/public/areas.php?retorno=inicio" class="trocar-area">
 
             <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
 
@@ -199,7 +199,7 @@
                              LIMPAR ÁREA
                         ========================================== -->
 
-          <a href="/desafiodomilhao/limpar-area.php?retorno=inicio" class="trocar-area">
+          <a href="/github/desafiodomilhao/public/limpar-area.php?retorno=inicio" class="trocar-area">
 
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
 
@@ -309,7 +309,7 @@
                      MODO PROFESSOR
                 ================================================== -->
 
-        <a href="/desafiodomilhao/professor.php" class="botao-menu">
+        <a href="/github/desafiodomilhao/public/professor.php" class="botao-menu">
 
           <div class="icone-botao">
 
@@ -342,7 +342,7 @@
                      BANCO DE QUESTÕES
                 ================================================== -->
 
-        <a href="/desafiodomilhao/login.php" class="botao-menu">
+        <a href="/github/desafiodomilhao/public/login.php" class="botao-menu">
 
           <div class="icone-botao">
 
@@ -375,7 +375,7 @@
                      RANKING
                 ================================================== -->
 
-        <a href="/desafiodomilhao/ranking.php" class="botao-menu">
+        <a href="/github/desafiodomilhao/public/ranking.php" class="botao-menu">
 
           <div class="icone-botao">
 
@@ -408,7 +408,7 @@
                      CONFIGURAÇÕES
                 ================================================== -->
 
-        <a href="/desafiodomilhao/configuracoes.php" class="botao-menu">
+        <a href="/github/desafiodomilhao/public/configuracoes.php" class="botao-menu">
 
           <div class="icone-botao">
 
@@ -519,7 +519,7 @@
 
 <audio id="musicaAbertura" preload="auto" loop>
 
-  <source src="/desafiodomilhao/assets/audio/trilhas/abertura.mp3" type="audio/mpeg">
+  <source src="/github/desafiodomilhao/public/assets/audio/trilhas/abertura.mp3" type="audio/mpeg">
 
 </audio>
 
@@ -539,7 +539,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/desafiodomilhao/assets/js/main.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/main.js"></script>
 
 
 </body>

@@ -46,7 +46,7 @@
         'Seu acesso foi desativado ou sua sessão não é mais válida.';
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );
@@ -70,7 +70,7 @@
         'Sua conta não possui nenhuma área autorizada. Entre em contato com o administrador.';
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );
@@ -315,13 +315,13 @@
     'Gerencie as perguntas do Desafio do Milhão.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/admin/perguntas.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/admin/perguntas.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/perguntas.css';
+    '/github/desafiodomilhao/public/assets/css/perguntas.css';
 
     require_once __DIR__ .
     '/../includes/header.php';
@@ -332,7 +332,7 @@
 
   <section class="cabecalho-banco">
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-banco">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-banco">
 
     <span class="rotulo-banco">
       <i class="fa-solid fa-database"></i>
@@ -399,7 +399,7 @@
 
     </div>
 
-    <a href="/desafiodomilhao/" class="botao-sair-banco">
+    <a href="/github/desafiodomilhao/public/" class="botao-sair-banco">
       <i class="fa-solid fa-right-from-bracket"></i>
       SAIR
     </a>
@@ -480,7 +480,7 @@
 
     </div>
 
-    <a href="/desafiodomilhao/admin/pergunta-cadastrar.php" class="botao-nova-pergunta">
+    <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php" class="botao-nova-pergunta">
       <i class="fa-solid fa-plus"></i>
       CADASTRAR NOVA QUESTÃO
     </a>
@@ -554,7 +554,7 @@
 
     </div>
 
-    <form method="GET" action="/desafiodomilhao/admin/perguntas.php" class="formulario-filtros">
+    <form method="GET" action="/github/desafiodomilhao/public/admin/perguntas.php" class="formulario-filtros">
 
       <div class="campo-filtro campo-busca">
 
@@ -681,7 +681,7 @@
 
       </div>
 
-      <a href="/desafiodomilhao/admin/perguntas.php" class="botao-limpar-filtros">
+      <a href="/github/desafiodomilhao/public/admin/perguntas.php" class="botao-limpar-filtros">
         <i class="fa-solid fa-eraser"></i>
         LIMPAR FILTROS
       </a>
@@ -708,7 +708,7 @@
         Ainda não existem questões para os filtros selecionados.
       </p>
 
-      <a href="/desafiodomilhao/admin/pergunta-cadastrar.php">
+      <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php">
         <i class="fa-solid fa-plus"></i>
         CADASTRAR PRIMEIRA QUESTÃO
       </a>
@@ -899,17 +899,17 @@
 
       <div class="acoes-card-questao">
 
-        <a href="/desafiodomilhao/admin/pergunta-cadastrar.php?id=<?php echo $perguntaId; ?>" class="acao-editar-questao">
+        <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php?id=<?php echo $perguntaId; ?>" class="acao-editar-questao">
           <i class="fa-solid fa-pen"></i>
           EDITAR
         </a>
 
-        <a href="/desafiodomilhao/admin/detalhes-pergunta.php?id=<?php echo $perguntaId; ?>" class="acao-detalhes-questao">
+        <a href="/github/desafiodomilhao/public/admin/detalhes-pergunta.php?id=<?php echo $perguntaId; ?>" class="acao-detalhes-questao">
           <i class="fa-solid fa-eye"></i>
           DETALHES
         </a>
 
-        <form action="/desafiodomilhao/admin/excluir-pergunta.php" method="POST" class="formulario-excluir-questao" data-excluir-questao>
+        <form action="/github/desafiodomilhao/public/admin/excluir-pergunta.php" method="POST" class="formulario-excluir-questao" data-excluir-questao>
           <input type="hidden" name="pergunta_id" value="<?php echo $perguntaId; ?>">
           <button type="submit" class="acao-excluir-questao">
             <i class="fa-solid fa-trash"></i>
@@ -939,7 +939,7 @@
 
     <?php if ($paginaAtual > 1): ?>
     <?php $parametrosPaginacao['pagina'] = $paginaAtual - 1; ?>
-    <a href="/desafiodomilhao/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>">
+    <a href="/github/desafiodomilhao/public/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>">
       <i class="fa-solid fa-arrow-left"></i>
       ANTERIOR
     </a>
@@ -948,7 +948,7 @@
     <div class="numeros-paginacao">
       <?php for ($pagina = $paginaInicial; $pagina <= $paginaFinal; $pagina++): ?>
       <?php $parametrosPaginacao['pagina'] = $pagina; ?>
-      <a href="/desafiodomilhao/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>" <?php echo $pagina === $paginaAtual ? 'aria-current="page"' : ''; ?>>
+      <a href="/github/desafiodomilhao/public/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>" <?php echo $pagina === $paginaAtual ? 'aria-current="page"' : ''; ?>>
         <?php echo $pagina; ?>
       </a>
       <?php endfor; ?>
@@ -956,7 +956,7 @@
 
     <?php if ($paginaAtual < $totalPaginas): ?>
     <?php $parametrosPaginacao['pagina'] = $paginaAtual + 1; ?>
-    <a href="/desafiodomilhao/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>">
+    <a href="/github/desafiodomilhao/public/admin/perguntas.php?<?php echo escapar(http_build_query($parametrosPaginacao)); ?>">
       PRÓXIMA
       <i class="fa-solid fa-arrow-right"></i>
     </a>
@@ -968,7 +968,7 @@
 
   <section class="rodape-banco">
 
-    <a href="/desafiodomilhao/" class="botao-voltar-banco">
+    <a href="/github/desafiodomilhao/public/" class="botao-voltar-banco">
       <i class="fa-solid fa-arrow-left"></i>
       VOLTAR AO JOGO
     </a>
@@ -984,7 +984,7 @@
 
 ?>
 
-<script src="/desafiodomilhao/assets/js/perguntas.js?v=<?php echo (int) filemtime(__DIR__ . '/../assets/js/perguntas.js'); ?>"></script>
+<script src="/github/desafiodomilhao/public/assets/js/perguntas.js?v=<?php echo (int) filemtime(__DIR__ . '/../public/assets/js/perguntas.js'); ?>"></script>
 
 </body>
 

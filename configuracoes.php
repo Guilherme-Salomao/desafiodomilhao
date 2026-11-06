@@ -46,13 +46,13 @@
     'Configure áudio, experiência visual, partida, ranking e acesso ao Banco de Questões.';
 
     $paginaUrl =
-    'http://localhost/desafiodomilhao/configuracoes.php';
+    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/configuracoes.php';
 
     $paginaTipo =
     'website';
 
     $paginaCss =
-    '/desafiodomilhao/assets/css/configuracoes.css';
+    '/github/desafiodomilhao/public/assets/css/configuracoes.css';
 
     /* =========================================================
    HEADER
@@ -80,7 +80,7 @@
 
     <!-- LOGO -->
 
-    <img src="/desafiodomilhao/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-configuracoes">
+    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-configuracoes">
 
 
     <!-- IDENTIFICAÇÃO -->
@@ -438,7 +438,7 @@
     <div class="acoes-acesso-banco">
 
 
-      <a href="/desafiodomilhao/login.php" class="botao-acesso entrar">
+      <a href="/github/desafiodomilhao/public/login.php" class="botao-acesso entrar">
 
         <i class="fa-solid fa-right-to-bracket"></i>
 
@@ -447,7 +447,7 @@
       </a>
 
 
-      <a href="/desafiodomilhao/cadastro.php" class="botao-acesso cadastrar">
+      <a href="/github/desafiodomilhao/public/cadastro.php" class="botao-acesso cadastrar">
 
         <i class="fa-solid fa-user-plus"></i>
 
@@ -1157,7 +1157,7 @@
 
     <!-- VOLTAR -->
 
-    <a href="/desafiodomilhao/" class="botao-voltar-configuracoes">
+    <a href="/github/desafiodomilhao/public/" class="botao-voltar-configuracoes">
 
       <i class="fa-solid fa-arrow-left"></i>
 
@@ -1199,7 +1199,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/desafiodomilhao/assets/js/configuracoes.js"></script>
+<script src="/github/desafiodomilhao/public/assets/js/configuracoes.js"></script>
 
 
 </body>

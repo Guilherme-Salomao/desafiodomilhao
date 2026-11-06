@@ -1,0 +1,12 @@
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /github/desafiodomilhao/public/
+
+# Arquivos estáticos existentes são entregues diretamente pelo Apache.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# As páginas PHP são atendidas pelo roteador público.
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]

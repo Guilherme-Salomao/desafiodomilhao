@@ -48,7 +48,7 @@ if (
     ===================================================== */
 
     header(
-        'Location: /desafiodomilhao/login.php',
+        'Location: /github/desafiodomilhao/public/login.php',
         true,
         303
     );

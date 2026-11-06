@@ -368,13 +368,19 @@ As credenciais do banco devem permanecer **fora da pasta pública `htdocs`**.
 Exemplo:
 
 ```text
-D:\xampp\config\desafiodomilhao-db.php
+config/database.php
+
+> Em produção, a aplicação deve ser acessada por
+> `https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/`.
+> Somente a pasta `public/` contém recursos acessíveis pelo navegador.
+> Copie `config/database.example.php` para `config/database.php`, preencha
+> as credenciais do servidor e mantenha esse arquivo fora do Git.
 ```
 
 ### 6️⃣ Abra no navegador
 
 ```text
-http://localhost/desafiodomilhao/
+http://localhost/desafiodomilhao/public/
 ```
 
 ---
