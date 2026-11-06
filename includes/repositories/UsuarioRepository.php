@@ -450,6 +450,102 @@ class UsuarioRepository
     }
 
     /* =====================================================
+       LISTA TODAS AS ÁREAS ATIVAS
+    ===================================================== */
+
+    public function listarTodasAreasAtivas(): array
+    {
+        $sql = "
+            SELECT
+                id,
+                nome,
+                slug,
+                descricao,
+                icone,
+                ordem
+            FROM areas
+            WHERE ativo = 1
+            ORDER BY ordem ASC, nome ASC
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /* =====================================================
+       ATUALIZA O PRÓPRIO PERFIL E ÁREAS
+    ===================================================== */
+
+    public function atualizarPerfil(
+        int $usuarioId,
+        string $nome,
+        ?string $senhaHash,
+        array $areasIds
+    ): array {
+        $areas = $this->buscarAreasAtivasPorIds($areasIds);
+
+        if (empty($areas)) {
+            throw new RuntimeException(
+                'Selecione pelo menos uma área autorizada.'
+            );
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $campos = ['nome = :nome'];
+            $parametros = [
+                ':nome' => $nome,
+                ':usuario_id' => $usuarioId,
+            ];
+
+            if ($senhaHash !== null) {
+                $campos[] = 'senha_hash = :senha_hash';
+                $parametros[':senha_hash'] = $senhaHash;
+            }
+
+            $sqlUsuario = "
+                UPDATE usuarios
+                SET " . implode(', ', $campos) . "
+                WHERE id = :usuario_id
+            ";
+
+            $stmtUsuario = $this->pdo->prepare($sqlUsuario);
+            $stmtUsuario->execute($parametros);
+
+            $stmtExcluirAreas = $this->pdo->prepare(
+                'DELETE FROM usuario_areas WHERE usuario_id = :usuario_id'
+            );
+            $stmtExcluirAreas->execute([':usuario_id' => $usuarioId]);
+
+            $stmtInserirArea = $this->pdo->prepare(
+                'INSERT INTO usuario_areas (usuario_id, area_id)
+                 VALUES (:usuario_id, :area_id)'
+            );
+
+            foreach ($areas as $area) {
+                $stmtInserirArea->execute([
+                    ':usuario_id' => $usuarioId,
+                    ':area_id' => (int) $area['id'],
+                ]);
+            }
+
+            $this->pdo->commit();
+
+            return $areas;
+
+        } catch (Throwable $erro) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $erro;
+        }
+    }
+
+    /* =====================================================
        VERIFICA SE USUÁRIO TEM ACESSO A UMA ÁREA
     ===================================================== */
 

@@ -351,7 +351,7 @@
 
   <section class="painel-usuario-banco">
 
-    <div class="usuario-logado-banco">
+    <a href="/github/desafiodomilhao/public/admin/perfil.php" class="usuario-logado-banco" aria-label="Editar meu perfil">
 
       <div class="icone-usuario-banco">
         <i class="fa-solid fa-user-shield"></i>
@@ -365,7 +365,7 @@
         </strong>
       </div>
 
-    </div>
+    </a>
 
     <div class="areas-usuario-banco">
 
