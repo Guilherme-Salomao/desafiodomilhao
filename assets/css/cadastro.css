@@ -1,0 +1,1033 @@
+/* =====================================================
+   PÁGINA - CADASTRO
+===================================================== */
+
+.pagina-cadastro {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 1050px;
+
+  min-height: calc(100vh - 50px);
+
+  margin: 0 auto;
+
+  padding: 28px 35px 45px;
+}
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.cabecalho-cadastro {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  text-align: center;
+}
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo-cadastro {
+  display: block;
+
+  width: 100%;
+  max-width: 220px;
+
+  height: auto;
+
+  margin: 0 auto 20px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.3))
+    drop-shadow(0 0 18px rgba(255, 183, 0, 0.1));
+}
+
+/* =====================================================
+   RÓTULO
+===================================================== */
+
+.rotulo-cadastro {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-bottom: 12px;
+
+  color: #ffc328;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.7px;
+}
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.cabecalho-cadastro h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 29px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
+
+.cabecalho-cadastro p {
+  max-width: 620px;
+
+  margin: 10px auto 0;
+
+  color: #aec3d2;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+/* =====================================================
+   PAINEL
+===================================================== */
+
+.painel-cadastro {
+  width: 100%;
+
+  padding: 30px;
+
+  border: 1px solid rgba(22, 142, 228, 0.72);
+
+  border-radius: 13px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(5, 27, 48, 0.96),
+    rgba(2, 14, 28, 0.96)
+  );
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* =====================================================
+   SEÇÕES
+===================================================== */
+
+.secao-cadastro {
+  width: 100%;
+
+  margin-bottom: 30px;
+}
+
+.secao-cadastro:not(:last-of-type) {
+  padding-bottom: 28px;
+
+  border-bottom: 1px solid rgba(22, 142, 228, 0.12);
+}
+
+/* =====================================================
+   CABEÇALHO DA SEÇÃO
+===================================================== */
+
+.titulo-secao-cadastro {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 20px;
+}
+
+.numero-etapa-cadastro {
+  width: 34px;
+
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: #07111d;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  border-radius: 50%;
+
+  background: linear-gradient(145deg, #ffd95e, #e49c00);
+
+  box-shadow: 0 0 14px rgba(255, 190, 30, 0.18);
+}
+
+.titulo-secao-cadastro > div:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.titulo-secao-cadastro strong {
+  color: #ffffff;
+
+  font-size: 15px;
+}
+
+.titulo-secao-cadastro span {
+  color: #8fa8ba;
+
+  font-size: 11px;
+}
+
+/* =====================================================
+   CAMPOS
+===================================================== */
+
+.grupo-campo-cadastro {
+  width: 100%;
+
+  margin-bottom: 20px;
+}
+
+.grupo-campo-cadastro label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 8px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.grupo-campo-cadastro label i {
+  color: #4db9ff;
+}
+
+.grupo-campo-cadastro > input,
+.campo-senha input {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 14px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  outline: none;
+
+  border: 1px solid rgba(22, 142, 228, 0.62);
+
+  border-radius: 7px;
+
+  background: rgba(1, 15, 29, 0.85);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.grupo-campo-cadastro > input::placeholder,
+.campo-senha input::placeholder {
+  color: #6f889a;
+}
+
+.grupo-campo-cadastro > input:focus,
+.campo-senha input:focus {
+  border-color: #ffc328;
+
+  background: rgba(2, 20, 38, 0.95);
+
+  box-shadow: 0 0 0 3px rgba(255, 195, 40, 0.07);
+}
+
+.grupo-campo-cadastro small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #728c9e;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   LINHA DE SENHAS
+===================================================== */
+
+.linha-senhas {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+/* =====================================================
+   CAMPO SENHA
+===================================================== */
+
+.campo-senha {
+  position: relative;
+
+  width: 100%;
+}
+
+.campo-senha input {
+  padding-right: 48px;
+}
+
+.botao-mostrar-senha {
+  position: absolute;
+
+  top: 50%;
+
+  right: 7px;
+
+  width: 36px;
+
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transform: translateY(-50%);
+
+  color: #7996a9;
+
+  cursor: pointer;
+
+  border: 0;
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.botao-mostrar-senha:hover {
+  color: #ffc328;
+
+  background: rgba(255, 195, 40, 0.06);
+}
+
+/* =====================================================
+   REQUISITOS DA SENHA
+===================================================== */
+
+.requisitos-senha {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 8px;
+
+  margin-top: -6px;
+}
+
+.requisito-senha {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #708999;
+
+  font-size: 9px;
+
+  transition: color 0.2s ease;
+}
+
+.requisito-senha i {
+  font-size: 5px;
+}
+
+.requisito-senha.valido {
+  color: #70e887;
+}
+
+.requisito-senha.valido i {
+  color: #6eff8a;
+}
+
+/* =====================================================
+   GRADE DE ÁREAS
+===================================================== */
+
+.grade-areas-cadastro {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+/* =====================================================
+   OPÇÃO DA ÁREA
+===================================================== */
+
+.opcao-area-cadastro {
+  position: relative;
+
+  cursor: pointer;
+}
+
+.opcao-area-cadastro input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.conteudo-area-cadastro {
+  position: relative;
+
+  min-height: 92px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 14px 48px 14px 15px;
+
+  border: 1px solid rgba(22, 142, 228, 0.52);
+
+  border-radius: 9px;
+
+  background: rgba(3, 22, 40, 0.82);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* =====================================================
+   ÍCONE DA ÁREA
+===================================================== */
+
+.icone-area-cadastro {
+  width: 46px;
+
+  height: 46px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: #4db9ff;
+
+  font-size: 20px;
+
+  border-radius: 9px;
+
+  border: 1px solid rgba(77, 185, 255, 0.22);
+
+  background: rgba(77, 185, 255, 0.07);
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+/* =====================================================
+   DADOS DA ÁREA
+===================================================== */
+
+.dados-area-cadastro {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  text-align: left;
+}
+
+.dados-area-cadastro strong {
+  color: #ffffff;
+
+  font-size: 12px;
+}
+
+.dados-area-cadastro small {
+  color: #8199aa;
+
+  font-size: 9px;
+
+  line-height: 1.45;
+}
+
+/* =====================================================
+   CHECK
+===================================================== */
+
+.check-area-cadastro {
+  position: absolute;
+
+  top: 50%;
+
+  right: 16px;
+
+  width: 23px;
+
+  height: 23px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transform: translateY(-50%);
+
+  color: transparent;
+
+  font-size: 10px;
+
+  border: 1px solid rgba(105, 139, 159, 0.42);
+
+  border-radius: 50%;
+
+  background: rgba(2, 16, 29, 0.85);
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* =====================================================
+   HOVER ÁREA
+===================================================== */
+
+.opcao-area-cadastro:hover .conteudo-area-cadastro {
+  transform: translateY(-2px);
+
+  border-color: #4db9ff;
+}
+
+/* =====================================================
+   ÁREA SELECIONADA
+===================================================== */
+
+.opcao-area-cadastro input:checked + .conteudo-area-cadastro {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    145deg,
+    rgba(105, 64, 4, 0.64),
+    rgba(47, 29, 2, 0.7)
+  );
+
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.11);
+}
+
+.opcao-area-cadastro
+  input:checked
+  + .conteudo-area-cadastro
+  .icone-area-cadastro {
+  color: #ffc328;
+
+  border-color: rgba(255, 195, 40, 0.34);
+
+  background: rgba(255, 195, 40, 0.07);
+}
+
+.opcao-area-cadastro
+  input:checked
+  + .conteudo-area-cadastro
+  .check-area-cadastro {
+  color: #07111d;
+
+  border-color: #6eff8a;
+
+  background: #6eff8a;
+}
+
+/* =====================================================
+   CONTADOR DE ÁREAS
+===================================================== */
+
+.contador-areas-selecionadas {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 13px;
+
+  color: #829cad;
+
+  font-size: 10px;
+}
+
+.contador-areas-selecionadas i {
+  color: #4db9ff;
+}
+
+/* =====================================================
+   AVISO DE APROVAÇÃO
+===================================================== */
+
+.aviso-aprovacao {
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 25px;
+
+  padding: 16px 18px;
+
+  border: 1px solid rgba(255, 195, 40, 0.34);
+
+  border-radius: 9px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(96, 58, 4, 0.22),
+    rgba(53, 33, 3, 0.1)
+  );
+}
+
+.icone-aviso-aprovacao {
+  width: 39px;
+
+  height: 39px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: #ffc328;
+
+  font-size: 17px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 195, 40, 0.08);
+
+  border: 1px solid rgba(255, 195, 40, 0.18);
+}
+
+.aviso-aprovacao > div:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.aviso-aprovacao strong {
+  color: #ffc328;
+
+  font-size: 11px;
+
+  letter-spacing: 0.7px;
+}
+
+.aviso-aprovacao span {
+  color: #ae9f7f;
+
+  font-size: 10px;
+
+  line-height: 1.55;
+}
+
+/* =====================================================
+   MENSAGENS
+===================================================== */
+
+.mensagem-cadastro {
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 11px;
+
+  padding: 15px;
+
+  border-radius: 8px;
+}
+
+.mensagem-cadastro.erro {
+  color: #ffd0d0;
+
+  border: 1px solid rgba(255, 82, 82, 0.32);
+
+  background: rgba(100, 15, 15, 0.18);
+}
+
+.mensagem-cadastro > i {
+  margin-top: 2px;
+
+  color: #ff7373;
+}
+
+.mensagem-cadastro div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.mensagem-cadastro strong {
+  font-size: 11px;
+}
+
+.mensagem-cadastro span {
+  font-size: 9px;
+}
+
+/* =====================================================
+   AÇÕES
+===================================================== */
+
+.acoes-cadastro {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+/* =====================================================
+   VOLTAR
+===================================================== */
+
+.botao-voltar-cadastro {
+  min-height: 48px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 22px;
+
+  color: #c5d7e3;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  border: 1px solid #168ee4;
+
+  border-radius: 7px;
+
+  background: rgba(3, 22, 40, 0.9);
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.botao-voltar-cadastro:hover {
+  color: #ffffff;
+
+  transform: translateY(-1px);
+
+  border-color: #4db9ff;
+
+  background: rgba(5, 35, 61, 0.95);
+}
+
+/* =====================================================
+   SOLICITAR CADASTRO
+===================================================== */
+
+.botao-solicitar-cadastro {
+  min-height: 52px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 29px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+
+  border: 2px solid #ffc328;
+
+  border-radius: 8px;
+
+  background: linear-gradient(90deg, #9b5c07, #553000);
+
+  box-shadow: 0 0 20px rgba(255, 183, 0, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.botao-solicitar-cadastro i {
+  color: #ffe075;
+}
+
+.botao-solicitar-cadastro:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  border-color: #ffe075;
+
+  box-shadow: 0 0 27px rgba(255, 183, 0, 0.34);
+}
+
+.botao-solicitar-cadastro:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+/* =====================================================
+   JÁ POSSUI CONTA
+===================================================== */
+
+.ja-possui-cadastro {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 25px;
+
+  padding-top: 20px;
+
+  color: #829cad;
+
+  font-size: 10px;
+
+  border-top: 1px solid rgba(22, 142, 228, 0.11);
+}
+
+.ja-possui-cadastro a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #ffc328;
+
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.ja-possui-cadastro a:hover {
+  color: #ffe075;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 850px) {
+  .pagina-cadastro {
+    max-width: 720px;
+
+    padding: 24px 22px 40px;
+  }
+
+  .painel-cadastro {
+    padding: 24px;
+  }
+
+  .grade-areas-cadastro {
+    grid-template-columns: 1fr;
+  }
+
+  .requisitos-senha {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media (max-width: 600px) {
+  .pagina-cadastro {
+    padding: 18px 12px 30px;
+  }
+
+  .logo-cadastro {
+    max-width: 180px;
+  }
+
+  .cabecalho-cadastro h1 {
+    font-size: 21px;
+  }
+
+  .cabecalho-cadastro p {
+    font-size: 11px;
+  }
+
+  .painel-cadastro {
+    padding: 17px;
+  }
+
+  .titulo-secao-cadastro {
+    align-items: flex-start;
+  }
+
+  .linha-senhas {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+  .requisitos-senha {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-cadastro {
+    flex-direction: column-reverse;
+  }
+
+  .botao-voltar-cadastro,
+  .botao-solicitar-cadastro {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   CELULAR PEQUENO
+===================================================== */
+
+@media (max-width: 420px) {
+  .pagina-cadastro {
+    padding: 15px 9px 25px;
+  }
+
+  .logo-cadastro {
+    max-width: 160px;
+  }
+
+  .rotulo-cadastro {
+    font-size: 9px;
+  }
+
+  .cabecalho-cadastro h1 {
+    font-size: 19px;
+  }
+
+  .painel-cadastro {
+    padding: 14px;
+  }
+
+  .conteudo-area-cadastro {
+    padding: 12px 42px 12px 12px;
+  }
+
+  .icone-area-cadastro {
+    width: 40px;
+
+    height: 40px;
+
+    font-size: 18px;
+  }
+}

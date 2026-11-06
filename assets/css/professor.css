@@ -1,0 +1,1051 @@
+/* =====================================================
+   PÁGINA - MODO PROFESSOR
+===================================================== */
+
+.pagina-professor {
+  position: relative;
+
+  z-index: 1;
+
+  width: 100%;
+
+  max-width: 1100px;
+
+  min-height: calc(100vh - 50px);
+
+  margin: 0 auto;
+
+  padding: 28px 35px 45px;
+}
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.cabecalho-professor {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 30px;
+
+  text-align: center;
+}
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo-professor {
+  display: block;
+
+  width: 100%;
+
+  max-width: 230px;
+
+  height: auto;
+
+  margin: 0 auto 20px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.3))
+    drop-shadow(0 0 18px rgba(255, 183, 0, 0.1));
+}
+
+/* =====================================================
+   IDENTIFICAÇÃO
+===================================================== */
+
+.identificacao-professor {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  margin-bottom: 14px;
+
+  padding: 8px 17px;
+
+  color: #ffc328;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.6px;
+
+  border: 1px solid rgba(255, 195, 40, 0.5);
+
+  border-radius: 30px;
+
+  background: rgba(82, 49, 2, 0.45);
+}
+
+.identificacao-professor i {
+  font-size: 14px;
+}
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.cabecalho-professor h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 29px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
+
+.cabecalho-professor p {
+  max-width: 620px;
+
+  margin: 10px auto 0;
+
+  color: #b6cada;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+/* =====================================================
+   PAINEL
+===================================================== */
+
+.painel-professor {
+  width: 100%;
+
+  padding: 30px;
+
+  border: 1px solid rgba(22, 142, 228, 0.8);
+
+  border-radius: 13px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(5, 27, 48, 0.96),
+    rgba(2, 14, 28, 0.96)
+  );
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(10px);
+}
+
+/* =====================================================
+   SEÇÕES
+===================================================== */
+
+.secao-configuracao {
+  width: 100%;
+
+  margin-bottom: 32px;
+}
+
+.secao-configuracao:not(:last-child) {
+  padding-bottom: 28px;
+
+  border-bottom: 1px solid rgba(56, 156, 224, 0.12);
+}
+
+/* =====================================================
+   TÍTULO DA SEÇÃO
+===================================================== */
+
+.titulo-secao {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 18px;
+}
+
+.numero-etapa {
+  width: 34px;
+
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: #07111d;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  border-radius: 50%;
+
+  background: linear-gradient(145deg, #ffd95e, #e49c00);
+
+  box-shadow: 0 0 14px rgba(255, 190, 30, 0.18);
+}
+
+.titulo-secao > div:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.titulo-secao strong {
+  color: #ffffff;
+
+  font-size: 15px;
+}
+
+.titulo-secao span {
+  color: #8fa8ba;
+
+  font-size: 11px;
+}
+
+/* =====================================================
+   ÁREAS
+===================================================== */
+
+.grade-areas-professor {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.opcao-area-professor {
+  position: relative;
+
+  cursor: pointer;
+}
+
+.opcao-area-professor input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.conteudo-area-professor {
+  position: relative;
+
+  min-height: 92px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 14px 44px 14px 15px;
+
+  border: 1px solid rgba(22, 142, 228, 0.55);
+
+  border-radius: 9px;
+
+  background: rgba(3, 22, 40, 0.82);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.icone-area-professor {
+  width: 46px;
+
+  height: 46px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  color: #4db9ff;
+
+  font-size: 21px;
+
+  border-radius: 9px;
+
+  background: rgba(16, 119, 190, 0.12);
+
+  border: 1px solid rgba(77, 185, 255, 0.22);
+}
+
+.dados-area-professor {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  text-align: left;
+}
+
+.dados-area-professor strong {
+  color: #ffffff;
+
+  font-size: 13px;
+}
+
+.dados-area-professor small {
+  color: #829bac;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+.check-area-professor {
+  position: absolute;
+
+  top: 50%;
+
+  right: 16px;
+
+  transform: translateY(-50%) scale(0.5);
+
+  color: #6eff8a;
+
+  font-size: 19px;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.opcao-area-professor:hover .conteudo-area-professor {
+  transform: translateY(-2px);
+
+  border-color: #4db9ff;
+}
+
+.opcao-area-professor input:checked + .conteudo-area-professor {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    145deg,
+    rgba(105, 64, 4, 0.64),
+    rgba(47, 29, 2, 0.7)
+  );
+
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.12);
+}
+
+.opcao-area-professor
+  input:checked
+  + .conteudo-area-professor
+  .icone-area-professor {
+  color: #ffc328;
+
+  border-color: rgba(255, 195, 40, 0.35);
+
+  background: rgba(255, 195, 40, 0.08);
+}
+
+.opcao-area-professor
+  input:checked
+  + .conteudo-area-professor
+  .check-area-professor {
+  opacity: 1;
+
+  transform: translateY(-50%) scale(1);
+}
+
+/* =====================================================
+   QUANTIDADE
+===================================================== */
+
+.opcoes-quantidade {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.opcao-quantidade {
+  position: relative;
+
+  cursor: pointer;
+}
+
+.opcao-quantidade input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.opcao-quantidade > span {
+  min-height: 82px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  border: 1px solid rgba(22, 142, 228, 0.55);
+
+  border-radius: 9px;
+
+  background: rgba(3, 22, 40, 0.82);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.opcao-quantidade strong {
+  color: #ffffff;
+
+  font-size: 23px;
+}
+
+.opcao-quantidade small {
+  color: #869faf;
+
+  font-size: 10px;
+}
+
+.opcao-quantidade:hover > span {
+  transform: translateY(-2px);
+
+  border-color: #4db9ff;
+}
+
+.opcao-quantidade input:checked + span {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    145deg,
+    rgba(105, 64, 4, 0.64),
+    rgba(47, 29, 2, 0.7)
+  );
+
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.12);
+}
+
+.opcao-quantidade input:checked + span strong {
+  color: #ffc328;
+}
+
+/* =====================================================
+   DIFICULDADE
+===================================================== */
+
+.opcoes-dificuldade-professor {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.opcao-dificuldade-professor {
+  position: relative;
+
+  cursor: pointer;
+}
+
+.opcao-dificuldade-professor input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.opcao-dificuldade-professor > span {
+  min-height: 125px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 14px;
+
+  text-align: center;
+
+  border: 1px solid rgba(22, 142, 228, 0.55);
+
+  border-radius: 9px;
+
+  background: rgba(3, 22, 40, 0.82);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.opcao-dificuldade-professor i {
+  margin-bottom: 2px;
+
+  color: #4db9ff;
+
+  font-size: 24px;
+}
+
+.opcao-dificuldade-professor strong {
+  color: #ffffff;
+
+  font-size: 13px;
+
+  letter-spacing: 0.8px;
+}
+
+.opcao-dificuldade-professor small {
+  color: #829bab;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+.opcao-dificuldade-professor:hover > span {
+  transform: translateY(-2px);
+
+  border-color: #4db9ff;
+}
+
+.opcao-dificuldade-professor input:checked + span {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    145deg,
+    rgba(105, 64, 4, 0.64),
+    rgba(47, 29, 2, 0.7)
+  );
+
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.12);
+}
+
+.opcao-dificuldade-professor input:checked + span i,
+.opcao-dificuldade-professor input:checked + span strong {
+  color: #ffc328;
+}
+
+/* =====================================================
+   AVISO SEM TEMPO
+===================================================== */
+
+.aviso-sem-tempo {
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 25px;
+
+  padding: 16px 18px;
+
+  border: 1px solid rgba(70, 186, 255, 0.28);
+
+  border-radius: 9px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(3, 78, 127, 0.15),
+    rgba(0, 40, 74, 0.08)
+  );
+}
+
+.aviso-sem-tempo > i {
+  margin-top: 2px;
+
+  color: #4db9ff;
+
+  font-size: 20px;
+}
+
+.aviso-sem-tempo div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.aviso-sem-tempo strong {
+  color: #ffffff;
+
+  font-size: 12px;
+}
+
+.aviso-sem-tempo span {
+  color: #9bb2c2;
+
+  font-size: 11px;
+
+  line-height: 1.55;
+}
+
+/* =====================================================
+   RESUMO
+===================================================== */
+
+.resumo-professor {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  margin-bottom: 25px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(22, 142, 228, 0.42);
+
+  border-radius: 9px;
+
+  background: rgba(0, 13, 26, 0.68);
+}
+
+.resumo-professor > div {
+  min-height: 92px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 10px;
+
+  text-align: center;
+}
+
+.resumo-professor > div:not(:last-child) {
+  border-right: 1px solid rgba(22, 142, 228, 0.2);
+}
+
+.resumo-professor i {
+  margin-bottom: 3px;
+
+  color: #4db9ff;
+
+  font-size: 15px;
+}
+
+.resumo-professor span {
+  color: #7893a6;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.resumo-professor strong {
+  color: #ffc328;
+
+  font-size: 13px;
+
+  line-height: 1.3;
+}
+
+/* =====================================================
+   AÇÕES
+===================================================== */
+
+.acoes-professor {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+/* =====================================================
+   VOLTAR
+===================================================== */
+
+.botao-voltar-professor {
+  min-height: 48px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 23px;
+
+  color: #c5d7e3;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  border: 1px solid #168ee4;
+
+  border-radius: 7px;
+
+  background: rgba(3, 22, 40, 0.9);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.botao-voltar-professor:hover {
+  color: #ffffff;
+
+  transform: translateY(-1px);
+
+  border-color: #4db9ff;
+
+  background: rgba(5, 35, 61, 0.95);
+}
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+.botao-iniciar-quiz {
+  min-height: 52px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 30px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+
+  cursor: pointer;
+
+  border: 2px solid #ffc328;
+
+  border-radius: 8px;
+
+  background: linear-gradient(90deg, #9b5c07, #553000);
+
+  box-shadow: 0 0 20px rgba(255, 183, 0, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.botao-iniciar-quiz i {
+  color: #ffe075;
+}
+
+.botao-iniciar-quiz:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  border-color: #ffe075;
+
+  box-shadow: 0 0 27px rgba(255, 183, 0, 0.35);
+}
+
+.botao-iniciar-quiz:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+/* =====================================================
+   ERRO
+===================================================== */
+
+.mensagem-erro {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 15px;
+
+  color: #ffd0d0;
+
+  font-size: 12px;
+
+  border: 1px solid rgba(255, 82, 82, 0.35);
+
+  border-radius: 8px;
+
+  background: rgba(100, 15, 15, 0.2);
+}
+
+.mensagem-erro i {
+  color: #ff6b6b;
+}
+
+/* =====================================================
+   RESPONSIVO - TABLET
+===================================================== */
+
+@media (max-width: 850px) {
+  .pagina-professor {
+    max-width: 720px;
+
+    padding: 24px 22px 40px;
+  }
+
+  .painel-professor {
+    padding: 24px;
+  }
+
+  .grade-areas-professor {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo-professor {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .resumo-professor > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .resumo-professor > div:nth-child(1),
+  .resumo-professor > div:nth-child(2) {
+    border-bottom: 1px solid rgba(22, 142, 228, 0.2);
+  }
+}
+
+/* =====================================================
+   RESPONSIVO - CELULAR
+===================================================== */
+
+@media (max-width: 600px) {
+  .pagina-professor {
+    padding: 18px 12px 30px;
+  }
+
+  .logo-professor {
+    max-width: 180px;
+  }
+
+  .cabecalho-professor h1 {
+    font-size: 21px;
+  }
+
+  .cabecalho-professor p {
+    font-size: 12px;
+  }
+
+  .painel-professor {
+    padding: 17px;
+  }
+
+  .titulo-secao {
+    align-items: flex-start;
+  }
+
+  .opcoes-quantidade {
+    grid-template-columns: 1fr;
+  }
+
+  .opcao-quantidade > span {
+    min-height: 64px;
+
+    flex-direction: row;
+
+    gap: 6px;
+  }
+
+  .opcao-quantidade strong {
+    font-size: 18px;
+  }
+
+  .opcoes-dificuldade-professor {
+    grid-template-columns: 1fr;
+  }
+
+  .opcao-dificuldade-professor > span {
+    min-height: 80px;
+
+    display: grid;
+
+    grid-template-columns: 40px minmax(0, 1fr);
+
+    grid-template-rows: auto auto;
+
+    column-gap: 10px;
+
+    text-align: left;
+
+    justify-items: start;
+  }
+
+  .opcao-dificuldade-professor i {
+    grid-column: 1;
+
+    grid-row: 1 / 3;
+
+    margin: 0;
+
+    align-self: center;
+
+    justify-self: center;
+  }
+
+  .opcao-dificuldade-professor strong {
+    grid-column: 2;
+
+    grid-row: 1;
+
+    align-self: end;
+  }
+
+  .opcao-dificuldade-professor small {
+    grid-column: 2;
+
+    grid-row: 2;
+
+    align-self: start;
+  }
+
+  .resumo-professor {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo-professor > div {
+    min-height: 68px;
+
+    border-right: 0 !important;
+
+    border-bottom: 1px solid rgba(22, 142, 228, 0.2);
+  }
+
+  .resumo-professor > div:last-child {
+    border-bottom: 0;
+  }
+
+  .acoes-professor {
+    flex-direction: column-reverse;
+  }
+
+  .botao-voltar-professor,
+  .botao-iniciar-quiz {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   CELULARES PEQUENOS
+===================================================== */
+
+@media (max-width: 420px) {
+  .pagina-professor {
+    padding: 15px 10px 25px;
+  }
+
+  .logo-professor {
+    max-width: 160px;
+  }
+
+  .identificacao-professor {
+    font-size: 9px;
+  }
+
+  .cabecalho-professor h1 {
+    font-size: 19px;
+  }
+
+  .painel-professor {
+    padding: 14px;
+  }
+
+  .conteudo-area-professor {
+    padding: 12px 38px 12px 12px;
+  }
+
+  .icone-area-professor {
+    width: 40px;
+
+    height: 40px;
+
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,1165 @@
+/* =====================================================
+   PÁGINA - CONFIGURAÇÃO DA PARTIDA
+===================================================== */
+
+.pagina-configuracao {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 1000px;
+
+  min-height: calc(100vh - 50px);
+
+  margin: 0 auto;
+
+  padding: 28px 35px 45px;
+}
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.cabecalho-configuracao {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  margin-bottom: 30px;
+}
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo-configuracao {
+  display: block;
+
+  width: 100%;
+  max-width: 240px;
+
+  height: auto;
+
+  margin: 0 auto 24px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.32))
+    drop-shadow(0 0 18px rgba(255, 183, 0, 0.12));
+}
+
+/* =====================================================
+   ÁREA SELECIONADA
+===================================================== */
+
+.cabecalho-configuracao .subtitulo {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin: 0 0 22px;
+
+  padding: 10px 22px;
+
+  color: #ffffff;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+
+  border: 1px solid #ffc328;
+
+  background: linear-gradient(
+    90deg,
+    rgba(123, 76, 4, 0.95),
+    rgba(72, 40, 0, 0.95)
+  );
+
+  box-shadow: 0 0 18px rgba(255, 183, 0, 0.16);
+}
+
+.cabecalho-configuracao .subtitulo > i:first-child {
+  color: #ffd34d;
+
+  font-size: 18px;
+}
+
+.cabecalho-configuracao .subtitulo span {
+  color: #ffffff;
+}
+
+.cabecalho-configuracao .check-area {
+  color: #6eff8a;
+
+  font-size: 14px;
+}
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.titulo-configuracao {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  width: 100%;
+}
+
+.etapa-configuracao {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  color: #ffc328;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.titulo-configuracao h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 27px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
+
+.titulo-configuracao p {
+  margin: 12px 0 0;
+
+  color: #bcd0df;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   CONTAINER PRINCIPAL
+===================================================== */
+
+.container-configuracao {
+  width: 100%;
+
+  display: block;
+}
+
+/* =====================================================
+   PAINEL DO FORMULÁRIO
+===================================================== */
+
+.painel-formulario {
+  width: 100%;
+
+  padding: 30px;
+
+  border: 1px solid rgba(22, 142, 228, 0.85);
+
+  border-radius: 12px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(5, 27, 48, 0.96),
+    rgba(2, 14, 28, 0.96)
+  );
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* =====================================================
+   GRUPO DE CAMPO
+===================================================== */
+
+.grupo-campo {
+  width: 100%;
+
+  margin-bottom: 22px;
+}
+
+.grupo-campo > label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 8px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.grupo-campo > label i {
+  color: #4db9ff;
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.grupo-campo input[type="text"] {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 14px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  outline: none;
+
+  border: 1px solid rgba(22, 142, 228, 0.75);
+
+  border-radius: 7px;
+
+  background: rgba(1, 15, 29, 0.85);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.grupo-campo input[type="text"]::placeholder {
+  color: #71899b;
+}
+
+.grupo-campo input[type="text"]:focus {
+  border-color: #ffc328;
+
+  background: rgba(2, 20, 38, 0.95);
+
+  box-shadow: 0 0 0 3px rgba(255, 195, 40, 0.08);
+}
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+.grupo-campo select {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 14px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  outline: none;
+
+  cursor: pointer;
+
+  border: 1px solid rgba(22, 142, 228, 0.75);
+
+  border-radius: 7px;
+
+  background: rgba(1, 15, 29, 0.85);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.grupo-campo select:focus {
+  border-color: #ffc328;
+
+  background: rgba(2, 20, 38, 0.95);
+
+  box-shadow: 0 0 0 3px rgba(255, 195, 40, 0.08);
+}
+
+.grupo-campo select option {
+  color: #ffffff;
+
+  background: #06192b;
+}
+
+/* =====================================================
+   TEXTO AUXILIAR
+===================================================== */
+
+.grupo-campo small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #7892a5;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   EQUIPES / JOGADORES
+===================================================== */
+
+.bloco-equipes {
+  margin-bottom: 22px;
+
+  padding-bottom: 6px;
+
+  border-bottom: 1px solid rgba(47, 156, 234, 0.12);
+}
+
+.titulo-secao-form {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.titulo-secao-form > i {
+  color: #ffc328;
+
+  font-size: 22px;
+}
+
+.titulo-secao-form div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.titulo-secao-form strong {
+  color: #ffffff;
+
+  font-size: 14px;
+}
+
+.titulo-secao-form span {
+  color: #8ea8bb;
+
+  font-size: 11px;
+}
+
+.linha-campos {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+/* =====================================================
+   DIFICULDADE
+===================================================== */
+
+.opcoes-dificuldade {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.opcao-dificuldade {
+  position: relative;
+
+  cursor: pointer;
+}
+
+.opcao-dificuldade input {
+  position: absolute;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   CONTEÚDO DA DIFICULDADE
+===================================================== */
+
+.conteudo-dificuldade {
+  width: 100%;
+
+  min-height: 135px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  text-align: center;
+
+  padding: 15px;
+
+  border: 1px solid rgba(22, 142, 228, 0.65);
+
+  border-radius: 9px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(4, 27, 49, 0.9),
+    rgba(2, 16, 31, 0.9)
+  );
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* =====================================================
+   ÍCONE DA DIFICULDADE
+===================================================== */
+
+.conteudo-dificuldade > i {
+  margin-bottom: 3px;
+
+  color: #4db9ff;
+
+  font-size: 24px;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* =====================================================
+   TÍTULO DA DIFICULDADE
+===================================================== */
+
+.conteudo-dificuldade strong {
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+}
+
+/* =====================================================
+   DESCRIÇÃO DA DIFICULDADE
+===================================================== */
+
+.conteudo-dificuldade small {
+  min-height: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #89a2b4;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+/* =====================================================
+   TEMPO DA DIFICULDADE
+===================================================== */
+
+.tempo-dificuldade {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: 4px;
+
+  padding: 5px 9px;
+
+  color: #ffc328;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  border-radius: 20px;
+
+  background: rgba(255, 183, 0, 0.07);
+
+  border: 1px solid rgba(255, 183, 0, 0.18);
+}
+
+.tempo-dificuldade i {
+  color: #ffc328;
+
+  font-size: 10px;
+}
+
+/* =====================================================
+   HOVER DIFICULDADE
+===================================================== */
+
+.opcao-dificuldade:hover .conteudo-dificuldade {
+  transform: translateY(-3px);
+
+  border-color: #4db9ff;
+
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+}
+
+.opcao-dificuldade:hover .conteudo-dificuldade > i {
+  transform: scale(1.08);
+}
+
+/* =====================================================
+   DIFICULDADE SELECIONADA
+===================================================== */
+
+.opcao-dificuldade input:checked + .conteudo-dificuldade {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    145deg,
+    rgba(115, 69, 4, 0.66),
+    rgba(56, 34, 2, 0.68)
+  );
+
+  box-shadow:
+    0 0 18px rgba(255, 183, 0, 0.14),
+    inset 0 0 14px rgba(255, 183, 0, 0.05);
+}
+
+.opcao-dificuldade input:checked + .conteudo-dificuldade > i {
+  color: #ffc328;
+}
+
+.opcao-dificuldade input:checked + .conteudo-dificuldade strong {
+  color: #ffe075;
+}
+
+/* =====================================================
+   FOCO PELO TECLADO
+===================================================== */
+
+.opcao-dificuldade input:focus-visible + .conteudo-dificuldade {
+  outline: 2px solid #4db9ff;
+
+  outline-offset: 3px;
+}
+
+/* =====================================================
+   EXPLICAÇÃO DA DIFICULDADE
+===================================================== */
+
+.explicacao-dificuldade {
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin-top: -4px;
+
+  margin-bottom: 22px;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(22, 142, 228, 0.3);
+
+  border-radius: 8px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(0, 78, 135, 0.11),
+    rgba(0, 43, 79, 0.08)
+  );
+}
+
+.explicacao-dificuldade > i {
+  margin-top: 2px;
+
+  color: #4db9ff;
+
+  font-size: 16px;
+
+  flex-shrink: 0;
+}
+
+.explicacao-dificuldade div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.explicacao-dificuldade strong {
+  color: #ffffff;
+
+  font-size: 12px;
+}
+
+.explicacao-dificuldade span {
+  color: #a7bdcd;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   RESUMO DA PARTIDA
+===================================================== */
+
+.resumo-partida-form {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  margin-top: 6px;
+
+  margin-bottom: 25px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(22, 142, 228, 0.5);
+
+  border-radius: 8px;
+
+  background: rgba(0, 13, 26, 0.65);
+}
+
+.resumo-partida-form > div {
+  min-height: 75px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 10px;
+}
+
+.resumo-partida-form > div:not(:last-child) {
+  border-right: 1px solid rgba(22, 142, 228, 0.25);
+}
+
+.resumo-partida-form span {
+  color: #809aac;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-align: center;
+}
+
+.resumo-partida-form strong {
+  color: #ffc328;
+
+  font-size: 16px;
+}
+
+/* =====================================================
+   AÇÕES
+===================================================== */
+
+.acoes-configuracao {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+/* =====================================================
+   BOTÃO VOLTAR
+===================================================== */
+
+.botao-voltar-config {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 48px;
+
+  padding: 0 22px;
+
+  color: #c6d7e3;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+
+  border: 1px solid #168ee4;
+
+  border-radius: 7px;
+
+  background: rgba(3, 22, 40, 0.9);
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.botao-voltar-config:hover {
+  color: #ffffff;
+
+  border-color: #4db9ff;
+
+  background: rgba(5, 35, 61, 0.95);
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 0 12px rgba(77, 185, 255, 0.12);
+}
+
+.botao-voltar-config:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   BOTÃO INICIAR PARTIDA
+===================================================== */
+
+.botao-iniciar-partida {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 11px;
+
+  min-height: 52px;
+
+  padding: 0 30px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+
+  cursor: pointer;
+
+  border: 2px solid #ffc328;
+
+  border-radius: 8px;
+
+  background: linear-gradient(90deg, #9b5c07, #553000);
+
+  box-shadow: 0 0 20px rgba(255, 183, 0, 0.22);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.botao-iniciar-partida i {
+  color: #ffe075;
+}
+
+.botao-iniciar-partida:hover {
+  transform: translateY(-2px);
+
+  border-color: #ffe075;
+
+  background: linear-gradient(90deg, #ae6908, #663800);
+
+  box-shadow: 0 0 28px rgba(255, 183, 0, 0.38);
+}
+
+.botao-iniciar-partida:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   RESPONSIVO - TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+  .pagina-configuracao {
+    max-width: 720px;
+
+    padding: 25px 22px 40px;
+  }
+
+  .painel-formulario {
+    padding: 24px;
+  }
+
+  .logo-configuracao {
+    max-width: 220px;
+
+    margin-bottom: 22px;
+  }
+
+  .cabecalho-configuracao .subtitulo {
+    margin-bottom: 20px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVO - CELULAR
+===================================================== */
+
+@media (max-width: 600px) {
+  .pagina-configuracao {
+    padding: 18px 12px 30px;
+  }
+
+  /* CABEÇALHO */
+
+  .cabecalho-configuracao {
+    margin-bottom: 22px;
+  }
+
+  /* LOGO */
+
+  .logo-configuracao {
+    max-width: 180px;
+
+    margin-bottom: 18px;
+  }
+
+  /* ÁREA */
+
+  .cabecalho-configuracao .subtitulo {
+    width: 100%;
+
+    max-width: 390px;
+
+    margin-bottom: 18px;
+
+    padding: 9px 14px;
+
+    font-size: 14px;
+  }
+
+  /* TÍTULOS */
+
+  .titulo-configuracao h1 {
+    font-size: 21px;
+  }
+
+  .titulo-configuracao p {
+    margin-top: 10px;
+
+    font-size: 12px;
+  }
+
+  .etapa-configuracao {
+    margin-bottom: 10px;
+
+    font-size: 10px;
+
+    letter-spacing: 1.5px;
+  }
+
+  /* FORMULÁRIO */
+
+  .painel-formulario {
+    padding: 18px;
+  }
+
+  /* EQUIPES */
+
+  .linha-campos {
+    grid-template-columns: 1fr;
+  }
+
+  /* DIFICULDADES */
+
+  .opcoes-dificuldade {
+    grid-template-columns: 1fr;
+
+    gap: 9px;
+  }
+
+  .conteudo-dificuldade {
+    min-height: 85px;
+
+    display: grid;
+
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+
+    grid-template-rows: auto auto;
+
+    align-items: center;
+
+    justify-items: start;
+
+    column-gap: 10px;
+
+    row-gap: 2px;
+
+    text-align: left;
+
+    padding: 12px 14px;
+  }
+
+  .conteudo-dificuldade > i {
+    grid-column: 1;
+    grid-row: 1 / 3;
+
+    width: 38px;
+
+    margin: 0;
+
+    font-size: 22px;
+
+    text-align: center;
+  }
+
+  .conteudo-dificuldade strong {
+    grid-column: 2;
+
+    grid-row: 1;
+
+    font-size: 12px;
+  }
+
+  .conteudo-dificuldade small {
+    grid-column: 2;
+
+    grid-row: 2;
+
+    min-height: 0;
+
+    justify-content: flex-start;
+
+    font-size: 9px;
+  }
+
+  .tempo-dificuldade {
+    grid-column: 3;
+
+    grid-row: 1 / 3;
+
+    margin: 0;
+
+    white-space: nowrap;
+  }
+
+  /* EXPLICAÇÃO */
+
+  .explicacao-dificuldade {
+    padding: 12px 13px;
+  }
+
+  /* RESUMO */
+
+  .resumo-partida-form {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo-partida-form > div {
+    min-height: 60px;
+  }
+
+  .resumo-partida-form > div:not(:last-child) {
+    border-right: 0;
+
+    border-bottom: 1px solid rgba(22, 142, 228, 0.25);
+  }
+
+  /* BOTÕES */
+
+  .acoes-configuracao {
+    flex-direction: column-reverse;
+  }
+
+  .botao-voltar-config,
+  .botao-iniciar-partida {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   CELULARES PEQUENOS
+===================================================== */
+
+@media (max-width: 420px) {
+  .pagina-configuracao {
+    padding: 15px 10px 25px;
+  }
+
+  .logo-configuracao {
+    max-width: 160px;
+
+    margin-bottom: 16px;
+  }
+
+  .cabecalho-configuracao .subtitulo {
+    margin-bottom: 16px;
+
+    font-size: 13px;
+
+    gap: 8px;
+  }
+
+  .titulo-configuracao h1 {
+    font-size: 19px;
+  }
+
+  .titulo-configuracao p {
+    font-size: 11px;
+  }
+
+  .etapa-configuracao {
+    margin-bottom: 9px;
+
+    font-size: 9px;
+  }
+
+  .painel-formulario {
+    padding: 15px;
+  }
+
+  .grupo-campo {
+    margin-bottom: 18px;
+  }
+
+  .grupo-campo input[type="text"],
+  .grupo-campo select {
+    height: 45px;
+
+    font-size: 13px;
+  }
+
+  .conteudo-dificuldade {
+    grid-template-columns: 32px minmax(0, 1fr);
+
+    grid-template-rows: auto auto auto;
+
+    min-height: 100px;
+  }
+
+  .conteudo-dificuldade > i {
+    grid-column: 1;
+
+    grid-row: 1 / 4;
+
+    width: 32px;
+
+    font-size: 20px;
+  }
+
+  .conteudo-dificuldade strong {
+    grid-column: 2;
+
+    grid-row: 1;
+  }
+
+  .conteudo-dificuldade small {
+    grid-column: 2;
+
+    grid-row: 2;
+  }
+
+  .tempo-dificuldade {
+    grid-column: 2;
+
+    grid-row: 3;
+
+    margin-top: 4px;
+  }
+
+  .explicacao-dificuldade {
+    gap: 9px;
+
+    padding: 11px 12px;
+  }
+
+  .explicacao-dificuldade span {
+    font-size: 10px;
+  }
+
+  .botao-voltar-config,
+  .botao-iniciar-partida {
+    min-height: 48px;
+
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,1038 @@
+/* =====================================================
+   CONFIGURAÇÕES GERAIS
+===================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+
+  color: #ffffff;
+
+  background: #020d1b;
+
+  position: relative;
+
+  overflow-x: hidden;
+}
+
+/* =====================================================
+   FUNDO PRINCIPAL - IMAGEM DAS DISCIPLINAS
+===================================================== */
+
+body::before {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: -2;
+
+  background: url("../img/fundos/fundo-disciplinas.png") center center / cover
+    no-repeat;
+
+  filter: brightness(0.75) contrast(1.02) saturate(0.92) blur(1.2px);
+
+  transform: scale(1.04);
+}
+
+/* =====================================================
+   CAMADA ESCURA SOBRE O FUNDO
+===================================================== */
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: -1;
+
+  background:
+    linear-gradient(rgba(2, 8, 16, 0.55), rgba(2, 8, 16, 0.55)),
+    radial-gradient(
+      circle at center,
+      rgba(0, 70, 140, 0.1),
+      rgba(0, 0, 0, 0.28)
+    );
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   OVERLAY GLOBAL
+===================================================== */
+
+.overlay {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 120, 255, 0.02),
+    rgba(0, 0, 0, 0.12)
+  );
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   TELA INICIAL DE ÁUDIO
+===================================================== */
+
+.tela-inicial-audio {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(14, 55, 91, 0.96),
+    rgba(1, 8, 18, 0.99)
+  );
+
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+}
+
+.tela-inicial-audio.oculta {
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   CONTEÚDO DA TELA INICIAL
+===================================================== */
+
+.conteudo-inicial-audio {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 32px;
+
+  text-align: center;
+}
+
+/* =====================================================
+   LOGO DA TELA INICIAL
+===================================================== */
+
+.logo-inicial-audio {
+  display: block;
+
+  width: 100%;
+
+  max-width: 520px;
+
+  height: auto;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 10px rgba(255, 183, 0, 0.4))
+    drop-shadow(0 0 30px rgba(255, 183, 0, 0.2));
+}
+
+/* =====================================================
+   BOTÃO INICIAR EXPERIÊNCIA
+===================================================== */
+
+#btnIniciarExperiencia {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  min-width: 300px;
+
+  padding: 18px 32px;
+
+  border: 2px solid #f4b41b;
+
+  border-radius: 10px;
+
+  background: linear-gradient(90deg, #9d5e08, #4d2900);
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  box-shadow:
+    0 0 25px rgba(255, 180, 0, 0.4),
+    inset 0 0 15px rgba(255, 210, 60, 0.12);
+}
+
+#btnIniciarExperiencia i {
+  font-size: 22px;
+
+  color: #ffe071;
+}
+
+#btnIniciarExperiencia:hover {
+  transform: scale(1.04);
+
+  border-color: #ffe071;
+
+  box-shadow:
+    0 0 35px rgba(255, 180, 0, 0.65),
+    inset 0 0 18px rgba(255, 210, 60, 0.16);
+}
+
+#btnIniciarExperiencia:active {
+  transform: scale(0.98);
+}
+
+/* =====================================================
+   PÁGINA PRINCIPAL
+===================================================== */
+
+.pagina-inicial {
+  position: relative;
+
+  z-index: 1;
+
+  width: 100%;
+
+  max-width: 1500px;
+
+  min-height: calc(100vh - 50px);
+
+  margin: 0 auto;
+
+  padding: 30px 4% 40px;
+}
+
+/* =====================================================
+   GRID PRINCIPAL
+===================================================== */
+
+.area-superior,
+.area-cards {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(500px, 1fr)
+    minmax(500px, 1fr);
+
+  gap: 40px;
+}
+
+/* =====================================================
+   ÁREA SUPERIOR
+===================================================== */
+
+.area-superior {
+  align-items: start;
+}
+
+/* =====================================================
+   COLUNA ESQUERDA
+===================================================== */
+
+.coluna-esquerda {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: flex-start;
+}
+
+/* =====================================================
+   COLUNA DIREITA
+===================================================== */
+
+.coluna-direita {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: flex-start;
+}
+
+/* =====================================================
+   LOGO PRINCIPAL
+===================================================== */
+
+.logo-area {
+  width: 100%;
+
+  text-align: center;
+
+  margin: 0;
+}
+
+.logo-principal {
+  display: block;
+
+  width: 100%;
+
+  max-width: 500px;
+
+  height: auto;
+
+  margin: 0 auto 20px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.35))
+    drop-shadow(0 0 24px rgba(255, 183, 0, 0.16));
+}
+
+/* =====================================================
+   SUBTÍTULO / ÁREA
+===================================================== */
+
+.subtitulo {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 4px;
+
+  padding: 10px 22px;
+
+  font-weight: 800;
+
+  font-size: 16px;
+
+  letter-spacing: 1.4px;
+
+  border-radius: 5px;
+
+  background: rgba(7, 25, 44, 0.95);
+
+  border: 1px solid #188cd7;
+
+  color: #ffffff;
+
+  backdrop-filter: blur(6px);
+}
+
+/* =====================================================
+   LINK - ESCOLHA SEU DESAFIO
+===================================================== */
+
+.link-desafio {
+  text-decoration: none;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.link-desafio:visited {
+  color: #ffffff;
+
+  text-decoration: none;
+}
+
+.link-desafio:hover {
+  color: #ffffff;
+
+  text-decoration: none;
+
+  border-color: #42bcff;
+
+  background: rgba(8, 40, 68, 0.97);
+
+  box-shadow: 0 0 18px rgba(0, 151, 255, 0.25);
+
+  transform: translateY(-2px);
+}
+
+.link-desafio:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   ÁREA DEFINIDA
+===================================================== */
+
+.link-desafio.area-definida {
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    90deg,
+    rgba(123, 76, 4, 0.95),
+    rgba(72, 40, 0, 0.95)
+  );
+
+  box-shadow: 0 0 18px rgba(255, 183, 0, 0.18);
+}
+
+.link-desafio.area-definida:hover {
+  border-color: #ffe071;
+
+  background: linear-gradient(
+    90deg,
+    rgba(148, 91, 6, 0.98),
+    rgba(88, 48, 0, 0.98)
+  );
+
+  box-shadow: 0 0 25px rgba(255, 183, 0, 0.32);
+}
+
+.link-desafio.area-definida > i:first-child {
+  color: #ffd34d;
+
+  font-size: 18px;
+}
+
+.check-area {
+  color: #6eff8a;
+
+  font-size: 14px;
+}
+
+/* =====================================================
+   INFORMAÇÕES DA ÁREA SELECIONADA
+===================================================== */
+
+.area-selecionada-info {
+  width: 100%;
+
+  margin-top: 13px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+}
+
+.rotulo-area-selecionada {
+  color: #ffc328;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+}
+
+.trocar-area {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  color: #a9cce4;
+
+  text-decoration: none;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.trocar-area:hover {
+  color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+/* =====================================================
+   DESCRIÇÃO
+===================================================== */
+
+.descricao {
+  width: 100%;
+
+  max-width: 520px;
+
+  margin: 18px auto 0;
+
+  line-height: 1.7;
+
+  color: #d0e1ef;
+
+  font-size: 18px;
+
+  text-align: center;
+
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+/* =====================================================
+   MENU PRINCIPAL
+===================================================== */
+
+.menu-principal {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+/* =====================================================
+   BOTÕES DO MENU
+===================================================== */
+
+.botao-menu {
+  min-height: 68px;
+
+  display: flex;
+
+  align-items: center;
+
+  text-decoration: none;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    90deg,
+    rgba(6, 30, 53, 0.94),
+    rgba(4, 20, 38, 0.94)
+  );
+
+  border: 1px solid #168ee4;
+
+  transition: 0.25s;
+
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    inset 0 0 12px rgba(0, 137, 255, 0.06),
+    0 5px 15px rgba(0, 0, 0, 0.22);
+}
+
+.botao-menu:hover {
+  transform: translateX(7px);
+
+  border-color: #42bcff;
+
+  background: linear-gradient(
+    90deg,
+    rgba(8, 42, 73, 0.97),
+    rgba(5, 27, 48, 0.97)
+  );
+
+  box-shadow: 0 0 16px rgba(0, 151, 255, 0.3);
+}
+
+/* =====================================================
+   ÍCONES DOS BOTÕES
+===================================================== */
+
+.icone-botao {
+  width: 80px;
+
+  min-height: 68px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  flex-shrink: 0;
+
+  font-size: 29px;
+
+  color: #52baff;
+
+  border-right: 1px solid rgba(60, 168, 255, 0.2);
+}
+
+/* =====================================================
+   TEXTOS DOS BOTÕES
+===================================================== */
+
+.texto-botao {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 10px 20px;
+}
+
+.texto-botao strong {
+  font-size: 17px;
+
+  letter-spacing: 0.4px;
+}
+
+.texto-botao span {
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: #b8cada;
+}
+
+/* =====================================================
+   BOTÃO JOGAR
+===================================================== */
+
+.botao-jogar {
+  min-height: 82px;
+
+  border: 2px solid #f4b41b;
+
+  background: linear-gradient(
+    90deg,
+    rgba(157, 94, 8, 0.96),
+    rgba(77, 41, 0, 0.96)
+  );
+
+  box-shadow:
+    0 0 22px rgba(255, 167, 0, 0.35),
+    inset 0 0 18px rgba(255, 211, 77, 0.15);
+}
+
+.botao-jogar:hover {
+  border-color: #ffe071;
+
+  background: linear-gradient(
+    90deg,
+    rgba(181, 111, 11, 0.98),
+    rgba(97, 52, 0, 0.98)
+  );
+
+  box-shadow: 0 0 30px rgba(255, 180, 0, 0.65);
+}
+
+.botao-jogar .icone-botao {
+  min-height: 82px;
+
+  color: #ffe071;
+
+  font-size: 35px;
+}
+
+.botao-jogar .texto-botao strong {
+  font-size: 22px;
+
+  color: #ffffff;
+}
+
+/* =====================================================
+   ÁREA DOS CARDS
+===================================================== */
+
+.area-cards {
+  margin-top: 30px;
+
+  align-items: stretch;
+}
+
+/* =====================================================
+   ESTILO GERAL DOS CARDS
+===================================================== */
+
+.card-destaque,
+.card-desafio {
+  width: 100%;
+
+  min-height: 150px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(6, 24, 44, 0.94),
+    rgba(3, 13, 27, 0.94)
+  );
+
+  border-radius: 12px;
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* =====================================================
+   PRÊMIO MÁXIMO
+===================================================== */
+
+.card-destaque {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 24px 28px;
+
+  border: 1px solid #d79311;
+
+  box-shadow:
+    0 0 30px rgba(255, 166, 0, 0.17),
+    0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.card-destaque .rotulo {
+  display: block;
+
+  font-size: 13px;
+
+  letter-spacing: 2px;
+
+  color: #d7e3ee;
+}
+
+.card-destaque h2 {
+  margin: 10px 0;
+
+  font-size: 36px;
+
+  color: #ffc328;
+
+  text-shadow: 0 0 18px rgba(255, 180, 0, 0.4);
+}
+
+.card-destaque p {
+  color: #c2d2df;
+
+  font-size: 14px;
+}
+
+/* =====================================================
+   DESAFIO FINAL
+===================================================== */
+
+.card-desafio {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 20px;
+
+  padding: 24px 28px;
+
+  border: 1px solid #eb9c18;
+
+  box-shadow:
+    0 0 20px rgba(255, 166, 0, 0.12),
+    0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.card-desafio i {
+  font-size: 34px;
+
+  color: #ffc328;
+
+  flex-shrink: 0;
+}
+
+.card-desafio div {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+}
+
+.card-desafio span {
+  color: #ffc328;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
+
+.card-desafio strong {
+  margin-top: 5px;
+
+  font-size: 18px;
+
+  color: #ffffff;
+}
+
+/* =====================================================
+   RODAPÉ
+===================================================== */
+
+footer {
+  position: relative;
+
+  z-index: 1;
+
+  min-height: 50px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 10px 20px;
+
+  color: #9aabba;
+
+  font-size: 12px;
+
+  text-align: center;
+
+  border-top: 1px solid rgba(53, 136, 197, 0.16);
+
+  background: rgba(2, 8, 16, 0.35);
+
+  backdrop-filter: blur(3px);
+}
+
+/* =====================================================
+   RESPONSIVO - TABLET
+===================================================== */
+
+@media (max-width: 1150px) {
+  .pagina-inicial {
+    max-width: 850px;
+
+    padding: 30px 30px 40px;
+  }
+
+  .area-superior,
+  .area-cards {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+  .coluna-esquerda,
+  .coluna-direita {
+    width: 100%;
+  }
+
+  .logo-principal {
+    max-width: 440px;
+  }
+
+  .logo-inicial-audio {
+    max-width: 440px;
+  }
+
+  .descricao {
+    max-width: 520px;
+
+    font-size: 17px;
+  }
+
+  .area-cards {
+    margin-top: 25px;
+  }
+}
+
+/* =====================================================
+   RESPONSIVO - CELULAR
+===================================================== */
+
+@media (max-width: 700px) {
+  .pagina-inicial {
+    padding: 25px 16px 35px;
+  }
+
+  .logo-principal {
+    max-width: 340px;
+  }
+
+  .logo-inicial-audio {
+    max-width: 360px;
+  }
+
+  .conteudo-inicial-audio {
+    gap: 25px;
+  }
+
+  .subtitulo {
+    max-width: 100%;
+
+    padding: 9px 14px;
+
+    font-size: 13px;
+
+    letter-spacing: 0.8px;
+  }
+
+  .link-desafio.area-definida {
+    flex-wrap: wrap;
+  }
+
+  .descricao {
+    max-width: 360px;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+  }
+
+  .card-destaque,
+  .card-desafio {
+    min-height: 135px;
+  }
+
+  .card-destaque h2 {
+    font-size: 31px;
+  }
+
+  .card-desafio {
+    justify-content: flex-start;
+
+    padding: 22px;
+  }
+
+  .icone-botao {
+    width: 65px;
+  }
+
+  .texto-botao {
+    padding-left: 14px;
+  }
+
+  #btnIniciarExperiencia {
+    min-width: 240px;
+
+    padding: 16px 24px;
+
+    font-size: 17px;
+  }
+}
+
+/* =====================================================
+   TELAS MUITO PEQUENAS
+===================================================== */
+
+@media (max-width: 420px) {
+  .logo-principal {
+    max-width: 290px;
+  }
+
+  .logo-inicial-audio {
+    max-width: 290px;
+  }
+
+  .subtitulo {
+    font-size: 12px;
+
+    padding: 8px 11px;
+  }
+
+  .descricao {
+    font-size: 14px;
+  }
+
+  .card-destaque h2 {
+    font-size: 27px;
+  }
+
+  .card-desafio strong {
+    font-size: 15px;
+  }
+
+  .texto-botao strong {
+    font-size: 15px;
+  }
+
+  .texto-botao span {
+    font-size: 11px;
+  }
+
+  #btnIniciarExperiencia {
+    min-width: 210px;
+
+    padding: 14px 20px;
+
+    font-size: 15px;
+  }
+}

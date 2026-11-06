@@ -1,0 +1,550 @@
+/* =====================================================
+   PÁGINA - SELEÇÃO DE ÁREAS
+===================================================== */
+
+.pagina-areas {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 1250px;
+
+  min-height: calc(100vh - 50px);
+
+  margin: 0 auto;
+
+  padding: 30px 40px 50px;
+}
+
+/* =====================================================
+   CABEÇALHO DA PÁGINA
+===================================================== */
+
+.cabecalho-areas {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  margin-bottom: 35px;
+}
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo-areas {
+  display: block;
+
+  width: 100%;
+  max-width: 280px;
+
+  height: auto;
+
+  margin: 0 auto 18px;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.35))
+    drop-shadow(0 0 20px rgba(255, 183, 0, 0.14));
+}
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.cabecalho-areas h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.8px;
+
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* =====================================================
+   DESCRIÇÃO
+===================================================== */
+
+.cabecalho-areas p {
+  width: 100%;
+  max-width: 620px;
+
+  margin-top: 10px;
+
+  color: #c5d6e5;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* =====================================================
+   GRADE DE ÁREAS
+===================================================== */
+
+.grade-areas {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+/* =====================================================
+   CARD DE ÁREA
+===================================================== */
+
+.card-area {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 120px;
+
+  display: grid;
+
+  grid-template-columns: 90px minmax(0, 1fr) 45px;
+
+  align-items: stretch;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  overflow: hidden;
+
+  border: 1px solid #168ee4;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(5, 27, 49, 0.96),
+    rgba(2, 13, 26, 0.96)
+  );
+
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.25),
+    inset 0 0 12px rgba(0, 130, 255, 0.04);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+/* =====================================================
+   CARD VISITADO
+===================================================== */
+
+.card-area:visited {
+  color: #ffffff;
+
+  text-decoration: none;
+}
+
+/* =====================================================
+   CARD HOVER
+===================================================== */
+
+.card-area:hover {
+  transform: translateY(-4px);
+
+  border-color: #ffc328;
+
+  background: linear-gradient(
+    135deg,
+    rgba(8, 40, 69, 0.98),
+    rgba(3, 20, 38, 0.98)
+  );
+
+  box-shadow:
+    0 0 22px rgba(255, 183, 0, 0.15),
+    0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================================
+   CARD ATIVO
+===================================================== */
+
+.card-area:active {
+  transform: translateY(-1px);
+}
+
+/* =====================================================
+   ÍCONE DA ÁREA
+===================================================== */
+
+.icone-area {
+  width: 90px;
+
+  min-height: 120px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+
+  color: #4db9ff;
+
+  background: rgba(0, 93, 160, 0.1);
+
+  border-right: 1px solid rgba(60, 168, 255, 0.18);
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease;
+}
+
+.card-area:hover .icone-area {
+  color: #ffc328;
+
+  background: rgba(255, 183, 0, 0.05);
+}
+
+/* =====================================================
+   CONTEÚDO DA ÁREA
+===================================================== */
+
+.conteudo-area {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 18px 20px;
+}
+
+.conteudo-area h2 {
+  margin: 0 0 7px;
+
+  color: #ffffff;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.conteudo-area p {
+  margin: 0;
+
+  color: #b9cad9;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   SETA
+===================================================== */
+
+.seta-area {
+  width: 45px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #4db9ff;
+
+  font-size: 17px;
+
+  transition:
+    transform 0.25s ease,
+    color 0.25s ease;
+}
+
+.card-area:hover .seta-area {
+  color: #ffc328;
+
+  transform: translateX(3px);
+}
+
+/* =====================================================
+   BOTÃO VOLTAR
+===================================================== */
+
+.area-voltar {
+  width: 100%;
+
+  margin-top: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.botao-voltar {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 11px 20px;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.7px;
+
+  border: 1px solid #168ee4;
+
+  border-radius: 7px;
+
+  background: rgba(4, 24, 43, 0.92);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.botao-voltar:visited {
+  color: #ffffff;
+
+  text-decoration: none;
+}
+
+.botao-voltar:hover {
+  color: #ffc328;
+
+  border-color: #ffc328;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 0 15px rgba(255, 183, 0, 0.12);
+}
+
+.botao-voltar:active {
+  transform: translateY(0);
+}
+
+/* =====================================================
+   TABLETS
+===================================================== */
+
+@media (max-width: 950px) {
+  .pagina-areas {
+    max-width: 750px;
+
+    padding: 30px 25px 45px;
+  }
+
+  .grade-areas {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .logo-areas {
+    max-width: 240px;
+  }
+}
+
+/* =====================================================
+   CELULARES
+===================================================== */
+
+@media (max-width: 600px) {
+  .pagina-areas {
+    width: 100%;
+
+    min-height: calc(100vh - 50px);
+
+    padding: 22px 14px 35px;
+  }
+
+  /* CABEÇALHO */
+
+  .cabecalho-areas {
+    margin-bottom: 25px;
+  }
+
+  /* LOGO */
+
+  .logo-areas {
+    width: auto;
+
+    max-width: 190px;
+
+    max-height: 180px;
+
+    margin-bottom: 15px;
+  }
+
+  /* TÍTULO */
+
+  .cabecalho-areas h1 {
+    font-size: 22px;
+
+    letter-spacing: 1.2px;
+  }
+
+  /* DESCRIÇÃO */
+
+  .cabecalho-areas p {
+    max-width: 380px;
+
+    margin-top: 8px;
+
+    padding: 0 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+  }
+
+  /* GRADE */
+
+  .grade-areas {
+    grid-template-columns: 1fr;
+
+    gap: 11px;
+  }
+
+  /* CARD */
+
+  .card-area {
+    min-height: 95px;
+
+    grid-template-columns: 65px minmax(0, 1fr) 30px;
+
+    border-radius: 8px;
+  }
+
+  /* ÍCONE */
+
+  .icone-area {
+    width: 65px;
+
+    min-height: 95px;
+
+    font-size: 25px;
+  }
+
+  /* CONTEÚDO */
+
+  .conteudo-area {
+    padding: 13px 12px;
+  }
+
+  .conteudo-area h2 {
+    margin-bottom: 4px;
+
+    font-size: 15px;
+
+    line-height: 1.2;
+  }
+
+  .conteudo-area p {
+    font-size: 11px;
+
+    line-height: 1.4;
+  }
+
+  /* SETA */
+
+  .seta-area {
+    width: 30px;
+
+    font-size: 14px;
+  }
+
+  /* VOLTAR */
+
+  .area-voltar {
+    margin-top: 24px;
+  }
+
+  .botao-voltar {
+    padding: 10px 16px;
+
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   CELULARES PEQUENOS
+===================================================== */
+
+@media (max-width: 420px) {
+  .pagina-areas {
+    padding: 18px 10px 30px;
+  }
+
+  .logo-areas {
+    max-width: 165px;
+
+    max-height: 160px;
+  }
+
+  .cabecalho-areas h1 {
+    font-size: 19px;
+  }
+
+  .cabecalho-areas p {
+    font-size: 12px;
+  }
+
+  .card-area {
+    grid-template-columns: 58px minmax(0, 1fr) 27px;
+  }
+
+  .icone-area {
+    width: 58px;
+
+    font-size: 22px;
+  }
+
+  .conteudo-area {
+    padding: 11px 10px;
+  }
+
+  .conteudo-area h2 {
+    font-size: 14px;
+  }
+
+  .conteudo-area p {
+    font-size: 10.5px;
+  }
+
+  .seta-area {
+    width: 27px;
+  }
+}
