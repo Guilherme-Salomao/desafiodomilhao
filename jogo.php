@@ -126,6 +126,17 @@ if ($dificuldadePartida === 'dificil') {
         'dificil';
 }
 
+/*
+ * A sétima posição da escada equivale a R$ 100.000.
+ * Deste prêmio em diante, a partida sempre utiliza
+ * questões difíceis, independentemente do nível inicial.
+ */
+if ($numeroPergunta >= 7) {
+
+    $dificuldade =
+        'dificil';
+}
+
 /* =========================================================
    BUSCA PERGUNTA
 ========================================================= */
@@ -133,10 +144,51 @@ if ($dificuldadePartida === 'dificil') {
 $repository =
     new PerguntaRepository();
 
+/*
+ * Evita repetições durante a partida atual e nas dez partidas
+ * anteriores da mesma sessão do jogador.
+ */
+$historicoPartidas =
+    $_SESSION['historico_partidas_perguntas']
+    ?? [];
+
+$idsHistorico = [];
+
+if (is_array($historicoPartidas)) {
+    foreach (array_slice($historicoPartidas, -10) as $perguntasPartida) {
+        if (is_array($perguntasPartida)) {
+            $idsHistorico = array_merge(
+                $idsHistorico,
+                array_map('intval', $perguntasPartida)
+            );
+        }
+    }
+}
+
+$idsPartidaAtual = is_array($partida['perguntas_usadas'] ?? null)
+    ? array_map('intval', $partida['perguntas_usadas'])
+    : [];
+
+$idPerguntaAtual = (int) ($partida['pergunta_atual_id'] ?? 0);
+
+if ($idPerguntaAtual > 0) {
+    $idsPartidaAtual[] = $idPerguntaAtual;
+}
+
+$idsIgnorar = array_values(
+    array_unique(
+        array_filter(
+            array_merge($idsHistorico, $idsPartidaAtual),
+            static fn (int $id): bool => $id > 0
+        )
+    )
+);
+
 $pergunta =
     $repository->buscarParaJogo(
         $areaId,
-        $dificuldade
+        $dificuldade,
+        $idsIgnorar
     );
 
 /* =========================================================

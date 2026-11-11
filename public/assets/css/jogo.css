@@ -406,6 +406,33 @@ body::after {
 
 
 /* =====================================================
+   PARABÉNS / VITÓRIA
+
+   Funciona de duas formas:
+
+   1. Caso o JS adicione a classe .parabens
+   2. Caso exista o ícone de troféu dentro do card
+
+===================================================== */
+
+.game-over-jogo.parabens,
+.game-over-jogo:has(.fa-trophy) {
+  border:
+    1px solid #2ce866;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 92, 38, 0.98),
+      rgba(2, 43, 18, 0.98)
+    );
+
+  box-shadow:
+    0 0 18px rgba(44, 232, 102, 0.22);
+}
+
+
+/* =====================================================
    CABEÇALHO GAME OVER
 ===================================================== */
 
@@ -474,7 +501,53 @@ body::after {
 
 
 /* =====================================================
-   PRÊMIO GAME OVER
+   CABEÇALHO PARABÉNS
+===================================================== */
+
+.game-over-jogo.parabens
+.game-over-cabecalho,
+.game-over-jogo:has(.fa-trophy)
+.game-over-cabecalho {
+  border-bottom:
+    1px solid rgba(130, 255, 156, 0.24);
+}
+
+.game-over-jogo.parabens
+.icone-game-over,
+.game-over-jogo:has(.fa-trophy)
+.icone-game-over {
+  color:
+    #ffffff;
+
+  border:
+    2px solid #52f27d;
+
+  background:
+    rgba(11, 126, 51, 0.78);
+
+  box-shadow:
+    0 0 10px rgba(49, 219, 96, 0.24);
+}
+
+.game-over-jogo.parabens
+.game-over-cabecalho strong,
+.game-over-jogo:has(.fa-trophy)
+.game-over-cabecalho strong {
+  color:
+    #7dff9f;
+}
+
+.game-over-jogo.parabens
+.game-over-cabecalho small,
+.game-over-jogo:has(.fa-trophy)
+.game-over-cabecalho small {
+  color:
+    #d9f7e0;
+}
+
+
+/* =====================================================
+   PRÊMIO
 ===================================================== */
 
 .game-over-premio {
@@ -515,16 +588,53 @@ body::after {
 
 
 /* =====================================================
+   PRÊMIO PARABÉNS
+===================================================== */
+
+.game-over-jogo.parabens
+.game-over-premio span,
+.game-over-jogo:has(.fa-trophy)
+.game-over-premio span {
+  color:
+    #b8e7c2;
+}
+
+.game-over-jogo.parabens
+.game-over-premio strong,
+.game-over-jogo:has(.fa-trophy)
+.game-over-premio strong {
+  color:
+    #ffe168;
+
+  text-shadow:
+    0 0 13px rgba(255, 225, 104, 0.38);
+}
+
+
+/* =====================================================
    SAIR
 ===================================================== */
 
 .botao-sair-jogo {
-  margin-top: auto;
+  margin-top: 8px;
 
-  align-self: center;
+  width: 100%;
+
+  min-height: 46px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  align-self: stretch;
+
+  box-sizing: border-box;
 
   padding:
-    13px 18px;
+    12px 18px;
 
   color: #e2eef4;
 
@@ -1106,6 +1216,10 @@ body::after {
 
 /* =====================================================
    PAINEL AJUDAS
+
+   margin-top:auto faz os cards inferiores ocuparem
+   a parte final da coluna central e terminarem na mesma
+   linha inferior da sidebar.
 ===================================================== */
 
 .painel-ajuda-jogo {
@@ -1132,7 +1246,11 @@ body::after {
 
   gap: 8px;
 
-  margin-top: 12px;
+  margin-top: auto;
+
+  padding-top: 12px;
+
+  box-sizing: border-box;
 }
 
 .painel-ajuda-jogo[hidden] {
@@ -1240,7 +1358,7 @@ body::after {
 
 
 /* =====================================================
-   50/50
+   50/50 / PERGUNTA TROCADA
 ===================================================== */
 
 .numero-historico-ajuda {
@@ -1479,13 +1597,17 @@ body::after {
 
 
 /* =====================================================
-   TROCAR
+   TROCAR PERGUNTA
+
+   O botão antigo é mantido estilizado por compatibilidade,
+   embora na versão atual o card inferior seja apenas
+   histórico da pergunta trocada.
 ===================================================== */
 
 .card-ajuda-detalhe[data-card-ajuda="trocar"]
 .conteudo-card-ajuda {
   justify-content:
-    space-between;
+    flex-start;
 }
 
 .botao-confirmar-troca {
@@ -1749,6 +1871,12 @@ body::after {
 
     grid-auto-rows:
       auto;
+
+    margin-top:
+      12px;
+
+    padding-top:
+      0;
   }
 
   .card-ajuda-detalhe {

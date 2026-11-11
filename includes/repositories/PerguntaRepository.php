@@ -498,6 +498,69 @@ class PerguntaRepository
         }
     }
 
+    /* =====================================================
+       IMPORTA QUESTÕES JÁ VALIDADAS
+    ===================================================== */
+
+    public function importarEmLote(int $usuarioId, array $questoes): int
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $stmtPergunta = $this->pdo->prepare("
+                INSERT INTO perguntas (
+                    area_id, usuario_id, pergunta, dificuldade,
+                    explicacao, imagem, ativo
+                ) VALUES (
+                    :area_id, :usuario_id, :pergunta, :dificuldade,
+                    :explicacao, NULL, :ativo
+                )
+            ");
+
+            $stmtAlternativa = $this->pdo->prepare("
+                INSERT INTO alternativas (
+                    pergunta_id, letra, texto, correta, ordem
+                ) VALUES (
+                    :pergunta_id, :letra, :texto, :correta, :ordem
+                )
+            ");
+
+            $ordens = ['A' => 1, 'B' => 2, 'C' => 3, 'D' => 4];
+
+            foreach ($questoes as $questao) {
+                $stmtPergunta->execute([
+                    ':area_id' => $questao['area_id'],
+                    ':usuario_id' => $usuarioId,
+                    ':pergunta' => $questao['pergunta'],
+                    ':dificuldade' => $questao['dificuldade'],
+                    ':explicacao' => $questao['explicacao'],
+                    ':ativo' => $questao['ativo'],
+                ]);
+
+                $perguntaId = (int) $this->pdo->lastInsertId();
+
+                foreach ($questao['alternativas'] as $letra => $texto) {
+                    $stmtAlternativa->execute([
+                        ':pergunta_id' => $perguntaId,
+                        ':letra' => $letra,
+                        ':texto' => $texto,
+                        ':correta' => $letra === $questao['resposta_correta'] ? 1 : 0,
+                        ':ordem' => $ordens[$letra],
+                    ]);
+                }
+            }
+
+            $this->pdo->commit();
+            return count($questoes);
+        } catch (Throwable $erro) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $erro;
+        }
+    }
+
     public function excluir(int $perguntaId): void
     {
         try {
@@ -532,8 +595,18 @@ class PerguntaRepository
 
     public function buscarParaJogo(
         int $areaId,
-        string $dificuldade
+        string $dificuldade,
+        array $idsIgnorar = []
     ): ?array {
+
+        $idsIgnorar = array_values(
+            array_unique(
+                array_filter(
+                    array_map('intval', $idsIgnorar),
+                    static fn (int $id): bool => $id > 0
+                )
+            )
+        );
 
         $sql = "
             SELECT id, pergunta, explicacao, dificuldade
@@ -541,6 +614,19 @@ class PerguntaRepository
             WHERE area_id = :area_id
               AND dificuldade = :dificuldade
               AND ativo = 1
+        ";
+
+        if ($idsIgnorar !== []) {
+            $marcadores = [];
+
+            foreach ($idsIgnorar as $indice => $id) {
+                $marcadores[] = ':ignorar_' . $indice;
+            }
+
+            $sql .= "\n              AND id NOT IN (" . implode(', ', $marcadores) . ')';
+        }
+
+        $sql .= "
             ORDER BY RAND()
             LIMIT 1
         ";
@@ -548,6 +634,11 @@ class PerguntaRepository
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':area_id', $areaId, PDO::PARAM_INT);
         $stmt->bindValue(':dificuldade', $dificuldade, PDO::PARAM_STR);
+
+        foreach ($idsIgnorar as $indice => $id) {
+            $stmt->bindValue(':ignorar_' . $indice, $id, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         $pergunta = $stmt->fetch();

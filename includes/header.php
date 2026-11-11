@@ -6,6 +6,10 @@
 
     $siteNome = $siteNome ?? 'Desafio do Milhão';
 
+    $urlBaseProjeto = function_exists('urlProjeto')
+    ? urlProjeto()
+    : '/github/desafiodomilhao/public/';
+
     /* =========================================================
    SUBTÍTULO / ÁREA ATUAL
 ========================================================= */
@@ -194,6 +198,10 @@
     ====================================================== -->
 
   <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <script>
+    window.APP_BASE_URL = <?php echo json_encode(rtrim($urlBaseProjeto, '/')); ?>;
+  </script>
 
 
   <!-- =====================================================

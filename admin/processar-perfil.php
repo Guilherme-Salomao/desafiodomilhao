@@ -77,7 +77,14 @@ try {
         ],
         $areas
     );
-    $_SESSION['sucesso_perfil'] = 'Perfil atualizado com sucesso.';
+    $_SESSION['sucesso_pergunta'] = 'Perfil atualizado com sucesso.';
+
+    header(
+        'Location: /github/desafiodomilhao/public/admin/perguntas.php',
+        true,
+        303
+    );
+    exit;
 } catch (Throwable $erro) {
     error_log('[Desafio do Milhão - Perfil] ' . $erro->getMessage());
     $_SESSION['erro_perfil'] = 'Não foi possível atualizar o perfil. Verifique as áreas selecionadas.';

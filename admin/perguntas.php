@@ -169,7 +169,7 @@
     }
     }
 
-    $itensPorPagina = 20;
+    $itensPorPagina = 24;
 
     $paginaRecebida =
     filter_input(
@@ -480,10 +480,17 @@
 
     </div>
 
-    <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php" class="botao-nova-pergunta">
-      <i class="fa-solid fa-plus"></i>
-      CADASTRAR NOVA QUESTÃO
-    </a>
+    <div class="acoes-questoes-banco">
+      <a href="/github/desafiodomilhao/public/admin/importar-perguntas.php" class="botao-importar-perguntas">
+        <i class="fa-solid fa-file-import"></i>
+        IMPORTAR PLANILHA
+      </a>
+
+      <a href="/github/desafiodomilhao/public/admin/pergunta-cadastrar.php" class="botao-nova-pergunta">
+        <i class="fa-solid fa-plus"></i>
+        CADASTRAR NOVA QUESTÃO
+      </a>
+    </div>
 
   </section>
 
@@ -932,6 +939,14 @@
     <?php endif; ?>
 
   </section>
+
+  <?php if ($totalPerguntasFiltradas > 0): ?>
+  <p class="resumo-paginacao-questoes">
+    Exibindo <strong><?php echo $offset + 1; ?></strong>–<strong><?php echo min($offset + $itensPorPagina, $totalPerguntasFiltradas); ?></strong>
+    de <strong><?php echo $totalPerguntasFiltradas; ?></strong> questões
+    <span>• Página <?php echo $paginaAtual; ?> de <?php echo $totalPaginas; ?></span>
+  </p>
+  <?php endif; ?>
 
   <?php if ($totalPaginas > 1): ?>
 

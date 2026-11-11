@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
             ".conteudo-pergunta-jogo h1"
         );
 
+    const cartaoPergunta =
+        document.querySelector(
+            ".cartao-pergunta-jogo"
+        );
+
     const contadorPergunta =
         document.querySelector(
             ".contador-pergunta"
@@ -61,6 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const chaveHistorico =
         "desafioMilhaoHistoricoAjudas";
+
+    const chaveEstadoPartida =
+        "desafioMilhaoEstadoPartida";
 
 
     /* =====================================================
@@ -292,6 +300,224 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    /* =====================================================
+       ESTADO PERSISTENTE DA PARTIDA
+    ===================================================== */
+
+    function salvarEstadoPartida(
+        estado
+    ) {
+
+        try {
+
+            sessionStorage.setItem(
+                chaveEstadoPartida,
+                JSON.stringify(
+                    estado
+                )
+            );
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao salvar estado da partida:",
+                erro
+            );
+        }
+    }
+
+
+    function carregarEstadoPartida() {
+
+        try {
+
+            const dados =
+                sessionStorage.getItem(
+                    chaveEstadoPartida
+                );
+
+            if (!dados) {
+                return null;
+            }
+
+            const estado =
+                JSON.parse(dados);
+
+            return (
+                estado &&
+                typeof estado === "object"
+            )
+                ? estado
+                : null;
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao recuperar estado da partida:",
+                erro
+            );
+
+            return null;
+        }
+    }
+
+
+    function limparEstadoPartida() {
+
+        sessionStorage.removeItem(
+            chaveEstadoPartida
+        );
+    }
+
+
+    /* =====================================================
+       SNAPSHOT DA PERGUNTA FINAL
+    ===================================================== */
+
+    function capturarPerguntaAtual() {
+
+        return {
+
+            contador:
+                contadorPergunta
+                    ? contadorPergunta.innerHTML
+                    : "",
+
+            cartao:
+                cartaoPergunta
+                    ? cartaoPergunta.innerHTML
+                    : "",
+
+            alternativas:
+                alternativas
+                    ? alternativas.innerHTML
+                    : "",
+
+            correta:
+                alternativas
+                    ? alternativas.dataset.correta || ""
+                    : "",
+
+            resultado:
+                resultado
+                    ? resultado.innerHTML
+                    : "",
+
+            resultadoClasse:
+                resultado
+                    ? resultado.className
+                    : "resultado-jogo",
+
+            resultadoOculto:
+                resultado
+                    ? resultado.hidden
+                    : true,
+
+            cronometro:
+                cronometro
+                    ? cronometro.textContent
+                    : "0"
+
+        };
+    }
+
+
+    function restaurarPerguntaCongelada(
+        snapshot
+    ) {
+
+        if (
+            !snapshot ||
+            typeof snapshot !== "object"
+        ) {
+            return;
+        }
+
+
+        /* =================================================
+           CONTADOR
+        ================================================= */
+
+        if (
+            contadorPergunta &&
+            snapshot.contador !== undefined
+        ) {
+
+            contadorPergunta.innerHTML =
+                snapshot.contador;
+        }
+
+
+        /* =================================================
+           PERGUNTA
+        ================================================= */
+
+        if (
+            cartaoPergunta &&
+            snapshot.cartao
+        ) {
+
+            cartaoPergunta.innerHTML =
+                snapshot.cartao;
+        }
+
+
+        /* =================================================
+           ALTERNATIVAS
+        ================================================= */
+
+        if (
+            alternativas &&
+            snapshot.alternativas
+        ) {
+
+            alternativas.innerHTML =
+                snapshot.alternativas;
+
+            alternativas.dataset.correta =
+                snapshot.correta || "";
+        }
+
+
+        /* =================================================
+           RESULTADO
+        ================================================= */
+
+        if (
+            resultado &&
+            snapshot.resultado !== undefined
+        ) {
+
+            resultado.innerHTML =
+                snapshot.resultado;
+
+            resultado.className =
+                snapshot.resultadoClasse ||
+                "resultado-jogo";
+
+            resultado.hidden =
+                Boolean(
+                    snapshot.resultadoOculto
+                );
+        }
+
+
+        /* =================================================
+           CRONÔMETRO
+        ================================================= */
+
+        if (cronometro) {
+
+            cronometro.textContent =
+                snapshot.cronometro || "0";
+        }
+    }
+
+
+    /* =====================================================
+       HISTÓRICO DAS AJUDAS
+    ===================================================== */
+
     function salvarAjuda(
         registro
     ) {
@@ -419,13 +645,22 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            "/github/desafiodomilhao/public/proxima-pergunta.php";
+            (
+                window.APP_BASE_URL ||
+                "/github/desafiodomilhao/public"
+            ) +
+            "/proxima-pergunta.php";
 
-        /*
-         * Mantém o título JOGAR.
-         *
-         * Altera apenas a descrição.
-         */
+        const titulo =
+            botaoJogar.querySelector(
+                ".texto-menu-jogo strong"
+            );
+
+        if (titulo) {
+
+            titulo.textContent =
+                "PRÓXIMA PERGUNTA";
+        }
 
         const descricao =
             botaoJogar.querySelector(
@@ -441,7 +676,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       NOVA PARTIDA APÓS GAME OVER
+       NOVA PARTIDA
     ===================================================== */
 
     function liberarJogarNovaPartida() {
@@ -463,10 +698,25 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            "/github/desafiodomilhao/public/configurar-partida.php?modo=individual";
+            (
+                window.APP_BASE_URL ||
+                "/github/desafiodomilhao/public"
+            ) +
+            "/configurar-partida.php?modo=individual";
 
         botaoJogar.dataset.novaPartida =
             "true";
+
+        const titulo =
+            botaoJogar.querySelector(
+                ".texto-menu-jogo strong"
+            );
+
+        if (titulo) {
+
+            titulo.textContent =
+                "NOVA PARTIDA";
+        }
 
         const descricao =
             botaoJogar.querySelector(
@@ -504,10 +754,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Nova partida:
-                     * limpa ajudas da anterior.
-                     */
+                    /* =========================================
+                       NOVA PARTIDA
+                    ========================================= */
 
                     if (
                         link.dataset.novaPartida ===
@@ -516,14 +765,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         limparHistorico();
 
+                        limparEstadoPartida();
+
                         return;
                     }
 
 
-                    /*
-                     * Próxima pergunta:
-                     * NÃO limpa as ajudas.
-                     */
+                    /* =========================================
+                       PRÓXIMA PERGUNTA
+                    ========================================= */
 
                     if (
                         aguardandoProxima &&
@@ -534,15 +784,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Após GAME OVER,
-                     * outros menus podem limpar
-                     * os dados temporários.
-                     */
+                    /* =========================================
+                       SAIU DO ENCERRAMENTO
+                    ========================================= */
 
                     if (partidaEncerrada) {
 
                         limparHistorico();
+
+                        limparEstadoPartida();
                     }
                 }
             );
@@ -551,12 +801,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       GAME OVER
+       ENCERRAMENTO DA PARTIDA
     ===================================================== */
 
-    function criarGameOver(
+    function criarEncerramento(
         valorPremio,
-        mensagem
+        mensagem,
+        sucesso = false
     ) {
 
         if (!menuLateral) {
@@ -578,27 +829,51 @@ document.addEventListener("DOMContentLoaded", function () {
             painel.id =
                 "gameOverJogo";
 
-            painel.className =
-                "game-over-jogo";
-
             menuLateral.insertAdjacentElement(
                 "afterend",
                 painel
             );
         }
 
+
+        painel.className =
+            sucesso
+                ? "game-over-jogo parabens"
+                : "game-over-jogo";
+
+
+        const titulo =
+            sucesso
+                ? "PARABÉNS!"
+                : "GAME OVER";
+
+        const icone =
+            sucesso
+                ? "fa-solid fa-trophy"
+                : "fa-solid fa-skull-crossbones";
+
+        const rotuloPremio =
+            sucesso
+                ? "PRÊMIO CONQUISTADO"
+                : "PRÊMIO ACUMULADO";
+
+
         painel.innerHTML =
             '<div class="game-over-cabecalho">' +
 
                 '<span class="icone-game-over">' +
 
-                    '<i class="fa-solid fa-skull-crossbones"></i>' +
+                    '<i class="' +
+                    icone +
+                    '"></i>' +
 
                 '</span>' +
 
                 '<div>' +
 
-                    '<strong>GAME OVER</strong>' +
+                    '<strong>' +
+                    titulo +
+                    '</strong>' +
 
                     '<small>' +
                     escaparHtml(
@@ -612,7 +887,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             '<div class="game-over-premio">' +
 
-                '<span>PRÊMIO ACUMULADO</span>' +
+                '<span>' +
+                rotuloPremio +
+                '</span>' +
 
                 '<strong>' +
                 escaparHtml(
@@ -626,7 +903,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function encerrarPartida(
         valorPremio,
-        mensagem
+        mensagem,
+        sucesso = false
     ) {
 
         partidaEncerrada =
@@ -654,27 +932,138 @@ document.addEventListener("DOMContentLoaded", function () {
 
         desabilitarAjudas();
 
-
-        /*
-         * GAME OVER:
-         * libera menus.
-         */
-
         liberarTodosMenu();
-
-
-        /*
-         * JOGAR passa a ser
-         * nova partida.
-         */
 
         liberarJogarNovaPartida();
 
 
-        criarGameOver(
+        /* =================================================
+           CAPTURA A PERGUNTA EXATAMENTE COMO ESTÁ
+        ================================================= */
+
+        const snapshot =
+            capturarPerguntaAtual();
+
+
+        /* =================================================
+           SALVA O ESTADO COMPLETO
+        ================================================= */
+
+        salvarEstadoPartida({
+
+            encerrada:
+                true,
+
+            sucesso:
+                Boolean(
+                    sucesso
+                ),
+
+            valorPremio:
+                valorPremio,
+
+            mensagem:
+                mensagem,
+
+            pergunta:
+                snapshot
+
+        });
+
+
+        criarEncerramento(
             valorPremio,
-            mensagem
+            mensagem,
+            sucesso
         );
+    }
+
+
+    /* =====================================================
+       RESTAURA PARTIDA ENCERRADA
+    ===================================================== */
+
+    function restaurarEstadoPartida() {
+
+        const estado =
+            carregarEstadoPartida();
+
+        if (
+            !estado ||
+            estado.encerrada !== true
+        ) {
+
+            return false;
+        }
+
+
+        /* =================================================
+           BLOQUEIA A PARTIDA
+        ================================================= */
+
+        partidaEncerrada =
+            true;
+
+        respondida =
+            true;
+
+        aguardandoProxima =
+            false;
+
+
+        /* =================================================
+           RESTAURA A PERGUNTA QUE TERMINOU A PARTIDA
+
+           O PHP pode ter carregado outra pergunta,
+           mas ela é imediatamente substituída pela
+           pergunta congelada.
+        ================================================= */
+
+        if (estado.pergunta) {
+
+            restaurarPerguntaCongelada(
+                estado.pergunta
+            );
+        }
+
+
+        /* =================================================
+           BLOQUEIA ALTERNATIVAS
+        ================================================= */
+
+        bloquearAlternativas();
+
+        desabilitarAjudas();
+
+
+        /* =================================================
+           MENUS
+        ================================================= */
+
+        liberarTodosMenu();
+
+        liberarJogarNovaPartida();
+
+
+        /* =================================================
+           CARD FINAL
+        ================================================= */
+
+        criarEncerramento(
+
+            estado.valorPremio ||
+            "R$ 0",
+
+            estado.mensagem ||
+            "Partida encerrada.",
+
+            Boolean(
+                estado.sucesso
+            )
+        );
+
+
+        return true;
     }
 
 
@@ -1119,7 +1508,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const card =
             criarCardAjuda(
                 "trocar",
-                "Trocar Pergunta",
+                "Pergunta Trocada",
                 "fa-solid fa-arrows-rotate"
             );
 
@@ -1132,52 +1521,111 @@ document.addEventListener("DOMContentLoaded", function () {
                 ".conteudo-card-ajuda"
             );
 
+        let alternativasHtml =
+            "";
+
+        registro.alternativas.forEach(
+            function (alternativa) {
+
+                alternativasHtml +=
+                    '<div class="mini-alternativa">' +
+
+                        '<strong>' +
+                        escaparHtml(
+                            alternativa.letra
+                        ) +
+                        '</strong>' +
+
+                        '<span>' +
+                        escaparHtml(
+                            alternativa.texto
+                        ) +
+                        '</span>' +
+
+                    '</div>';
+            }
+        );
+
         conteudo.innerHTML =
-            '<p>' +
+            '<span class="numero-historico-ajuda">' +
             escaparHtml(
-                registro.mensagem
+                registro.numero
+            ) +
+            '</span>' +
+
+            '<p class="pergunta-historico-ajuda">' +
+            escaparHtml(
+                registro.pergunta
             ) +
             '</p>' +
 
-            '<button type="button" ' +
-            'class="botao-confirmar-troca" ' +
-            'id="btnConfirmarTroca">' +
-
-            'TROCAR PERGUNTA' +
-
-            '</button>';
-
-        const confirmar =
-            conteudo.querySelector(
-                "#btnConfirmarTroca"
-            );
-
-        if (confirmar) {
-
-            confirmar.addEventListener(
-                "click",
-                function () {
-
-                    /*
-                     * Troca sem limpar ajudas.
-                     */
-
-                    window.location.reload();
-                }
-            );
-        }
+            '<div class="mini-alternativas-ajuda">' +
+            alternativasHtml +
+            '</div>';
     }
 
 
     function registrarTrocar() {
+
+        if (
+            !alternativas ||
+            !tituloPergunta
+        ) {
+            return;
+        }
+
+        const lista =
+            [];
+
+        alternativas
+            .querySelectorAll(
+                ".alternativa-jogo"
+            )
+            .forEach(
+                function (opcao) {
+
+                    const texto =
+                        opcao.querySelector(
+                            "span"
+                        );
+
+                    lista.push({
+
+                        letra:
+                            opcao.dataset.letra || "",
+
+                        texto:
+                            texto
+                                ? texto.textContent.trim()
+                                : ""
+
+                    });
+                }
+            );
 
         const registro = {
 
             tipo:
                 "trocar",
 
-            mensagem:
-                "Será exibida uma nova pergunta do mesmo nível de dificuldade."
+            numero:
+                contadorPergunta
+                    ? contadorPergunta
+                        .textContent
+                        .replace(
+                            /\s+/g,
+                            " "
+                        )
+                        .trim()
+                    : "",
+
+            pergunta:
+                tituloPergunta
+                    .textContent
+                    .trim(),
+
+            alternativas:
+                lista
 
         };
 
@@ -1283,6 +1731,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       PRIMEIRO RESTAURA O ESTADO FINAL
+
+       Se houver GAME OVER ou PARABÉNS salvo,
+       substitui imediatamente qualquer pergunta nova
+       que o PHP tenha carregado.
+    ===================================================== */
+
+    restaurarEstadoPartida();
+
+
+    /* =====================================================
        SAIR
     ===================================================== */
 
@@ -1293,6 +1752,8 @@ document.addEventListener("DOMContentLoaded", function () {
             function () {
 
                 limparHistorico();
+
+                limparEstadoPartida();
             }
         );
     }
@@ -1416,6 +1877,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             : ""
                                     );
                             }
+
 
                             const campoExplicacao =
                                 resultado.querySelector(
@@ -1580,7 +2042,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 encerrarPartida(
                                     calcularPremioAtual(),
-                                    "Parabéns! Você concluiu o desafio."
+                                    "Você concluiu o desafio e chegou ao prêmio máximo!",
+                                    true
                                 );
 
                                 return;
@@ -1589,8 +2052,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             /* =================================================
                                AINDA EXISTEM PERGUNTAS
-
-                               LIBERA SOMENTE JOGAR.
                             ================================================= */
 
                             liberarJogarProximaPergunta();
@@ -1724,7 +2185,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const resposta =
                             await fetch(
-                                "/github/desafiodomilhao/public/api/jogo.php",
+
+                                (
+                                    window.APP_BASE_URL ||
+                                    "/github/desafiodomilhao/public"
+                                ) +
+
+                                "/api/jogo.php",
+
                                 {
 
                                     method:
@@ -1854,7 +2322,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         ) {
 
                             registrarTrocar();
+
+                            window.location.reload();
+
+                            return;
                         }
+
 
                     } catch (erro) {
 

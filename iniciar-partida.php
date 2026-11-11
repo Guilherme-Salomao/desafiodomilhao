@@ -531,6 +531,44 @@ if ($dificuldade === 'dificil') {
    SALVA PARTIDA
 ============================================================ */
 
+$partidaAnterior = $_SESSION['partida'] ?? null;
+
+if (is_array($partidaAnterior)) {
+    $perguntasAnteriores = array_map(
+        'intval',
+        is_array($partidaAnterior['perguntas_usadas'] ?? null)
+            ? $partidaAnterior['perguntas_usadas']
+            : []
+    );
+
+    $perguntaAtualAnterior = (int) ($partidaAnterior['pergunta_atual_id'] ?? 0);
+
+    if ($perguntaAtualAnterior > 0) {
+        $perguntasAnteriores[] = $perguntaAtualAnterior;
+    }
+
+    $perguntasAnteriores = array_values(
+        array_unique(
+            array_filter(
+                $perguntasAnteriores,
+                static fn (int $id): bool => $id > 0
+            )
+        )
+    );
+
+    if ($perguntasAnteriores !== []) {
+        $historicoPartidas = $_SESSION['historico_partidas_perguntas'] ?? [];
+        $historicoPartidas = is_array($historicoPartidas) ? $historicoPartidas : [];
+        $historicoPartidas[] = $perguntasAnteriores;
+
+        // Mantém somente as últimas dez partidas desta sessão.
+        $_SESSION['historico_partidas_perguntas'] = array_slice(
+            $historicoPartidas,
+            -10
+        );
+    }
+}
+
 $_SESSION['partida'] =
     $configuracao;
 

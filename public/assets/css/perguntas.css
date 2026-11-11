@@ -6,14 +6,14 @@
   position: relative;
   z-index: 1;
 
-  width: 100%;
-  max-width: 1180px;
+  width: calc(100% - 28px);
+  max-width: none;
 
   min-height: calc(100vh - 50px);
 
   margin: 0 auto;
 
-  padding: 28px 35px 45px;
+  padding: 28px 14px 45px;
 }
 
 /* =====================================================
@@ -121,6 +121,13 @@
   text-decoration: none;
 
   transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.usuario-logado-banco,
+.usuario-logado-banco *,
+.usuario-logado-banco:hover,
+.usuario-logado-banco:hover * {
+  text-decoration: none;
 }
 
 .usuario-logado-banco:hover,
@@ -361,6 +368,24 @@
 
   margin: 27px 0 16px;
 }
+
+.acoes-questoes-banco { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.botao-importar-perguntas { display: inline-flex; align-items: center; gap: 7px; padding: 11px 15px; color: #b8ddf2; font-size: 9px; font-weight: 800; text-decoration: none; border: 1px solid rgba(77,185,255,.48); border-radius: 7px; background: rgba(5,52,83,.42); }
+.cartao-importacao { max-width: 900px; margin: 28px auto; padding: 26px; border: 1px solid rgba(22,142,228,.48); border-radius: 12px; background: rgba(2,18,35,.94); }
+.pagina-importacao .perfil-voltar { display: inline-flex; gap: 8px; color: #9bc7df; font-size: 12px; font-weight: 700; text-decoration: none; }
+.cartao-importacao h1 { margin: 8px 0; color: #fff; font-size: 28px; }
+.cartao-importacao > p { color: #b8ccd8; font-size: 13px; }
+.acoes-importacao { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin: 20px 0; }
+.acoes-importacao a, .form-importacao button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 15px; color: #fff; font-size: 10px; font-weight: 800; text-decoration: none; border: 1px solid #e7a900; border-radius: 7px; background: #805500; cursor: pointer; }
+.acoes-importacao span, .form-importacao small { color: #a9c3d1; font-size: 11px; }
+.areas-importacao { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 14px; border-radius: 8px; background: rgba(3,25,44,.8); color: #cfe2ed; font-size: 11px; }
+.areas-importacao span { padding: 5px 8px; color: #4db9ff; border: 1px solid rgba(77,185,255,.25); border-radius: 999px; }
+.form-importacao { display: grid; gap: 10px; margin-top: 22px; }
+.form-importacao label { color: #dbeaf2; font-size: 12px; font-weight: 700; }
+.form-importacao input { padding: 12px; color: #dbeaf2; border: 1px dashed #168ee4; border-radius: 7px; background: #03182a; }
+.form-importacao button { width: fit-content; margin-top: 8px; }
+.erros-importacao { margin: 18px 0; padding: 14px; color: #ffbebf; border: 1px solid rgba(255,86,86,.45); border-radius: 8px; background: rgba(98,20,27,.32); font-size: 12px; }
+.erros-importacao ul { margin: 8px 0 0; padding-left: 18px; }
 
 .titulo-secao-banco span {
   color: #ffd35a;
@@ -870,9 +895,9 @@
 }
 
 .lista-questoes-nivel {
-  display: flex;
+  display: grid;
 
-  flex-direction: column;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 
   gap: 8px;
 
@@ -905,6 +930,26 @@
   gap: 10px;
 
   margin-top: 22px;
+}
+
+.resumo-paginacao-questoes {
+  margin: 18px 0 -6px;
+
+  color: #a9c3d1;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  text-align: center;
+}
+
+.resumo-paginacao-questoes strong {
+  color: #e9f6ff;
+}
+
+.resumo-paginacao-questoes span {
+  color: #ffd35a;
 }
 
 .paginacao-questoes > a,
@@ -953,6 +998,10 @@
 }
 
 .card-questao-banco {
+  display: flex;
+
+  flex-direction: column;
+
   border: 1px solid rgba(22, 142, 228, 0.34);
 
   border-radius: 10px;
@@ -975,7 +1024,7 @@
 
   gap: 15px;
 
-  padding: 13px 16px;
+  padding: 9px 11px;
 
   border-bottom: 1px solid rgba(22, 142, 228, 0.1);
 }
@@ -1063,15 +1112,17 @@
 ===================================================== */
 
 .conteudo-card-questao {
-  padding: 18px 16px;
+  flex: 1;
+
+  padding: 12px 11px;
 }
 
 .conteudo-card-questao h3 {
-  margin: 0 0 13px;
+  margin: 0 0 10px;
 
   color: #edf5f8;
 
-  font-size: 16px;
+  font-size: 13px;
 
   font-weight: 600;
 
@@ -1083,7 +1134,7 @@
 
   flex-wrap: wrap;
 
-  gap: 15px;
+  gap: 8px;
 }
 
 .metadados-questao span {
@@ -1095,7 +1146,7 @@
 
   color: #abc0cb;
 
-  font-size: 10px;
+  font-size: 9px;
 
   font-weight: 500;
 }
@@ -1113,9 +1164,11 @@
 
   justify-content: flex-end;
 
-  gap: 8px;
+  flex-wrap: wrap;
 
-  padding: 11px 16px;
+  gap: 5px;
+
+  padding: 8px 10px;
 
   border-top: 1px solid rgba(22, 142, 228, 0.1);
 }
@@ -1123,7 +1176,7 @@
 .acao-editar-questao,
 .acao-detalhes-questao,
 .acao-excluir-questao {
-  min-height: 34px;
+  min-height: 29px;
 
   display: inline-flex;
 
@@ -1133,11 +1186,11 @@
 
   gap: 6px;
 
-  padding: 0 12px;
+  padding: 0 8px;
 
   font-family: inherit;
 
-  font-size: 8px;
+  font-size: 7px;
 
   font-weight: 800;
 
@@ -1340,6 +1393,14 @@
 ===================================================== */
 
 @media (max-width: 980px) {
+  .pagina-banco-questoes {
+    width: calc(100% - 24px);
+  }
+
+  .lista-questoes-nivel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .painel-usuario-banco {
     grid-template-columns: 1fr auto;
   }
@@ -1363,9 +1424,21 @@
   }
 }
 
+@media (min-width: 981px) and (max-width: 1400px) {
+  .lista-questoes-nivel {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 650px) {
   .pagina-banco-questoes {
+    width: auto;
+
     padding: 18px 12px 30px;
+  }
+
+  .lista-questoes-nivel {
+    grid-template-columns: 1fr;
   }
 
   .cabecalho-banco h1 {
