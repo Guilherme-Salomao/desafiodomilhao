@@ -1,0 +1,835 @@
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+html {
+    background: #00101e;
+}
+
+body {
+    min-height: 100vh;
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(10, 91, 151, 0.25),
+            transparent 42%
+        ),
+        linear-gradient(
+            180deg,
+            #001a2e 0%,
+            #00101e 100%
+        );
+}
+
+
+/* =====================================================
+   FUNDO
+===================================================== */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: -1;
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0, 146, 255, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(0, 97, 167, 0.10),
+            transparent 35%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   PÁGINA
+===================================================== */
+
+.pagina-tecnico {
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        20px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   CARTÃO
+===================================================== */
+
+.cartao-tecnico {
+    width: 100%;
+
+    max-width: 620px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        #168ee4;
+
+    border-radius:
+        18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(2, 33, 57, 0.98),
+            rgba(0, 18, 33, 0.99)
+        );
+
+    box-shadow:
+        0 0 35px
+        rgba(22, 142, 228, 0.18);
+}
+
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+.cabecalho-tecnico {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding:
+        20px;
+
+    border-bottom:
+        1px solid
+        rgba(22, 142, 228, 0.28);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(10, 77, 125, 0.45),
+            rgba(0, 22, 40, 0.20)
+        );
+}
+
+
+/* =====================================================
+   ÍCONE
+===================================================== */
+
+.icone-cabecalho-tecnico {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        2px solid
+        #39b8ff;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(0, 76, 128, 0.40);
+
+    box-shadow:
+        0 0 12px
+        rgba(57, 184, 255, 0.18);
+}
+
+.icone-tecnico {
+    font-size:
+        25px;
+
+    font-style:
+        normal;
+}
+
+
+/* =====================================================
+   TEXTO CABEÇALHO
+===================================================== */
+
+.texto-cabecalho-tecnico {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.texto-cabecalho-tecnico strong {
+    color:
+        #ffffff;
+
+    font-size:
+        19px;
+
+    font-weight:
+        900;
+
+    line-height:
+        1.15;
+}
+
+.texto-cabecalho-tecnico span {
+    color:
+        #9fd9ff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+}
+
+
+/* =====================================================
+   PERGUNTA
+===================================================== */
+
+.pergunta-tecnico {
+    padding:
+        25px 24px 20px;
+
+    border-bottom:
+        1px solid
+        rgba(22, 142, 228, 0.18);
+}
+
+.rotulo-pergunta-tecnico {
+    display:
+        inline-block;
+
+    margin-bottom:
+        10px;
+
+    padding:
+        5px 9px;
+
+    color:
+        #73caff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    border:
+        1px solid
+        rgba(70, 190, 255, 0.38);
+
+    border-radius:
+        5px;
+
+    background:
+        rgba(0, 93, 155, 0.18);
+}
+
+.pergunta-tecnico h1 {
+    margin: 0;
+
+    color:
+        #ffffff;
+
+    font-size:
+        clamp(
+            22px,
+            5vw,
+            31px
+        );
+
+    line-height:
+        1.25;
+
+    font-weight:
+        800;
+}
+
+
+/* =====================================================
+   FORMULÁRIO
+===================================================== */
+
+.formulario-tecnico {
+    padding:
+        20px 24px 25px;
+}
+
+
+/* =====================================================
+   ALTERNATIVAS
+===================================================== */
+
+.alternativas-tecnico {
+    display: grid;
+
+    gap: 11px;
+}
+
+.alternativa-tecnico {
+    position: relative;
+
+    min-height: 62px;
+
+    display: grid;
+
+    grid-template-columns:
+        44px
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        9px 14px;
+
+    cursor: pointer;
+
+    border:
+        1px solid
+        #166fa8;
+
+    border-radius:
+        10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(3, 49, 82, 0.96),
+            rgba(1, 27, 48, 0.97)
+        );
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.alternativa-tecnico:hover {
+    transform:
+        translateY(-1px);
+
+    border-color:
+        #42bbff;
+
+    box-shadow:
+        0 0 14px
+        rgba(22, 142, 228, 0.13);
+}
+
+
+/* =====================================================
+   RADIO
+===================================================== */
+
+.alternativa-tecnico input {
+    position:
+        absolute;
+
+    opacity:
+        0;
+
+    pointer-events:
+        none;
+}
+
+
+/* =====================================================
+   LETRA
+===================================================== */
+
+.letra-alternativa-tecnico {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items:
+        center;
+
+    color:
+        #ffffff;
+
+    font-size:
+        17px;
+
+    font-weight:
+        900;
+
+    border:
+        2px solid
+        #1c9cec;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(0, 73, 121, 0.45);
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease;
+}
+
+
+/* =====================================================
+   TEXTO ALTERNATIVA
+===================================================== */
+
+.texto-alternativa-tecnico {
+    color:
+        #ffffff;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.35;
+
+    font-weight:
+        600;
+}
+
+
+/* =====================================================
+   SELECIONADA
+===================================================== */
+
+.alternativa-tecnico:has(input:checked) {
+    border-color:
+        #ffd43b;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(112, 74, 4, 0.75),
+            rgba(52, 35, 3, 0.92)
+        );
+
+    box-shadow:
+        0 0 16px
+        rgba(255, 212, 59, 0.15);
+}
+
+.alternativa-tecnico:has(input:checked)
+.letra-alternativa-tecnico {
+    color:
+        #0a1720;
+
+    border-color:
+        #ffd43b;
+
+    background:
+        #ffd43b;
+}
+
+
+/* =====================================================
+   BOTÃO RESPONDER
+===================================================== */
+
+.botao-responder-tecnico {
+    width: 100%;
+
+    min-height:
+        54px;
+
+    margin-top:
+        20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        10px 20px;
+
+    color:
+        #051725;
+
+    font-family:
+        inherit;
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+
+    cursor:
+        pointer;
+
+    border:
+        0;
+
+    border-radius:
+        10px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffd94f,
+            #f2af18
+        );
+
+    box-shadow:
+        0 0 16px
+        rgba(255, 191, 24, 0.18);
+
+    transition:
+        transform 0.18s ease,
+        filter 0.18s ease;
+}
+
+.botao-responder-tecnico:hover {
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.06);
+}
+
+.botao-responder-tecnico:disabled {
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+}
+
+
+/* =====================================================
+   MENSAGEM
+===================================================== */
+
+.mensagem-tecnico {
+    margin:
+        25px;
+
+    padding:
+        28px 20px;
+
+    text-align:
+        center;
+
+    border-radius:
+        13px;
+}
+
+.mensagem-tecnico[hidden] {
+    display:
+        none !important;
+}
+
+
+/* =====================================================
+   ÍCONE MENSAGEM
+===================================================== */
+
+.icone-mensagem-tecnico {
+    width: 62px;
+    height: 62px;
+
+    display: grid;
+
+    place-items:
+        center;
+
+    margin:
+        0 auto 15px;
+
+    font-size:
+        29px;
+
+    font-weight:
+        900;
+
+    border-radius:
+        50%;
+}
+
+
+/* =====================================================
+   SUCESSO
+===================================================== */
+
+.mensagem-tecnico.sucesso {
+    border:
+        1px solid
+        #3ade72;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 73, 35, 0.88),
+            rgba(3, 39, 22, 0.92)
+        );
+}
+
+.mensagem-tecnico.sucesso
+.icone-mensagem-tecnico {
+    color:
+        #062914;
+
+    background:
+        #5cff8c;
+
+    box-shadow:
+        0 0 18px
+        rgba(92, 255, 140, 0.24);
+}
+
+.mensagem-tecnico.sucesso strong {
+    color:
+        #7cff9f;
+}
+
+
+/* =====================================================
+   ERRO / ENCERRADA
+===================================================== */
+
+.mensagem-tecnico.erro {
+    border:
+        1px solid
+        #ff6767;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(88, 18, 26, 0.90),
+            rgba(45, 7, 13, 0.94)
+        );
+}
+
+.mensagem-tecnico.erro
+.icone-mensagem-tecnico {
+    color:
+        #ffffff;
+
+    background:
+        #d94848;
+
+    box-shadow:
+        0 0 18px
+        rgba(255, 77, 77, 0.22);
+}
+
+.mensagem-tecnico.erro strong {
+    color:
+        #ff8d8d;
+}
+
+
+/* =====================================================
+   TEXTO MENSAGEM
+===================================================== */
+
+.mensagem-tecnico strong {
+    display:
+        block;
+
+    margin-bottom:
+        9px;
+
+    font-size:
+        21px;
+
+    font-weight:
+        900;
+}
+
+.mensagem-tecnico p {
+    margin:
+        0;
+
+    color:
+        #ffffff;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.45;
+}
+
+.mensagem-tecnico small {
+    display:
+        block;
+
+    margin-top:
+        6px;
+
+    color:
+        #cce6d5;
+
+    font-size:
+        12px;
+}
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 650px) {
+
+    .pagina-tecnico {
+        align-items:
+            flex-start;
+
+        padding:
+            12px;
+    }
+
+
+    .cartao-tecnico {
+        border-radius:
+            13px;
+    }
+
+
+    .cabecalho-tecnico {
+        padding:
+            16px;
+
+        gap:
+            11px;
+    }
+
+
+    .icone-cabecalho-tecnico {
+        width:
+            44px;
+
+        height:
+            44px;
+    }
+
+
+    .texto-cabecalho-tecnico strong {
+        font-size:
+            16px;
+    }
+
+
+    .texto-cabecalho-tecnico span {
+        font-size:
+            10px;
+    }
+
+
+    .pergunta-tecnico {
+        padding:
+            20px 16px 17px;
+    }
+
+
+    .pergunta-tecnico h1 {
+        font-size:
+            23px;
+    }
+
+
+    .formulario-tecnico {
+        padding:
+            16px;
+    }
+
+
+    .alternativa-tecnico {
+        min-height:
+            58px;
+
+        grid-template-columns:
+            40px
+            minmax(0, 1fr);
+
+        padding:
+            8px 11px;
+    }
+
+
+    .letra-alternativa-tecnico {
+        width:
+            35px;
+
+        height:
+            35px;
+
+        font-size:
+            15px;
+    }
+
+
+    .texto-alternativa-tecnico {
+        font-size:
+            14px;
+    }
+
+
+    .mensagem-tecnico {
+        margin:
+            16px;
+
+        padding:
+            25px 15px;
+    }
+
+}

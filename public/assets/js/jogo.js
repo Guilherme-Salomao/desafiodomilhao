@@ -24,11 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ".conteudo-pergunta-jogo h1"
         );
 
-    const cartaoPergunta =
-        document.querySelector(
-            ".cartao-pergunta-jogo"
-        );
-
     const contadorPergunta =
         document.querySelector(
             ".contador-pergunta"
@@ -61,17 +56,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       URL BASE
+    ===================================================== */
+
+    const baseUrl =
+        window.APP_BASE_URL ||
+        "/github/desafiodomilhao/public";
+
+
+    /* =====================================================
        STORAGE
     ===================================================== */
 
     const chaveHistorico =
         "desafioMilhaoHistoricoAjudas";
-
-    const chaveEstadoPartida =
-        "desafioMilhaoEstadoPartida";
-
-    const chaveTempoPartida =
-        "desafioMilhaoTempoPartida";
 
 
     /* =====================================================
@@ -79,27 +77,21 @@ document.addEventListener("DOMContentLoaded", function () {
     ===================================================== */
 
     let respondida = false;
-
     let partidaEncerrada = false;
-
     let aguardandoProxima = false;
 
     let intervaloCronometro = null;
+    let intervaloTurma = null;
+    let intervaloTecnico = null;
 
-    let inicioQuestaoMs = null;
+    let cronometroPausado = false;
 
-
-    /* =====================================================
-       BASE URL
-    ===================================================== */
-
-    function obterBaseUrl() {
-
-        return (
-            window.APP_BASE_URL ||
-            "/github/desafiodomilhao/public"
-        );
-    }
+    let tempoAtual =
+        cronometro
+            ? Number(
+                cronometro.textContent.trim()
+            )
+            : 0;
 
 
     /* =====================================================
@@ -161,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Number(
                     correspondencia[2]
                 ) || 10
+
         };
     }
 
@@ -216,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
             obterDadosPergunta();
 
         if (dados.atual <= 1) {
-
             return "R$ 0";
         }
 
@@ -224,10 +216,8 @@ document.addEventListener("DOMContentLoaded", function () {
             obterPremios();
 
         return (
-            premios[
-                dados.atual - 1
-            ] ||
-            "R$ 0"
+            premios[dados.atual - 1]
+            || "R$ 0"
         );
     }
 
@@ -241,34 +231,14 @@ document.addEventListener("DOMContentLoaded", function () {
             obterPremios();
 
         return (
-            premios[
-                dados.atual
-            ] ||
-            "R$ 0"
+            premios[dados.atual]
+            || "R$ 0"
         );
     }
 
 
-    function converterPremioParaNumero(
-        valor
-    ) {
-
-        const numero =
-            String(
-                valor ?? ""
-            ).replace(
-                /[^0-9]/g,
-                ""
-            );
-
-        return numero
-            ? Number(numero)
-            : 0;
-    }
-
-
     /* =====================================================
-       HISTÓRICO DAS AJUDAS
+       HISTÓRICO
     ===================================================== */
 
     function carregarHistorico() {
@@ -305,26 +275,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function salvarHistorico(
-        historico
-    ) {
+    function salvarHistorico(historico) {
 
-        try {
-
-            sessionStorage.setItem(
-                chaveHistorico,
-                JSON.stringify(
-                    historico
-                )
-            );
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao salvar histórico:",
-                erro
-            );
-        }
+        sessionStorage.setItem(
+            chaveHistorico,
+            JSON.stringify(
+                historico
+            )
+        );
     }
 
 
@@ -336,9 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function salvarAjuda(
-        registro
-    ) {
+    function salvarAjuda(registro) {
 
         const historico =
             carregarHistorico();
@@ -372,379 +328,277 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function ajudaFoiUtilizada(
-        tipo
-    ) {
+    function ajudaFoiUtilizada(tipo) {
 
         return carregarHistorico()
             .some(
                 function (registro) {
 
                     return (
-                        registro.tipo ===
-                        tipo
+                        registro.tipo === tipo
                     );
                 }
             );
     }
 
 
-    function obterResumoAjudas() {
-
-        const historico =
-            carregarHistorico();
-
-        const tipos =
-            new Set(
-                historico
-                    .map(
-                        function (item) {
-
-                            return item.tipo;
-                        }
-                    )
-                    .filter(Boolean)
-            );
-
-        return {
-
-            quantidade:
-                tipos.size,
-
-            cinquenta:
-                tipos.has(
-                    "cinquenta"
-                ),
-
-            tecnico:
-                tipos.has(
-                    "tecnico"
-                ),
-
-            turma:
-                tipos.has(
-                    "turma"
-                ),
-
-            trocar:
-                tipos.has(
-                    "trocar"
-                )
-        };
-    }
-
-
     /* =====================================================
-       ESTADO PERSISTENTE
+       CRONÔMETRO
     ===================================================== */
 
-    function salvarEstadoPartida(
-        estado
-    ) {
+    function atualizarVisualCronometro() {
 
-        try {
-
-            sessionStorage.setItem(
-                chaveEstadoPartida,
-                JSON.stringify(
-                    estado
-                )
-            );
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao salvar estado da partida:",
-                erro
-            );
-        }
-    }
-
-
-    function carregarEstadoPartida() {
-
-        try {
-
-            const dados =
-                sessionStorage.getItem(
-                    chaveEstadoPartida
-                );
-
-            if (!dados) {
-
-                return null;
-            }
-
-            const estado =
-                JSON.parse(dados);
-
-            return (
-                estado &&
-                typeof estado ===
-                "object"
-            )
-                ? estado
-                : null;
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao recuperar estado:",
-                erro
-            );
-
-            return null;
-        }
-    }
-
-
-    function limparEstadoPartida() {
-
-        sessionStorage.removeItem(
-            chaveEstadoPartida
-        );
-    }
-
-
-    /* =====================================================
-       TEMPO DA PARTIDA
-    ===================================================== */
-
-    function carregarTempoPartida() {
-
-        const valor =
-            Number(
-                sessionStorage.getItem(
-                    chaveTempoPartida
-                ) || 0
-            );
-
-        if (
-            !Number.isFinite(
-                valor
-            )
-        ) {
-
-            return 0;
+        if (!cronometro) {
+            return;
         }
 
-        return Math.max(
-            0,
-            Math.round(valor)
-        );
-    }
-
-
-    function salvarTempoPartida(
-        tempo
-    ) {
-
-        sessionStorage.setItem(
-            chaveTempoPartida,
+        cronometro.textContent =
             String(
-                Math.max(
-                    0,
-                    Math.round(
-                        tempo
-                    )
-                )
-            )
+                tempoAtual
+            );
+
+        cronometro.classList.toggle(
+            "tempo-pausado",
+            cronometroPausado
         );
+
+        cronometro.classList.toggle(
+            "tempo-critico",
+            tempoAtual <= 5
+        );
+
+        cronometro.title =
+            cronometroPausado
+                ? "Tempo pausado. Clique para continuar."
+                : "Clique para pausar o tempo.";
     }
 
 
-    function limparTempoPartida() {
-
-        sessionStorage.removeItem(
-            chaveTempoPartida
-        );
-
-        inicioQuestaoMs =
-            null;
-    }
-
-
-    function iniciarTempoQuestao() {
+    function iniciarCronometro() {
 
         if (
+            !cronometro ||
+            respondida ||
             partidaEncerrada ||
-            respondida
+            tempoAtual <= 0 ||
+            cronometroPausado ||
+            intervaloCronometro
         ) {
-
             return;
         }
 
-        inicioQuestaoMs =
-            Date.now();
+
+        atualizarVisualCronometro();
+
+
+        intervaloCronometro =
+            window.setInterval(
+                function () {
+
+                    if (
+                        cronometroPausado ||
+                        respondida ||
+                        partidaEncerrada
+                    ) {
+                        return;
+                    }
+
+
+                    tempoAtual -= 1;
+
+                    atualizarVisualCronometro();
+
+
+                    if (tempoAtual <= 0) {
+
+                        clearInterval(
+                            intervaloCronometro
+                        );
+
+                        intervaloCronometro =
+                            null;
+
+                        tratarTempoEsgotado();
+                    }
+
+                },
+                1000
+            );
     }
 
 
-    function consolidarTempoQuestao() {
+    function pausarCronometro() {
 
         if (
-            inicioQuestaoMs ===
-            null
+            !cronometro ||
+            respondida ||
+            partidaEncerrada
         ) {
-
-            return carregarTempoPartida();
+            return;
         }
 
-        const agora =
-            Date.now();
+        cronometroPausado = true;
 
-        const decorrido =
-            Math.max(
-                0,
-                agora -
-                inicioQuestaoMs
+
+        if (intervaloCronometro) {
+
+            clearInterval(
+                intervaloCronometro
             );
 
-        const total =
-            carregarTempoPartida() +
-            decorrido;
+            intervaloCronometro = null;
+        }
 
-        salvarTempoPartida(
-            total
-        );
 
-        inicioQuestaoMs =
-            null;
+        atualizarVisualCronometro();
+    }
 
-        return total;
+
+    function continuarCronometro() {
+
+        if (
+            !cronometroPausado ||
+            respondida ||
+            partidaEncerrada ||
+            tempoAtual <= 0
+        ) {
+            return;
+        }
+
+
+        cronometroPausado = false;
+
+        atualizarVisualCronometro();
+
+        iniciarCronometro();
     }
 
 
     /* =====================================================
-       SNAPSHOT DA PERGUNTA FINAL
+       QR GRANDE
     ===================================================== */
 
-    function capturarPerguntaAtual() {
+    function fecharQrGrande() {
 
-        return {
+        const overlay =
+            document.getElementById(
+                "overlayQrTurma"
+            );
 
-            contador:
-                contadorPergunta
-                    ? contadorPergunta.innerHTML
-                    : "",
+        if (overlay) {
+            overlay.remove();
+        }
 
-            cartao:
-                cartaoPergunta
-                    ? cartaoPergunta.innerHTML
-                    : "",
-
-            alternativas:
-                alternativas
-                    ? alternativas.innerHTML
-                    : "",
-
-            correta:
-                alternativas
-                    ? (
-                        alternativas.dataset
-                            .correta || ""
-                    )
-                    : "",
-
-            resultado:
-                resultado
-                    ? resultado.innerHTML
-                    : "",
-
-            resultadoClasse:
-                resultado
-                    ? resultado.className
-                    : "resultado-jogo",
-
-            resultadoOculto:
-                resultado
-                    ? resultado.hidden
-                    : true,
-
-            cronometro:
-                cronometro
-                    ? cronometro.textContent
-                    : "0"
-        };
+        document.body.classList.remove(
+            "qr-turma-aberto"
+        );
     }
 
 
-    function restaurarPerguntaCongelada(
-        snapshot
+    function abrirQrGrande(
+        urlQr,
+        titulo = "CONSULTAR A TURMA"
     ) {
 
-        if (
-            !snapshot ||
-            typeof snapshot !==
-            "object"
-        ) {
-
-            return;
-        }
+        fecharQrGrande();
 
 
-        if (
-            contadorPergunta &&
-            snapshot.contador !==
-            undefined
-        ) {
+        const overlay =
+            document.createElement(
+                "div"
+            );
 
-            contadorPergunta.innerHTML =
-                snapshot.contador;
-        }
+        overlay.id =
+            "overlayQrTurma";
 
-
-        if (
-            cartaoPergunta &&
-            snapshot.cartao
-        ) {
-
-            cartaoPergunta.innerHTML =
-                snapshot.cartao;
-        }
+        overlay.className =
+            "overlay-qr-turma";
 
 
-        if (
-            alternativas &&
-            snapshot.alternativas
-        ) {
+        overlay.innerHTML =
+            '<div class="modal-qr-turma">' +
 
-            alternativas.innerHTML =
-                snapshot.alternativas;
+                '<button ' +
+                    'type="button" ' +
+                    'class="botao-fechar-qr-grande" ' +
+                    'id="btnFecharQrGrande">' +
 
-            alternativas.dataset.correta =
-                snapshot.correta ||
-                "";
-        }
+                    '<i class="fa-solid fa-xmark"></i>' +
+
+                    '<span>FECHAR</span>' +
+
+                '</button>' +
+
+                '<div class="titulo-qr-grande">' +
+
+                    '<i class="fa-solid fa-qrcode"></i>' +
+
+                    '<strong>' +
+                        escaparHtml(titulo) +
+                    '</strong>' +
+
+                '</div>' +
+
+                '<div class="area-qr-grande">' +
+
+                    '<img src="' +
+                    escaparHtml(urlQr) +
+                    '" alt="QR Code">' +
+
+                '</div>' +
+
+                '<p>' +
+                    'Aponte a câmera do celular para responder' +
+                '</p>' +
+
+            '</div>';
 
 
-        if (
-            resultado &&
-            snapshot.resultado !==
-            undefined
-        ) {
+        document.body.appendChild(
+            overlay
+        );
 
-            resultado.innerHTML =
-                snapshot.resultado;
-
-            resultado.className =
-                snapshot.resultadoClasse ||
-                "resultado-jogo";
-
-            resultado.hidden =
-                Boolean(
-                    snapshot
-                        .resultadoOculto
-                );
-        }
+        document.body.classList.add(
+            "qr-turma-aberto"
+        );
 
 
-        if (cronometro) {
+        overlay
+            .querySelector(
+                "#btnFecharQrGrande"
+            )
+            .addEventListener(
+                "click",
+                fecharQrGrande
+            );
 
-            cronometro.textContent =
-                snapshot.cronometro ||
-                "0";
-        }
+
+        overlay.addEventListener(
+            "click",
+            function (evento) {
+
+                if (
+                    evento.target === overlay
+                ) {
+
+                    fecharQrGrande();
+                }
+            }
+        );
     }
+
+
+    document.addEventListener(
+        "keydown",
+        function (evento) {
+
+            if (
+                evento.key === "Escape"
+            ) {
+                fecharQrGrande();
+            }
+        }
+    );
 
 
     /* =====================================================
@@ -798,12 +652,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function liberarJogarProximaPergunta() {
 
         if (!botaoJogar) {
-
             return;
         }
 
-        aguardandoProxima =
-            true;
+        aguardandoProxima = true;
 
         botaoJogar.classList.remove(
             "bloqueado-partida"
@@ -818,8 +670,9 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            obterBaseUrl() +
+            baseUrl +
             "/proxima-pergunta.php";
+
 
         const titulo =
             botaoJogar.querySelector(
@@ -827,20 +680,8 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (titulo) {
-
             titulo.textContent =
                 "PRÓXIMA PERGUNTA";
-        }
-
-        const descricao =
-            botaoJogar.querySelector(
-                ".texto-menu-jogo small"
-            );
-
-        if (descricao) {
-
-            descricao.textContent =
-                "Avançar para a próxima pergunta";
         }
     }
 
@@ -848,7 +689,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function liberarJogarNovaPartida() {
 
         if (!botaoJogar) {
-
             return;
         }
 
@@ -865,11 +705,12 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            obterBaseUrl() +
+            baseUrl +
             "/configurar-partida.php?modo=individual";
 
         botaoJogar.dataset.novaPartida =
             "true";
+
 
         const titulo =
             botaoJogar.querySelector(
@@ -881,23 +722,8 @@ document.addEventListener("DOMContentLoaded", function () {
             titulo.textContent =
                 "NOVA PARTIDA";
         }
-
-        const descricao =
-            botaoJogar.querySelector(
-                ".texto-menu-jogo small"
-            );
-
-        if (descricao) {
-
-            descricao.textContent =
-                "Iniciar uma nova partida";
-        }
     }
 
-
-    /* =====================================================
-       CLIQUES DO MENU
-    ===================================================== */
 
     linksMenu.forEach(
         function (link) {
@@ -919,16 +745,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                     if (
-                        link.dataset
-                            .novaPartida ===
+                        link.dataset.novaPartida ===
                         "true"
                     ) {
 
                         limparHistorico();
-
-                        limparEstadoPartida();
-
-                        limparTempoPartida();
 
                         return;
                     }
@@ -943,15 +764,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    if (
-                        partidaEncerrada
-                    ) {
+                    if (partidaEncerrada) {
 
                         limparHistorico();
-
-                        limparEstadoPartida();
-
-                        limparTempoPartida();
                     }
                 }
             );
@@ -960,510 +775,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       CARD FINAL
-    ===================================================== */
-
-    function criarEncerramento(
-        valorPremio,
-        mensagem,
-        sucesso = false
-    ) {
-
-        if (!menuLateral) {
-
-            return;
-        }
-
-        let painel =
-            document.getElementById(
-                "gameOverJogo"
-            );
-
-        if (!painel) {
-
-            painel =
-                document.createElement(
-                    "section"
-                );
-
-            painel.id =
-                "gameOverJogo";
-
-            menuLateral
-                .insertAdjacentElement(
-                    "afterend",
-                    painel
-                );
-        }
-
-
-        painel.className =
-            sucesso
-                ? "game-over-jogo parabens"
-                : "game-over-jogo";
-
-
-        const titulo =
-            sucesso
-                ? "PARABÉNS!"
-                : "GAME OVER";
-
-        const icone =
-            sucesso
-                ? "fa-solid fa-trophy"
-                : "fa-solid fa-skull-crossbones";
-
-        const rotuloPremio =
-            sucesso
-                ? "PRÊMIO CONQUISTADO"
-                : "PRÊMIO ACUMULADO";
-
-
-        painel.innerHTML =
-            '<div class="game-over-cabecalho">' +
-
-                '<span class="icone-game-over">' +
-
-                    '<i class="' +
-                    icone +
-                    '"></i>' +
-
-                '</span>' +
-
-                '<div>' +
-
-                    '<strong>' +
-                    titulo +
-                    '</strong>' +
-
-                    '<small>' +
-                    escaparHtml(
-                        mensagem
-                    ) +
-                    '</small>' +
-
-                '</div>' +
-
-            '</div>' +
-
-            '<div class="game-over-premio">' +
-
-                '<span>' +
-                rotuloPremio +
-                '</span>' +
-
-                '<strong>' +
-                escaparHtml(
-                    valorPremio
-                ) +
-                '</strong>' +
-
-            '</div>';
-    }
-
-
-    /* =====================================================
-       DADOS PARA O RANKING
-    ===================================================== */
-
-    function montarDadosRanking(
-        sucesso,
-        valorPremio
-    ) {
-
-        const dados =
-            obterDadosPergunta();
-
-        const ajudas =
-            obterResumoAjudas();
-
-        const perguntaFinal =
-            Math.max(
-                1,
-                dados.atual
-            );
-
-        return {
-
-            resultado:
-                sucesso
-                    ? "vencedor"
-                    : "game_over",
-
-            pergunta_final:
-                perguntaFinal,
-
-            perguntas_respondidas:
-                perguntaFinal,
-
-            acertos:
-                sucesso
-                    ? perguntaFinal
-                    : Math.max(
-                        0,
-                        perguntaFinal - 1
-                    ),
-
-            erros:
-                sucesso
-                    ? 0
-                    : 1,
-
-            tempo_total_ms:
-                carregarTempoPartida(),
-
-            ajuda_cinquenta:
-                ajudas.cinquenta
-                    ? 1
-                    : 0,
-
-            ajuda_tecnico:
-                ajudas.tecnico
-                    ? 1
-                    : 0,
-
-            ajuda_turma:
-                ajudas.turma
-                    ? 1
-                    : 0,
-
-            ajuda_trocar:
-                ajudas.trocar
-                    ? 1
-                    : 0,
-
-            premio:
-                converterPremioParaNumero(
-                    valorPremio
-                )
-        };
-    }
-
-
-    /* =====================================================
-       GRAVA RESULTADO
-    ===================================================== */
-
-    async function registrarResultadoRanking(
-        estado
-    ) {
-
-        if (
-            !estado ||
-            estado.rankingRegistrado ===
-            true ||
-            !estado.dadosRanking
-        ) {
-
-            return;
-        }
-
-        try {
-
-            const resposta =
-                await fetch(
-                    obterBaseUrl() +
-                    "/api/resultado.php",
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(
-                                estado.dadosRanking
-                            )
-                    }
-                );
-
-            const retorno =
-                await resposta.json();
-
-
-            if (
-                !resposta.ok ||
-                !retorno.sucesso
-            ) {
-
-                console.error(
-                    "Erro ao gravar ranking:",
-                    retorno
-                );
-
-                return;
-            }
-
-
-            estado.rankingRegistrado =
-                true;
-
-            salvarEstadoPartida(
-                estado
-            );
-
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao registrar ranking:",
-                erro
-            );
-        }
-    }
-
-
-    /* =====================================================
-       BLOQUEAR ALTERNATIVAS / AJUDAS
-    ===================================================== */
-
-    function bloquearAlternativas() {
-
-        if (!alternativas) {
-
-            return;
-        }
-
-        alternativas
-            .querySelectorAll(
-                ".alternativa-jogo"
-            )
-            .forEach(
-                function (opcao) {
-
-                    opcao.disabled =
-                        true;
-                }
-            );
-    }
-
-
-    function desabilitarAjudas() {
-
-        botoesAjuda.forEach(
-            function (botao) {
-
-                botao.disabled =
-                    true;
-            }
-        );
-    }
-
-
-    function restaurarEstadoBotoesAjuda() {
-
-        botoesAjuda.forEach(
-            function (botao) {
-
-                const tipo =
-                    botao.dataset.ajuda;
-
-                if (
-                    ajudaFoiUtilizada(
-                        tipo
-                    )
-                ) {
-
-                    botao.disabled =
-                        true;
-                }
-            }
-        );
-    }
-
-
-    /* =====================================================
-       ENCERRA PARTIDA
-    ===================================================== */
-
-    function encerrarPartida(
-        valorPremio,
-        mensagem,
-        sucesso = false
-    ) {
-
-        partidaEncerrada =
-            true;
-
-        respondida =
-            true;
-
-        aguardandoProxima =
-            false;
-
-
-        if (
-            intervaloCronometro
-        ) {
-
-            clearInterval(
-                intervaloCronometro
-            );
-
-            intervaloCronometro =
-                null;
-        }
-
-
-        consolidarTempoQuestao();
-
-        bloquearAlternativas();
-
-        desabilitarAjudas();
-
-        liberarTodosMenu();
-
-        liberarJogarNovaPartida();
-
-
-        const snapshot =
-            capturarPerguntaAtual();
-
-
-        const dadosRanking =
-            montarDadosRanking(
-                sucesso,
-                valorPremio
-            );
-
-
-        const estadoFinal = {
-
-            encerrada:
-                true,
-
-            sucesso:
-                Boolean(
-                    sucesso
-                ),
-
-            valorPremio:
-                valorPremio,
-
-            mensagem:
-                mensagem,
-
-            pergunta:
-                snapshot,
-
-            dadosRanking:
-                dadosRanking,
-
-            rankingRegistrado:
-                false
-        };
-
-
-        salvarEstadoPartida(
-            estadoFinal
-        );
-
-
-        criarEncerramento(
-            valorPremio,
-            mensagem,
-            sucesso
-        );
-
-
-        registrarResultadoRanking(
-            estadoFinal
-        );
-    }
-
-
-    /* =====================================================
-       RESTAURA PARTIDA ENCERRADA
-    ===================================================== */
-
-    function restaurarEstadoPartida() {
-
-        const estado =
-            carregarEstadoPartida();
-
-        if (
-            !estado ||
-            estado.encerrada !==
-            true
-        ) {
-
-            return false;
-        }
-
-
-        partidaEncerrada =
-            true;
-
-        respondida =
-            true;
-
-        aguardandoProxima =
-            false;
-
-
-        if (
-            estado.pergunta
-        ) {
-
-            restaurarPerguntaCongelada(
-                estado.pergunta
-            );
-        }
-
-
-        bloquearAlternativas();
-
-        desabilitarAjudas();
-
-        liberarTodosMenu();
-
-        liberarJogarNovaPartida();
-
-
-        criarEncerramento(
-            estado.valorPremio ||
-            "R$ 0",
-
-            estado.mensagem ||
-            "Partida encerrada.",
-
-            Boolean(
-                estado.sucesso
-            )
-        );
-
-
-        /*
-         * Se a gravação falhou antes
-         * do F5, tenta novamente.
-         *
-         * O partida_token UNIQUE no banco
-         * impede duplicidade.
-         */
-
-        if (
-            estado.dadosRanking &&
-            estado.rankingRegistrado !==
-            true
-        ) {
-
-            registrarResultadoRanking(
-                estado
-            );
-        }
-
-
-        return true;
-    }
-
-
-    /* =====================================================
-       CARDS DAS AJUDAS
+       CARD AJUDA
     ===================================================== */
 
     function criarCardAjuda(
@@ -1473,12 +785,12 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         if (!painelAjuda) {
-
             return null;
         }
 
-        painelAjuda.hidden =
-            false;
+
+        painelAjuda.hidden = false;
+
 
         let card =
             painelAjuda.querySelector(
@@ -1486,6 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 tipo +
                 '"]'
             );
+
 
         if (!card) {
 
@@ -1518,9 +831,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 '</span>' +
 
                 '<strong>' +
-                escaparHtml(
-                    titulo
-                ) +
+                    escaparHtml(titulo) +
                 '</strong>' +
 
             '</div>' +
@@ -1533,172 +844,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       50/50
-    ===================================================== */
-
-    function renderizarCinquenta(
-        registro
-    ) {
-
-        const card =
-            criarCardAjuda(
-                "cinquenta",
-                "50/50",
-                "fa-solid fa-scissors"
-            );
-
-        if (!card) {
-
-            return;
-        }
-
-        const conteudo =
-            card.querySelector(
-                ".conteudo-card-ajuda"
-            );
-
-        let alternativasHtml =
-            "";
-
-
-        registro.alternativas
-            .forEach(
-                function (alternativa) {
-
-                    const classe =
-                        alternativa.removida
-                            ? " mini-alternativa-removida"
-                            : "";
-
-                    alternativasHtml +=
-
-                        '<div class="mini-alternativa' +
-                        classe +
-                        '">' +
-
-                            '<strong>' +
-                            escaparHtml(
-                                alternativa.letra
-                            ) +
-                            '</strong>' +
-
-                            '<span>' +
-                            escaparHtml(
-                                alternativa.texto
-                            ) +
-                            '</span>' +
-
-                        '</div>';
-                }
-            );
-
-
-        conteudo.innerHTML =
-
-            '<span class="numero-historico-ajuda">' +
-            escaparHtml(
-                registro.numero
-            ) +
-            '</span>' +
-
-            '<p class="pergunta-historico-ajuda">' +
-            escaparHtml(
-                registro.pergunta
-            ) +
-            '</p>' +
-
-            '<div class="mini-alternativas-ajuda">' +
-            alternativasHtml +
-            '</div>';
-    }
-
-
-    function registrarCinquenta(
-        removidas
-    ) {
-
-        if (
-            !alternativas ||
-            !tituloPergunta
-        ) {
-
-            return;
-        }
-
-        const lista = [];
-
-
-        alternativas
-            .querySelectorAll(
-                ".alternativa-jogo"
-            )
-            .forEach(
-                function (opcao) {
-
-                    const texto =
-                        opcao.querySelector(
-                            "span"
-                        );
-
-                    lista.push({
-
-                        letra:
-                            opcao.dataset.letra ||
-                            "",
-
-                        texto:
-                            texto
-                                ? texto.textContent
-                                    .trim()
-                                : "",
-
-                        removida:
-                            removidas.includes(
-                                opcao.dataset.letra
-                            )
-                    });
-                }
-            );
-
-
-        const registro = {
-
-            tipo:
-                "cinquenta",
-
-            numero:
-                contadorPergunta
-                    ? contadorPergunta
-                        .textContent
-                        .replace(
-                            /\s+/g,
-                            " "
-                        )
-                        .trim()
-                    : "",
-
-            pergunta:
-                tituloPergunta
-                    .textContent
-                    .trim(),
-
-            alternativas:
-                lista
-        };
-
-
-        salvarAjuda(
-            registro
-        );
-
-        renderizarCinquenta(
-            registro
-        );
-    }
-
-
-    /* =====================================================
-       TÉCNICO
+       TÉCNICO REAL
     ===================================================== */
 
     function renderizarTecnico(
@@ -1712,10 +858,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 "fa-solid fa-user-gear"
             );
 
-        if (!card) {
 
+        if (!card) {
             return;
         }
+
 
         const conteudo =
             card.querySelector(
@@ -1723,39 +870,329 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
+        /*
+         * Resposta já recebida.
+         */
+
+        if (registro.respondida) {
+
+            conteudo.innerHTML =
+                '<div class="turma-modo-resultado">' +
+
+                    '<p class="rotulo-resultado-turma">' +
+                        'O técnico respondeu:' +
+                    '</p>' +
+
+                    '<strong class="quantidade-respostas-turma">' +
+
+                        '<i class="fa-solid fa-user-gear"></i> ' +
+
+                        'RESPOSTA RECEBIDA' +
+
+                    '</strong>' +
+
+                    '<div class="votos-turma">' +
+
+                        '<span>' +
+
+                            '<b>' +
+                                escaparHtml(
+                                    registro.alternativa || "?"
+                                ) +
+                            '</b>' +
+
+                            '<i>' +
+
+                                '<u style="width:100%"></u>' +
+
+                            '</i>' +
+
+                            '<em>100%</em>' +
+
+                        '</span>' +
+
+                    '</div>' +
+
+                '</div>';
+
+            return;
+        }
+
+
+        /*
+         * QR aguardando uma única pessoa.
+         */
+
+        const urlQr =
+            "https://api.qrserver.com/v1/create-qr-code/" +
+            "?size=600x600" +
+            "&data=" +
+            encodeURIComponent(
+                registro.url
+            );
+
+
         conteudo.innerHTML =
+            '<div class="turma-modo-qr">' +
 
-            '<p class="rotulo-tecnico">' +
-            'O técnico diz:' +
-            '</p>' +
+                '<div class="qr-turma-grande">' +
 
-            '<div class="fala-tecnico">' +
-            escaparHtml(
-                registro.mensagem
-            ) +
+                    '<button ' +
+                        'type="button" ' +
+                        'class="botao-abrir-qr-grande" ' +
+                        'id="btnAbrirQrTecnico">' +
+
+                        '<img src="' +
+                        escaparHtml(urlQr) +
+                        '" alt="QR Code do técnico">' +
+
+                        '<span class="indicacao-ampliar-qr">' +
+
+                            '<i class="fa-solid fa-expand"></i> ' +
+
+                            'CLIQUE PARA AMPLIAR' +
+
+                        '</span>' +
+
+                    '</button>' +
+
+                '</div>' +
+
+                '<p class="texto-qr-turma">' +
+
+                    'Somente uma pessoa poderá responder' +
+
+                '</p>' +
+
             '</div>';
+
+
+        const botaoQr =
+            conteudo.querySelector(
+                "#btnAbrirQrTecnico"
+            );
+
+
+        if (botaoQr) {
+
+            botaoQr.addEventListener(
+                "click",
+                function () {
+
+                    abrirQrGrande(
+                        urlQr,
+                        "CONSULTAR O TÉCNICO"
+                    );
+                }
+            );
+        }
     }
 
 
-    function registrarTecnico() {
+    async function atualizarResultadoTecnico(
+        token
+    ) {
 
-        const registro = {
+        try {
 
-            tipo:
-                "tecnico",
+            const resposta =
+                await fetch(
+                    baseUrl +
+                    "/api/tecnico-resultado.php?t=" +
+                    encodeURIComponent(token),
+                    {
+                        cache:
+                            "no-store"
+                    }
+                );
 
-            mensagem:
-                "Analise atentamente o enunciado e identifique qual alternativa é tecnicamente mais adequada."
-        };
+
+            const retorno =
+                await resposta.json();
 
 
-        salvarAjuda(
-            registro
+            if (!retorno.sucesso) {
+                return;
+            }
+
+
+            if (!retorno.respondida) {
+                return;
+            }
+
+
+            const historico =
+                carregarHistorico();
+
+
+            const indice =
+                historico.findIndex(
+                    function (item) {
+
+                        return (
+                            item.tipo ===
+                            "tecnico"
+                        );
+                    }
+                );
+
+
+            if (indice < 0) {
+                return;
+            }
+
+
+            historico[indice].respondida =
+                true;
+
+            historico[indice].alternativa =
+                retorno.alternativa;
+
+
+            salvarHistorico(
+                historico
+            );
+
+
+            fecharQrGrande();
+
+
+            renderizarTecnico(
+                historico[indice]
+            );
+
+
+            if (intervaloTecnico) {
+
+                clearInterval(
+                    intervaloTecnico
+                );
+
+                intervaloTecnico = null;
+            }
+
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao consultar técnico:",
+                erro
+            );
+        }
+    }
+
+
+    function iniciarAtualizacaoTecnico(
+        token
+    ) {
+
+        if (!token) {
+            return;
+        }
+
+
+        if (intervaloTecnico) {
+
+            clearInterval(
+                intervaloTecnico
+            );
+        }
+
+
+        atualizarResultadoTecnico(
+            token
         );
 
-        renderizarTecnico(
-            registro
-        );
+
+        intervaloTecnico =
+            window.setInterval(
+                function () {
+
+                    atualizarResultadoTecnico(
+                        token
+                    );
+
+                },
+                1500
+            );
+    }
+
+
+    async function registrarTecnico() {
+
+        try {
+
+            const resposta =
+                await fetch(
+                    baseUrl +
+                    "/api/tecnico-criar.php",
+                    {
+                        method:
+                            "POST"
+                    }
+                );
+
+
+            const retorno =
+                await resposta.json();
+
+
+            if (!retorno.sucesso) {
+
+                return false;
+            }
+
+
+            const registro = {
+
+                tipo:
+                    "tecnico",
+
+                token:
+                    retorno.token,
+
+                url:
+                    retorno.url,
+
+                consulta_id:
+                    retorno.consulta_id,
+
+                respondida:
+                    false,
+
+                alternativa:
+                    null
+
+            };
+
+
+            salvarAjuda(
+                registro
+            );
+
+
+            renderizarTecnico(
+                registro
+            );
+
+
+            iniciarAtualizacaoTecnico(
+                registro.token
+            );
+
+
+            return true;
+
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao criar consulta ao técnico:",
+                erro
+            );
+
+            return false;
+        }
     }
 
 
@@ -1763,9 +1200,46 @@ document.addEventListener("DOMContentLoaded", function () {
        TURMA
     ===================================================== */
 
-    function renderizarTurma(
-        registro
+    function atualizarEstadoExibicaoTurma(
+        mostrarResultados
     ) {
+
+        const historico =
+            carregarHistorico();
+
+        const indice =
+            historico.findIndex(
+                function (item) {
+
+                    return (
+                        item.tipo ===
+                        "turma"
+                    );
+                }
+            );
+
+
+        if (indice < 0) {
+            return;
+        }
+
+
+        historico[indice].mostrarResultados =
+            mostrarResultados === true;
+
+
+        salvarHistorico(
+            historico
+        );
+
+
+        renderizarTurma(
+            historico[indice]
+        );
+    }
+
+
+    function renderizarTurma(registro) {
 
         const card =
             criarCardAjuda(
@@ -1774,10 +1248,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 "fa-solid fa-users"
             );
 
-        if (!card) {
 
+        if (!card) {
             return;
         }
+
 
         const conteudo =
             card.querySelector(
@@ -1785,38 +1260,142 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        const html =
-            Object.entries(
-                registro.votos
-            )
+        if (!registro.mostrarResultados) {
+
+            const urlQr =
+                "https://api.qrserver.com/v1/create-qr-code/" +
+                "?size=600x600" +
+                "&data=" +
+                encodeURIComponent(
+                    registro.url
+                );
+
+
+            conteudo.innerHTML =
+                '<div class="turma-modo-qr">' +
+
+                    '<div class="qr-turma-grande">' +
+
+                        '<button type="button" ' +
+                        'class="botao-abrir-qr-grande" ' +
+                        'id="btnAbrirQrGrande">' +
+
+                            '<img src="' +
+                            escaparHtml(urlQr) +
+                            '" alt="QR Code">' +
+
+                            '<span class="indicacao-ampliar-qr">' +
+
+                                '<i class="fa-solid fa-expand"></i> ' +
+
+                                'CLIQUE PARA AMPLIAR' +
+
+                            '</span>' +
+
+                        '</button>' +
+
+                    '</div>' +
+
+                    '<p class="texto-qr-turma">' +
+
+                        'Leia o QR Code para responder' +
+
+                    '</p>' +
+
+                    '<button type="button" ' +
+                    'class="botao-fechar-qr-turma" ' +
+                    'id="btnFecharQrTurma">' +
+
+                        '<i class="fa-solid fa-chart-column"></i> ' +
+
+                        'VER RESULTADOS' +
+
+                    '</button>' +
+
+                '</div>';
+
+
+            conteudo
+                .querySelector(
+                    "#btnAbrirQrGrande"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        abrirQrGrande(
+                            urlQr,
+                            "CONSULTAR A TURMA"
+                        );
+                    }
+                );
+
+
+            conteudo
+                .querySelector(
+                    "#btnFecharQrTurma"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        fecharQrGrande();
+
+                        atualizarEstadoExibicaoTurma(
+                            true
+                        );
+                    }
+                );
+
+
+            return;
+        }
+
+
+        const votos =
+            registro.votos || {
+                A: 0,
+                B: 0,
+                C: 0,
+                D: 0
+            };
+
+
+        const total =
+            Number(
+                registro.total_respostas || 0
+            );
+
+
+        const htmlVotos =
+            ["A", "B", "C", "D"]
                 .map(
-                    function (item) {
+                    function (letra) {
+
+                        const percentual =
+                            Number(
+                                votos[letra] || 0
+                            );
+
 
                         return (
-
                             '<span>' +
 
                                 '<b>' +
-                                escaparHtml(
-                                    item[0]
-                                ) +
+                                    letra +
                                 '</b>' +
 
                                 '<i>' +
 
                                     '<u style="width:' +
-                                    Number(
-                                        item[1]
-                                    ) +
+                                    percentual +
                                     '%"></u>' +
 
                                 '</i>' +
 
                                 '<em>' +
-                                Number(
-                                    item[1]
-                                ) +
-                                '%</em>' +
+                                    percentual +
+                                    '%</em>' +
 
                             '</span>'
                         );
@@ -1826,146 +1405,245 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         conteudo.innerHTML =
+            '<div class="turma-modo-resultado">' +
 
-            '<p>' +
-            'Veja como a turma votou:' +
-            '</p>' +
+                '<p class="rotulo-resultado-turma">' +
 
-            '<div class="votos-turma">' +
-            html +
+                    'Veja como a turma votou:' +
+
+                '</p>' +
+
+                '<strong class="quantidade-respostas-turma">' +
+
+                    '<i class="fa-solid fa-users"></i> ' +
+
+                    total +
+
+                    (
+                        total === 1
+                            ? ' resposta recebida'
+                            : ' respostas recebidas'
+                    ) +
+
+                '</strong>' +
+
+                '<div class="votos-turma">' +
+
+                    htmlVotos +
+
+                '</div>' +
+
             '</div>';
     }
 
 
-    function registrarTurma() {
+    async function atualizarResultadoTurma(
+        token
+    ) {
 
-        if (!alternativas) {
+        try {
 
-            return;
+            const resposta =
+                await fetch(
+                    baseUrl +
+                    "/api/turma-resultado.php?t=" +
+                    encodeURIComponent(token),
+                    {
+                        cache:
+                            "no-store"
+                    }
+                );
+
+
+            const retorno =
+                await resposta.json();
+
+
+            if (!retorno.sucesso) {
+                return;
+            }
+
+
+            const historico =
+                carregarHistorico();
+
+
+            const indice =
+                historico.findIndex(
+                    function (item) {
+
+                        return (
+                            item.tipo ===
+                            "turma"
+                        );
+                    }
+                );
+
+
+            if (indice < 0) {
+                return;
+            }
+
+
+            historico[indice].votos =
+                retorno.votos;
+
+            historico[indice].total_respostas =
+                Number(
+                    retorno.total_respostas || 0
+                );
+
+
+            salvarHistorico(
+                historico
+            );
+
+
+            if (
+                historico[indice]
+                    .mostrarResultados
+            ) {
+
+                renderizarTurma(
+                    historico[indice]
+                );
+            }
+
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao atualizar turma:",
+                erro
+            );
+        }
+    }
+
+
+    function iniciarAtualizacaoTurma(
+        token
+    ) {
+
+        if (intervaloTurma) {
+
+            clearInterval(
+                intervaloTurma
+            );
         }
 
-        const correta =
-            alternativas.dataset.correta;
 
-        const votos = {
-
-            A: 8,
-            B: 14,
-            C: 7,
-            D: 9
-        };
-
-
-        votos[correta] =
-            71;
-
-
-        const registro = {
-
-            tipo:
-                "turma",
-
-            votos:
-                votos
-        };
-
-
-        salvarAjuda(
-            registro
+        atualizarResultadoTurma(
+            token
         );
 
-        renderizarTurma(
-            registro
-        );
+
+        intervaloTurma =
+            window.setInterval(
+                function () {
+
+                    atualizarResultadoTurma(
+                        token
+                    );
+
+                },
+                2000
+            );
+    }
+
+
+    async function registrarTurma() {
+
+        try {
+
+            const resposta =
+                await fetch(
+                    baseUrl +
+                    "/api/turma-criar.php",
+                    {
+                        method:
+                            "POST"
+                    }
+                );
+
+
+            const retorno =
+                await resposta.json();
+
+
+            if (!retorno.sucesso) {
+
+                return false;
+            }
+
+
+            const registro = {
+
+                tipo:
+                    "turma",
+
+                token:
+                    retorno.token,
+
+                url:
+                    retorno.url,
+
+                consulta_id:
+                    retorno.consulta_id,
+
+                mostrarResultados:
+                    false,
+
+                total_respostas:
+                    0,
+
+                votos:
+                    {
+                        A: 0,
+                        B: 0,
+                        C: 0,
+                        D: 0
+                    }
+
+            };
+
+
+            salvarAjuda(
+                registro
+            );
+
+
+            renderizarTurma(
+                registro
+            );
+
+
+            iniciarAtualizacaoTurma(
+                registro.token
+            );
+
+
+            return true;
+
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao criar consulta da turma:",
+                erro
+            );
+
+            return false;
+        }
     }
 
 
     /* =====================================================
-       TROCAR PERGUNTA
+       50/50
     ===================================================== */
 
-    function renderizarTrocar(
-        registro
+    function registrarCinquenta(
+        removidas
     ) {
-
-        const card =
-            criarCardAjuda(
-                "trocar",
-                "Pergunta Trocada",
-                "fa-solid fa-arrows-rotate"
-            );
-
-        if (!card) {
-
-            return;
-        }
-
-        const conteudo =
-            card.querySelector(
-                ".conteudo-card-ajuda"
-            );
-
-        let alternativasHtml =
-            "";
-
-
-        registro.alternativas
-            .forEach(
-                function (alternativa) {
-
-                    alternativasHtml +=
-
-                        '<div class="mini-alternativa">' +
-
-                            '<strong>' +
-                            escaparHtml(
-                                alternativa.letra
-                            ) +
-                            '</strong>' +
-
-                            '<span>' +
-                            escaparHtml(
-                                alternativa.texto
-                            ) +
-                            '</span>' +
-
-                        '</div>';
-                }
-            );
-
-
-        conteudo.innerHTML =
-
-            '<span class="numero-historico-ajuda">' +
-            escaparHtml(
-                registro.numero
-            ) +
-            '</span>' +
-
-            '<p class="pergunta-historico-ajuda">' +
-            escaparHtml(
-                registro.pergunta
-            ) +
-            '</p>' +
-
-            '<div class="mini-alternativas-ajuda">' +
-            alternativasHtml +
-            '</div>';
-    }
-
-
-    function registrarTrocar() {
-
-        if (
-            !alternativas ||
-            !tituloPergunta
-        ) {
-
-            return;
-        }
-
-        const lista = [];
-
 
         alternativas
             .querySelectorAll(
@@ -1974,23 +1652,19 @@ document.addEventListener("DOMContentLoaded", function () {
             .forEach(
                 function (opcao) {
 
-                    const texto =
-                        opcao.querySelector(
-                            "span"
+                    if (
+                        removidas.includes(
+                            opcao.dataset.letra
+                        )
+                    ) {
+
+                        opcao.classList.add(
+                            "removida"
                         );
 
-                    lista.push({
-
-                        letra:
-                            opcao.dataset.letra ||
-                            "",
-
-                        texto:
-                            texto
-                                ? texto.textContent
-                                    .trim()
-                                : ""
-                    });
+                        opcao.disabled =
+                            true;
+                    }
                 }
             );
 
@@ -1998,26 +1672,55 @@ document.addEventListener("DOMContentLoaded", function () {
         const registro = {
 
             tipo:
-                "trocar",
+                "cinquenta",
 
             numero:
                 contadorPergunta
                     ? contadorPergunta
                         .textContent
-                        .replace(
-                            /\s+/g,
-                            " "
-                        )
                         .trim()
                     : "",
 
             pergunta:
                 tituloPergunta
-                    .textContent
-                    .trim(),
+                    ? tituloPergunta
+                        .textContent
+                        .trim()
+                    : "",
 
             alternativas:
-                lista
+                Array.from(
+                    alternativas.querySelectorAll(
+                        ".alternativa-jogo"
+                    )
+                )
+                    .map(
+                        function (opcao) {
+
+                            const span =
+                                opcao.querySelector(
+                                    "span"
+                                );
+
+                            return {
+
+                                letra:
+                                    opcao.dataset.letra,
+
+                                texto:
+                                    span
+                                        ? span.textContent.trim()
+                                        : "",
+
+                                removida:
+                                    opcao.classList.contains(
+                                        "removida"
+                                    )
+
+                            };
+                        }
+                    )
+
         };
 
 
@@ -2025,65 +1728,393 @@ document.addEventListener("DOMContentLoaded", function () {
             registro
         );
 
+
+        renderizarCinquenta(
+            registro
+        );
+    }
+
+
+    function renderizarCinquenta(
+        registro
+    ) {
+
+        const card =
+            criarCardAjuda(
+                "cinquenta",
+                "50/50",
+                "fa-solid fa-scissors"
+            );
+
+
+        if (!card) {
+            return;
+        }
+
+
+        const conteudo =
+            card.querySelector(
+                ".conteudo-card-ajuda"
+            );
+
+
+        conteudo.innerHTML =
+            '<span class="numero-historico-ajuda">' +
+                escaparHtml(registro.numero) +
+            '</span>' +
+
+            '<p class="pergunta-historico-ajuda">' +
+                escaparHtml(registro.pergunta) +
+            '</p>' +
+
+            '<div class="mini-alternativas-ajuda">' +
+
+                registro.alternativas
+                    .map(
+                        function (alternativa) {
+
+                            return (
+                                '<div class="mini-alternativa ' +
+
+                                (
+                                    alternativa.removida
+                                        ? 'mini-alternativa-removida'
+                                        : ''
+                                ) +
+
+                                '">' +
+
+                                    '<strong>' +
+                                        escaparHtml(
+                                            alternativa.letra
+                                        ) +
+                                    '</strong>' +
+
+                                    '<span>' +
+                                        escaparHtml(
+                                            alternativa.texto
+                                        ) +
+                                    '</span>' +
+
+                                '</div>'
+                            );
+                        }
+                    )
+                    .join("") +
+
+            '</div>';
+    }
+
+
+    /* =====================================================
+       TROCAR
+    ===================================================== */
+
+    function registrarTrocar() {
+
+        const registro = {
+
+            tipo:
+                "trocar",
+
+            mensagem:
+                "Será exibida uma nova pergunta do mesmo nível de dificuldade."
+
+        };
+
+
+        salvarAjuda(
+            registro
+        );
+
+
         renderizarTrocar(
             registro
         );
     }
 
 
+    function renderizarTrocar(
+        registro
+    ) {
+
+        const card =
+            criarCardAjuda(
+                "trocar",
+                "Trocar Pergunta",
+                "fa-solid fa-arrows-rotate"
+            );
+
+
+        if (!card) {
+            return;
+        }
+
+
+        const conteudo =
+            card.querySelector(
+                ".conteudo-card-ajuda"
+            );
+
+
+        conteudo.innerHTML =
+            '<p>' +
+                escaparHtml(
+                    registro.mensagem
+                ) +
+            '</p>' +
+
+            '<button type="button" ' +
+            'class="botao-confirmar-troca" ' +
+            'id="btnConfirmarTroca">' +
+
+                'TROCAR PERGUNTA' +
+
+            '</button>';
+
+
+        conteudo
+            .querySelector(
+                "#btnConfirmarTroca"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    window.location.reload();
+                }
+            );
+    }
+
+
     /* =====================================================
-       RESTAURA HISTÓRICO
+       RESTAURA AJUDAS
     ===================================================== */
 
     function restaurarHistorico() {
 
-        const historico =
-            carregarHistorico();
+        carregarHistorico()
+            .forEach(
+                function (registro) {
 
-
-        historico.forEach(
-            function (registro) {
-
-                switch (
-                    registro.tipo
-                ) {
-
-                    case "cinquenta":
+                    if (
+                        registro.tipo ===
+                        "cinquenta"
+                    ) {
 
                         renderizarCinquenta(
                             registro
                         );
+                    }
 
-                        break;
 
-
-                    case "tecnico":
+                    if (
+                        registro.tipo ===
+                        "tecnico"
+                    ) {
 
                         renderizarTecnico(
                             registro
                         );
 
-                        break;
+                        if (
+                            !registro.respondida &&
+                            registro.token
+                        ) {
+
+                            iniciarAtualizacaoTecnico(
+                                registro.token
+                            );
+                        }
+                    }
 
 
-                    case "turma":
+                    if (
+                        registro.tipo ===
+                        "turma"
+                    ) {
 
                         renderizarTurma(
                             registro
                         );
 
-                        break;
+                        if (registro.token) {
+
+                            iniciarAtualizacaoTurma(
+                                registro.token
+                            );
+                        }
+                    }
 
 
-                    case "trocar":
+                    if (
+                        registro.tipo ===
+                        "trocar"
+                    ) {
 
                         renderizarTrocar(
                             registro
                         );
+                    }
+                }
+            );
+    }
 
-                        break;
+
+    function restaurarEstadoBotoesAjuda() {
+
+        botoesAjuda.forEach(
+            function (botao) {
+
+                if (
+                    ajudaFoiUtilizada(
+                        botao.dataset.ajuda
+                    )
+                ) {
+
+                    botao.disabled =
+                        true;
                 }
             }
+        );
+    }
+
+
+    function desabilitarAjudas() {
+
+        botoesAjuda.forEach(
+            function (botao) {
+
+                botao.disabled =
+                    true;
+            }
+        );
+    }
+
+
+    function bloquearAlternativas() {
+
+        if (!alternativas) {
+            return;
+        }
+
+        alternativas
+            .querySelectorAll(
+                ".alternativa-jogo"
+            )
+            .forEach(
+                function (opcao) {
+
+                    opcao.disabled =
+                        true;
+                }
+            );
+    }
+
+
+    /* =====================================================
+       GAME OVER
+    ===================================================== */
+
+    function encerrarPartida(
+        valorPremio,
+        mensagem
+    ) {
+
+        partidaEncerrada = true;
+        respondida = true;
+
+
+        if (intervaloCronometro) {
+            clearInterval(intervaloCronometro);
+        }
+
+        if (intervaloTurma) {
+            clearInterval(intervaloTurma);
+        }
+
+        if (intervaloTecnico) {
+            clearInterval(intervaloTecnico);
+        }
+
+
+        fecharQrGrande();
+
+        bloquearAlternativas();
+
+        desabilitarAjudas();
+
+        liberarTodosMenu();
+
+        liberarJogarNovaPartida();
+
+
+        if (!menuLateral) {
+            return;
+        }
+
+
+        const painel =
+            document.createElement(
+                "section"
+            );
+
+        painel.className =
+            "game-over-jogo";
+
+
+        painel.innerHTML =
+            '<div class="game-over-cabecalho">' +
+
+                '<span class="icone-game-over">' +
+
+                    '<i class="fa-solid fa-skull-crossbones"></i>' +
+
+                '</span>' +
+
+                '<div>' +
+
+                    '<strong>GAME OVER</strong>' +
+
+                    '<small>' +
+                        escaparHtml(mensagem) +
+                    '</small>' +
+
+                '</div>' +
+
+            '</div>' +
+
+            '<div class="game-over-premio">' +
+
+                '<span>PRÊMIO ACUMULADO</span>' +
+
+                '<strong>' +
+                    escaparHtml(valorPremio) +
+                '</strong>' +
+
+            '</div>';
+
+
+        menuLateral.insertAdjacentElement(
+            "afterend",
+            painel
+        );
+    }
+
+
+    function tratarTempoEsgotado() {
+
+        if (
+            respondida ||
+            partidaEncerrada
+        ) {
+            return;
+        }
+
+
+        encerrarPartida(
+            calcularPremioErro(),
+            "O tempo da pergunta terminou."
         );
     }
 
@@ -2099,40 +2130,44 @@ document.addEventListener("DOMContentLoaded", function () {
     restaurarEstadoBotoesAjuda();
 
 
-    const partidaFinalizadaAoCarregar =
-        restaurarEstadoPartida();
+    if (cronometro) {
+
+        atualizarVisualCronometro();
+
+        iniciarCronometro();
 
 
-    if (
-        !partidaFinalizadaAoCarregar
-    ) {
+        /*
+         * NOVA REGRA:
+         *
+         * correndo -> pausa
+         * pausado  -> continua
+         */
 
-        iniciarTempoQuestao();
+        cronometro.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    respondida ||
+                    partidaEncerrada
+                ) {
+                    return;
+                }
+
+
+                if (cronometroPausado) {
+
+                    continuarCronometro();
+
+                } else {
+
+                    pausarCronometro();
+                }
+            }
+        );
     }
 
-
-    /* =====================================================
-       ATUALIZAÇÃO / F5
-    ===================================================== */
-
-    window.addEventListener(
-        "beforeunload",
-        function () {
-
-            if (
-                !partidaEncerrada &&
-                !respondida
-            ) {
-
-                consolidarTempoQuestao();
-            }
-        }
-    );
-
-
-    /* =====================================================
-       SAIR
-    ===================================================== */
 
     if (botaoSair) {
 
@@ -2142,211 +2177,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 limparHistorico();
 
-                limparEstadoPartida();
-
-                limparTempoPartida();
+                fecharQrGrande();
             }
         );
     }
 
 
-    /* =====================================================
-       CRONÔMETRO
-    ===================================================== */
-
-    if (
-        cronometro &&
-        !partidaEncerrada
-    ) {
-
-        let tempo =
-            Number(
-                cronometro.textContent
-                    .trim()
-            );
-
-
-        intervaloCronometro =
-            window.setInterval(
-                function () {
-
-                    if (
-                        respondida ||
-                        partidaEncerrada ||
-                        tempo <= 0
-                    ) {
-
-                        return;
-                    }
-
-
-                    tempo -= 1;
-
-
-                    cronometro.textContent =
-                        String(
-                            tempo
-                        );
-
-
-                    if (
-                        tempo <= 5
-                    ) {
-
-                        cronometro
-                            .classList
-                            .add(
-                                "tempo-critico"
-                            );
-                    }
-
-
-                    if (
-                        tempo <= 0
-                    ) {
-
-                        const correta =
-                            alternativas
-                                ? (
-                                    alternativas
-                                        .dataset
-                                        .correta ||
-                                    ""
-                                )
-                                : "";
-
-
-                        const alternativaCorreta =
-                            alternativas
-                                ? alternativas
-                                    .querySelector(
-                                        '.alternativa-jogo[data-letra="' +
-                                        correta +
-                                        '"]'
-                                    )
-                                : null;
-
-
-                        if (
-                            alternativaCorreta
-                        ) {
-
-                            alternativaCorreta
-                                .classList
-                                .add(
-                                    "correta"
-                                );
-                        }
-
-
-                        if (resultado) {
-
-                            resultado.hidden =
-                                false;
-
-                            resultado.className =
-                                "resultado-jogo incorreta";
-
-
-                            resultado.innerHTML =
-
-                                '<strong>' +
-
-                                    '<i class="fa-solid fa-clock"></i> ' +
-
-                                    'TEMPO ESGOTADO!' +
-
-                                '</strong>' +
-
-                                '<span>' +
-
-                                    'A resposta correta era: ' +
-
-                                    '<b></b>' +
-
-                                '</span>' +
-
-                                '<p></p>';
-
-
-                            const texto =
-                                alternativaCorreta
-                                    ? alternativaCorreta
-                                        .querySelector(
-                                            "span"
-                                        )
-                                    : null;
-
-
-                            const campo =
-                                resultado
-                                    .querySelector(
-                                        "b"
-                                    );
-
-
-                            if (campo) {
-
-                                campo.textContent =
-                                    correta +
-                                    ") " +
-                                    (
-                                        texto
-                                            ? texto
-                                                .textContent
-                                            : ""
-                                    );
-                            }
-
-
-                            const campoExplicacao =
-                                resultado
-                                    .querySelector(
-                                        "p"
-                                    );
-
-
-                            if (
-                                campoExplicacao
-                            ) {
-
-                                campoExplicacao
-                                    .textContent =
-                                    explicacao
-                                        ? explicacao
-                                            .textContent
-                                        : "";
-                            }
-                        }
-
-
-                        encerrarPartida(
-                            calcularPremioErro(),
-                            "O tempo da pergunta terminou."
-                        );
-                    }
-
-                },
-                1000
-            );
-    }
-
-
-    /* =====================================================
-       SEM QUESTÃO
-    ===================================================== */
-
     if (
         !alternativas ||
         !resultado
     ) {
-
         return;
     }
 
 
     /* =====================================================
-       RESPOSTAS
+       RESPOSTAS DO JOGO
     ===================================================== */
 
     alternativas
@@ -2363,71 +2209,35 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (
                             respondida ||
                             partidaEncerrada ||
-                            botao.classList
-                                .contains(
-                                    "removida"
-                                )
+                            botao.classList.contains(
+                                "removida"
+                            )
                         ) {
-
                             return;
                         }
 
 
                         const correta =
-                            alternativas
-                                .dataset
-                                .correta;
-
+                            alternativas.dataset.correta;
 
                         const letra =
-                            botao.dataset
-                                .letra;
+                            botao.dataset.letra;
 
 
-                        const alternativaCorreta =
-                            alternativas
-                                .querySelector(
-                                    '.alternativa-jogo[data-letra="' +
-                                    correta +
-                                    '"]'
-                                );
-
-
-                        if (
-                            intervaloCronometro
-                        ) {
-
-                            clearInterval(
-                                intervaloCronometro
-                            );
-
-                            intervaloCronometro =
-                                null;
+                        if (intervaloCronometro) {
+                            clearInterval(intervaloCronometro);
                         }
 
-
-                        bloquearAlternativas();
-
-                        desabilitarAjudas();
-
-
-                        /* =================================================
-                           ACERTO
-                        ================================================= */
 
                         if (
                             letra === correta
                         ) {
 
-                            respondida =
-                                true;
+                            respondida = true;
 
-
-                            botao.classList
-                                .add(
-                                    "correta"
-                                );
-
+                            botao.classList.add(
+                                "correta"
+                            );
 
                             resultado.hidden =
                                 false;
@@ -2435,47 +2245,24 @@ document.addEventListener("DOMContentLoaded", function () {
                             resultado.className =
                                 "resultado-jogo correta";
 
-
                             resultado.innerHTML =
-
                                 '<strong>' +
-
                                     '<i class="fa-solid fa-circle-check"></i> ' +
-
                                     'CORRETO!' +
-
                                 '</strong>' +
 
-                                '<p></p>';
-
-
-                            const campoExplicacao =
-                                resultado
-                                    .querySelector(
-                                        "p"
-                                    );
-
-
-                            if (
-                                campoExplicacao
-                            ) {
-
-                                campoExplicacao
-                                    .textContent =
-                                    explicacao
-                                        ? explicacao
-                                            .textContent
-                                        : "";
-                            }
+                                '<p>' +
+                                    escaparHtml(
+                                        explicacao
+                                            ? explicacao.textContent
+                                            : ""
+                                    ) +
+                                '</p>';
 
 
                             const dados =
                                 obterDadosPergunta();
 
-
-                            /* =================================================
-                               ÚLTIMA PERGUNTA
-                            ================================================= */
 
                             if (
                                 dados.atual >=
@@ -2484,19 +2271,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 encerrarPartida(
                                     calcularPremioAtual(),
-                                    "Você concluiu o desafio e chegou ao prêmio máximo!",
-                                    true
+                                    "Parabéns! Você concluiu o desafio."
                                 );
 
                                 return;
                             }
 
-
-                            /* =================================================
-                               PRÓXIMA PERGUNTA
-                            ================================================= */
-
-                            consolidarTempoQuestao();
 
                             liberarJogarProximaPergunta();
 
@@ -2504,25 +2284,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
 
-                        /* =================================================
-                           ERRO
-                        ================================================= */
+                        botao.classList.add(
+                            "incorreta"
+                        );
 
-                        botao.classList
-                            .add(
-                                "incorreta"
+
+                        const corretaElemento =
+                            alternativas.querySelector(
+                                '[data-letra="' +
+                                correta +
+                                '"]'
                             );
 
 
-                        if (
-                            alternativaCorreta
-                        ) {
+                        if (corretaElemento) {
 
-                            alternativaCorreta
-                                .classList
-                                .add(
-                                    "correta"
-                                );
+                            corretaElemento.classList.add(
+                                "correta"
+                            );
                         }
 
 
@@ -2532,75 +2311,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         resultado.className =
                             "resultado-jogo incorreta";
 
-
                         resultado.innerHTML =
-
                             '<strong>' +
-
                                 '<i class="fa-solid fa-circle-xmark"></i> ' +
-
                                 'INCORRETO!' +
-
                             '</strong>' +
 
-                            '<span>' +
-
-                                'A resposta correta é: ' +
-
-                                '<b></b>' +
-
-                            '</span>' +
-
-                            '<p></p>';
-
-
-                        const texto =
-                            alternativaCorreta
-                                ? alternativaCorreta
-                                    .querySelector(
-                                        "span"
-                                    )
-                                : null;
-
-
-                        const campo =
-                            resultado.querySelector(
-                                "b"
-                            );
-
-
-                        if (campo) {
-
-                            campo.textContent =
-                                correta +
-                                ") " +
-                                (
-                                    texto
-                                        ? texto
-                                            .textContent
+                            '<p>' +
+                                escaparHtml(
+                                    explicacao
+                                        ? explicacao.textContent
                                         : ""
-                                );
-                        }
-
-
-                        const campoExplicacao =
-                            resultado
-                                .querySelector(
-                                    "p"
-                                );
-
-
-                        if (
-                            campoExplicacao
-                        ) {
-
-                            campoExplicacao
-                                .textContent =
-                                explicacao
-                                    ? explicacao
-                                        .textContent
-                                    : "";
-                        }
+                                ) +
+                            '</p>';
 
 
                         encerrarPartida(
@@ -2629,7 +2352,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         partidaEncerrada ||
                         botao.disabled
                     ) {
-
                         return;
                     }
 
@@ -2638,14 +2360,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         botao.dataset.ajuda;
 
 
+                    /*
+                     * Toda ajuda pausa automaticamente.
+                     */
+
+                    pausarCronometro();
+
+
                     try {
 
                         const resposta =
                             await fetch(
-                                obterBaseUrl() +
+                                baseUrl +
                                 "/api/jogo.php",
                                 {
-
                                     method:
                                         "POST",
 
@@ -2670,13 +2398,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             await resposta.json();
 
 
-                        if (
-                            !retorno.sucesso
-                        ) {
+                        if (!retorno.sucesso) {
 
-                            console.error(
-                                retorno
-                            );
+                            continuarCronometro();
 
                             return;
                         }
@@ -2686,93 +2410,64 @@ document.addEventListener("DOMContentLoaded", function () {
                             true;
 
 
-                        /* =================================================
-                           50/50
-                        ================================================= */
-
                         if (
                             ajuda ===
                             "cinquenta"
                         ) {
 
-                            const removidas =
+                            registrarCinquenta(
                                 Array.isArray(
                                     retorno.removidas
                                 )
                                     ? retorno.removidas
-                                    : [];
-
-
-                            alternativas
-                                .querySelectorAll(
-                                    ".alternativa-jogo"
-                                )
-                                .forEach(
-                                    function (opcao) {
-
-                                        if (
-                                            removidas
-                                                .includes(
-                                                    opcao
-                                                        .dataset
-                                                        .letra
-                                                )
-                                        ) {
-
-                                            opcao
-                                                .classList
-                                                .add(
-                                                    "removida"
-                                                );
-
-                                            opcao.disabled =
-                                                true;
-                                        }
-                                    }
-                                );
-
-
-                            registrarCinquenta(
-                                removidas
+                                    : []
                             );
 
                             return;
                         }
 
 
-                        /* =================================================
-                           TÉCNICO
-                        ================================================= */
-
                         if (
                             ajuda ===
                             "tecnico"
                         ) {
 
-                            registrarTecnico();
+                            const criada =
+                                await registrarTecnico();
+
+
+                            if (!criada) {
+
+                                botao.disabled =
+                                    false;
+
+                                continuarCronometro();
+                            }
 
                             return;
                         }
 
-
-                        /* =================================================
-                           TURMA
-                        ================================================= */
 
                         if (
                             ajuda ===
                             "turma"
                         ) {
 
-                            registrarTurma();
+                            const criada =
+                                await registrarTurma();
+
+
+                            if (!criada) {
+
+                                botao.disabled =
+                                    false;
+
+                                continuarCronometro();
+                            }
 
                             return;
                         }
 
-
-                        /* =================================================
-                           TROCAR
-                        ================================================= */
 
                         if (
                             ajuda ===
@@ -2780,16 +2475,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         ) {
 
                             registrarTrocar();
-
-                            /*
-                             * O tempo gasto na pergunta
-                             * descartada também conta.
-                             */
-
-                            consolidarTempoQuestao();
-
-                            window.location
-                                .reload();
 
                             return;
                         }
@@ -2801,6 +2486,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             "Erro ao utilizar ajuda:",
                             erro
                         );
+
+                        continuarCronometro();
                     }
                 }
             );

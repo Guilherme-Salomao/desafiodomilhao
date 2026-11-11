@@ -404,38 +404,6 @@ body::after {
     0 0 16px rgba(255, 36, 36, 0.14);
 }
 
-
-/* =====================================================
-   PARABÉNS / VITÓRIA
-
-   Funciona de duas formas:
-
-   1. Caso o JS adicione a classe .parabens
-   2. Caso exista o ícone de troféu dentro do card
-
-===================================================== */
-
-.game-over-jogo.parabens,
-.game-over-jogo:has(.fa-trophy) {
-  border:
-    1px solid #2ce866;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(7, 92, 38, 0.98),
-      rgba(2, 43, 18, 0.98)
-    );
-
-  box-shadow:
-    0 0 18px rgba(44, 232, 102, 0.22);
-}
-
-
-/* =====================================================
-   CABEÇALHO GAME OVER
-===================================================== */
-
 .game-over-cabecalho {
   display: grid;
 
@@ -499,57 +467,6 @@ body::after {
   line-height: 1.25;
 }
 
-
-/* =====================================================
-   CABEÇALHO PARABÉNS
-===================================================== */
-
-.game-over-jogo.parabens
-.game-over-cabecalho,
-.game-over-jogo:has(.fa-trophy)
-.game-over-cabecalho {
-  border-bottom:
-    1px solid rgba(130, 255, 156, 0.24);
-}
-
-.game-over-jogo.parabens
-.icone-game-over,
-.game-over-jogo:has(.fa-trophy)
-.icone-game-over {
-  color:
-    #ffffff;
-
-  border:
-    2px solid #52f27d;
-
-  background:
-    rgba(11, 126, 51, 0.78);
-
-  box-shadow:
-    0 0 10px rgba(49, 219, 96, 0.24);
-}
-
-.game-over-jogo.parabens
-.game-over-cabecalho strong,
-.game-over-jogo:has(.fa-trophy)
-.game-over-cabecalho strong {
-  color:
-    #7dff9f;
-}
-
-.game-over-jogo.parabens
-.game-over-cabecalho small,
-.game-over-jogo:has(.fa-trophy)
-.game-over-cabecalho small {
-  color:
-    #d9f7e0;
-}
-
-
-/* =====================================================
-   PRÊMIO
-===================================================== */
-
 .game-over-premio {
   display: flex;
 
@@ -584,30 +501,6 @@ body::after {
 
   text-shadow:
     0 0 10px rgba(255, 195, 40, 0.28);
-}
-
-
-/* =====================================================
-   PRÊMIO PARABÉNS
-===================================================== */
-
-.game-over-jogo.parabens
-.game-over-premio span,
-.game-over-jogo:has(.fa-trophy)
-.game-over-premio span {
-  color:
-    #b8e7c2;
-}
-
-.game-over-jogo.parabens
-.game-over-premio strong,
-.game-over-jogo:has(.fa-trophy)
-.game-over-premio strong {
-  color:
-    #ffe168;
-
-  text-shadow:
-    0 0 13px rgba(255, 225, 104, 0.38);
 }
 
 
@@ -781,7 +674,7 @@ body::after {
 
 
 /* =====================================================
-   STATUS
+   STATUS / CRONÔMETRO
 ===================================================== */
 
 .status-pergunta-jogo {
@@ -851,6 +744,8 @@ body::after {
 
   font-weight: 800;
 
+  cursor: pointer;
+
   border:
     4px solid #f8a719;
 
@@ -861,6 +756,13 @@ body::after {
 
   box-shadow:
     0 0 10px rgba(255, 156, 0, 0.48);
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .cronometro-jogo.tempo-critico {
@@ -868,6 +770,45 @@ body::after {
 
   border-color:
     #ff4b4b;
+}
+
+.cronometro-jogo.tempo-pausado {
+  color: #ffd43b;
+
+  border-color:
+    #ffd43b;
+
+  background:
+    #302500;
+
+  box-shadow:
+    0 0 18px
+    rgba(255, 212, 59, 0.65);
+
+  animation:
+    pulsarCronometroPausado
+    1.2s infinite;
+}
+
+.cronometro-jogo.tempo-pausado:hover {
+  transform:
+    scale(1.08);
+}
+
+@keyframes pulsarCronometroPausado {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 8px
+      rgba(255, 212, 59, 0.35);
+  }
+
+  50% {
+    box-shadow:
+      0 0 22px
+      rgba(255, 212, 59, 0.85);
+  }
 }
 
 
@@ -925,11 +866,6 @@ body::after {
 
   line-height: 1.30;
 }
-
-
-/* =====================================================
-   IMAGEM
-===================================================== */
 
 .imagem-pergunta-jogo {
   width: 100%;
@@ -1066,11 +1002,6 @@ body::after {
   font-weight: 600;
 }
 
-
-/* =====================================================
-   CORRETA
-===================================================== */
-
 .alternativa-jogo.correta::before {
   background:
     #35f35d;
@@ -1081,11 +1012,6 @@ body::after {
     rgba(8, 112, 33, 0.96);
 }
 
-
-/* =====================================================
-   INCORRETA
-===================================================== */
-
 .alternativa-jogo.incorreta::before {
   background:
     #ff5454;
@@ -1095,11 +1021,6 @@ body::after {
   background:
     rgba(72, 10, 17, 0.96);
 }
-
-
-/* =====================================================
-   REMOVIDA
-===================================================== */
 
 .alternativa-jogo.removida {
   opacity: 0.55;
@@ -1216,10 +1137,6 @@ body::after {
 
 /* =====================================================
    PAINEL AJUDAS
-
-   margin-top:auto faz os cards inferiores ocuparem
-   a parte final da coluna central e terminarem na mesma
-   linha inferior da sidebar.
 ===================================================== */
 
 .painel-ajuda-jogo {
@@ -1246,11 +1163,7 @@ body::after {
 
   gap: 8px;
 
-  margin-top: auto;
-
-  padding-top: 12px;
-
-  box-sizing: border-box;
+  margin-top: 12px;
 }
 
 .painel-ajuda-jogo[hidden] {
@@ -1358,7 +1271,7 @@ body::after {
 
 
 /* =====================================================
-   50/50 / PERGUNTA TROCADA
+   50/50
 ===================================================== */
 
 .numero-historico-ajuda {
@@ -1511,7 +1424,297 @@ body::after {
 
 
 /* =====================================================
-   TURMA
+   CONSULTAR TURMA - QR
+===================================================== */
+
+.card-ajuda-detalhe[data-card-ajuda="turma"]
+.conteudo-card-ajuda {
+  padding-top: 8px;
+}
+
+.turma-modo-qr {
+  width: 100%;
+  height: 100%;
+
+  min-height: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+}
+
+.qr-turma-grande {
+  flex: 1;
+
+  width: 100%;
+
+  min-height: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =====================================================
+   BOTÃO QR CLICÁVEL
+===================================================== */
+
+.botao-abrir-qr-grande {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border: 0;
+
+  background: transparent;
+}
+
+.botao-abrir-qr-grande img {
+  width: 170px;
+  height: 170px;
+
+  max-width: 100%;
+
+  display: block;
+
+  padding: 6px;
+
+  box-sizing: border-box;
+
+  border-radius: 7px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 16px
+    rgba(255, 255, 255, 0.16);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.botao-abrir-qr-grande:hover img {
+  transform:
+    scale(1.03);
+
+  box-shadow:
+    0 0 22px
+    rgba(77, 185, 255, 0.42);
+}
+
+.indicacao-ampliar-qr {
+  position: absolute;
+
+  left: 50%;
+  bottom: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding:
+    5px 7px;
+
+  color: #ffffff;
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  border-radius: 4px;
+
+  background:
+    rgba(0, 17, 31, 0.88);
+
+  transform:
+    translateX(-50%);
+}
+
+.indicacao-ampliar-qr i {
+  font-size: 8px;
+}
+
+.texto-qr-turma {
+  margin:
+    0 !important;
+
+  color:
+    #ffffff !important;
+
+  font-size:
+    9px !important;
+
+  font-weight:
+    700;
+
+  text-align:
+    center !important;
+}
+
+
+/* =====================================================
+   BOTÃO VER RESULTADOS
+===================================================== */
+
+.botao-fechar-qr-turma {
+  width: 100%;
+
+  min-height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding:
+    6px 10px;
+
+  color:
+    #ffffff;
+
+  font-family:
+    inherit;
+
+  font-size:
+    9px;
+
+  font-weight:
+    900;
+
+  cursor:
+    pointer;
+
+  border:
+    1px solid #35b8ff;
+
+  border-radius:
+    6px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #087bc2,
+      #05578d
+    );
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.botao-fechar-qr-turma:hover {
+  transform:
+    translateY(-1px);
+
+  border-color:
+    #84d7ff;
+
+  background:
+    linear-gradient(
+      180deg,
+      #1594e2,
+      #0867a5
+    );
+}
+
+
+/* =====================================================
+   RESULTADOS DA TURMA
+===================================================== */
+
+.turma-modo-resultado {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-height: 0;
+}
+
+.rotulo-resultado-turma {
+  margin:
+    0 0 7px !important;
+
+  color:
+    #d6e4eb !important;
+
+  font-size:
+    9px !important;
+
+  font-weight:
+    700;
+
+  text-align:
+    center !important;
+}
+
+.quantidade-respostas-turma {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-bottom:
+    10px;
+
+  padding:
+    7px 8px;
+
+  color:
+    #ffd43b;
+
+  font-size:
+    10px;
+
+  text-align:
+    center;
+
+  border:
+    1px solid
+    rgba(255, 212, 59, 0.35);
+
+  border-radius:
+    5px;
+
+  background:
+    rgba(99, 72, 8, 0.26);
+}
+
+.quantidade-respostas-turma i {
+  color:
+    #ffd43b;
+}
+
+
+/* =====================================================
+   VOTOS TURMA
 ===================================================== */
 
 .votos-turma {
@@ -1567,6 +1770,8 @@ body::after {
   border:
     1px solid #1b669a;
 
+  border-radius: 3px;
+
   background:
     rgba(2, 24, 43, 0.94);
 }
@@ -1574,7 +1779,10 @@ body::after {
 .votos-turma i u {
   display: block;
 
+  width: 0;
   height: 100%;
+
+  border-radius: 2px;
 
   background:
     linear-gradient(
@@ -1582,6 +1790,9 @@ body::after {
       #087cff,
       #1bf25c
     );
+
+  transition:
+    width 0.35s ease;
 }
 
 .votos-turma em {
@@ -1593,21 +1804,301 @@ body::after {
 
   font-style:
     normal;
+
+  text-align:
+    right;
 }
 
 
 /* =====================================================
-   TROCAR PERGUNTA
+   QR CODE TELA CHEIA
+===================================================== */
 
-   O botão antigo é mantido estilizado por compatibilidade,
-   embora na versão atual o card inferior seja apenas
-   histórico da pergunta trocada.
+body.qr-turma-aberto {
+  overflow: hidden;
+}
+
+.overlay-qr-turma {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 999999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    24px;
+
+  box-sizing:
+    border-box;
+
+  background:
+    rgba(0, 6, 13, 0.96);
+
+  backdrop-filter:
+    blur(8px);
+}
+
+.modal-qr-turma {
+  position: relative;
+
+  width:
+    min(92vw, 760px);
+
+  height:
+    min(92vh, 760px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    28px;
+
+  box-sizing:
+    border-box;
+
+  border:
+    2px solid #168ee4;
+
+  border-radius:
+    22px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #07345a 0%,
+      #021a2e 55%,
+      #00101e 100%
+    );
+
+  box-shadow:
+    0 0 60px
+    rgba(22, 142, 228, 0.32);
+}
+
+
+/* =====================================================
+   TÍTULO QR GRANDE
+===================================================== */
+
+.titulo-qr-grande {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-bottom:
+    18px;
+
+  color:
+    #ffffff;
+}
+
+.titulo-qr-grande i {
+  width: 45px;
+  height: 45px;
+
+  display: grid;
+
+  place-items: center;
+
+  color:
+    #ffffff;
+
+  font-size:
+    21px;
+
+  border:
+    2px solid #4db9ff;
+
+  border-radius:
+    50%;
+}
+
+.titulo-qr-grande strong {
+  font-size:
+    clamp(
+      18px,
+      2.2vw,
+      28px
+    );
+
+  font-weight:
+    900;
+}
+
+
+/* =====================================================
+   ÁREA QR GRANDE
+===================================================== */
+
+.area-qr-grande {
+  flex: 1;
+
+  min-height: 0;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.area-qr-grande img {
+  width:
+    min(60vh, 560px);
+
+  height:
+    min(60vh, 560px);
+
+  max-width:
+    72vw;
+
+  max-height:
+    72vw;
+
+  display:
+    block;
+
+  padding:
+    14px;
+
+  box-sizing:
+    border-box;
+
+  border-radius:
+    12px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 0 35px
+    rgba(255, 255, 255, 0.28);
+}
+
+.modal-qr-turma > p {
+  margin:
+    18px 0 0;
+
+  color:
+    #ffffff;
+
+  font-size:
+    clamp(
+      14px,
+      1.6vw,
+      21px
+    );
+
+  font-weight:
+    700;
+
+  text-align:
+    center;
+}
+
+
+/* =====================================================
+   FECHAR QR GRANDE
+===================================================== */
+
+.botao-fechar-qr-grande {
+  position:
+    absolute;
+
+  top:
+    18px;
+
+  right:
+    18px;
+
+  min-height:
+    42px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    7px;
+
+  padding:
+    0 14px;
+
+  color:
+    #ffffff;
+
+  font-family:
+    inherit;
+
+  font-size:
+    11px;
+
+  font-weight:
+    900;
+
+  cursor:
+    pointer;
+
+  border:
+    1px solid
+    #ff6464;
+
+  border-radius:
+    7px;
+
+  background:
+    rgba(
+      105,
+      14,
+      23,
+      0.92
+    );
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+}
+
+.botao-fechar-qr-grande:hover {
+  transform:
+    scale(1.04);
+
+  background:
+    rgba(
+      150,
+      20,
+      31,
+      0.96
+    );
+}
+
+
+/* =====================================================
+   TROCAR
 ===================================================== */
 
 .card-ajuda-detalhe[data-card-ajuda="trocar"]
 .conteudo-card-ajuda {
   justify-content:
-    flex-start;
+    space-between;
 }
 
 .botao-confirmar-troca {
@@ -1871,12 +2362,6 @@ body::after {
 
     grid-auto-rows:
       auto;
-
-    margin-top:
-      12px;
-
-    padding-top:
-      0;
   }
 
   .card-ajuda-detalhe {
@@ -1884,7 +2369,59 @@ body::after {
       auto;
 
     min-height:
-      230px;
+      305px;
+  }
+
+  .botao-abrir-qr-grande img {
+    width:
+      190px;
+
+    height:
+      190px;
+  }
+
+  .overlay-qr-turma {
+    padding:
+      10px;
+  }
+
+  .modal-qr-turma {
+    width:
+      100%;
+
+    height:
+      100%;
+
+    max-height:
+      100%;
+
+    padding:
+      70px 15px 20px;
+
+    border-radius:
+      12px;
+  }
+
+  .area-qr-grande img {
+    width:
+      min(78vw, 430px);
+
+    height:
+      min(78vw, 430px);
+
+    max-width:
+      none;
+
+    max-height:
+      none;
+  }
+
+  .botao-fechar-qr-grande {
+    top:
+      14px;
+
+    right:
+      14px;
   }
 
 }
