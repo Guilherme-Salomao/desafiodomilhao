@@ -1,6 +1,7 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
+
 
 /* ============================================================
    SESSÃO
@@ -10,172 +11,211 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-/* ============================================================
-   REPOSITORY
-============================================================ */
-
-require_once __DIR__ .
-    '/includes/repositories/AreaRepository.php';
 
 /* ============================================================
-   RECEBE PARÂMETROS
+   DEPENDÊNCIAS
 ============================================================ */
 
-$slug = trim(
-    (string) ($_GET['area'] ?? '')
-);
+require_once __DIR__ . '/includes/url.php';
 
-$retorno = trim(
-    (string) ($_GET['retorno'] ?? 'inicio')
-);
+require_once __DIR__ . '/includes/conexao.php';
+
 
 /* ============================================================
-   VALIDA SLUG
+   CONEXÃO
 ============================================================ */
 
-if ($slug === '') {
+$pdo = conectarBanco();
 
-    header(
-        'Location: /github/desafiodomilhao/public/areas.php',
-        true,
-        302
+
+/* ============================================================
+   ID DA ÁREA
+============================================================ */
+
+$areaId =
+    filter_input(
+        INPUT_GET,
+        'id',
+        FILTER_VALIDATE_INT
     );
 
-    exit;
-}
 
 /* ============================================================
-   RETORNOS PERMITIDOS
+   RETORNO
 ============================================================ */
 
-$retornosPermitidos = [
-    'inicio',
-    'jogo',
-    'competicao',
-];
+$retorno =
+    trim(
+        (string) (
+            $_GET['retorno']
+            ?? ''
+        )
+    );
+
+
+/* ============================================================
+   ID INVÁLIDO
+============================================================ */
 
 if (
-    ! in_array(
-        $retorno,
-        $retornosPermitidos,
-        true
-    )
+    $areaId === false ||
+    $areaId === null ||
+    $areaId <= 0
 ) {
 
-    $retorno = 'inicio';
+    header(
+        'Location: ' .
+        urlProjeto(
+            'areas.php'
+        ),
+        true,
+        303
+    );
+
+    exit;
 }
+
 
 /* ============================================================
-   BUSCA ÁREA
+   BUSCA A ÁREA
 ============================================================ */
 
-try {
+$sql = '
+    SELECT
+        id,
+        nome,
+        slug,
+        descricao,
+        icone,
+        ativo,
+        ordem
+    FROM areas
+    WHERE
+        id = :id
+        AND ativo = 1
+    LIMIT 1
+';
 
-    $areaRepository =
-    new AreaRepository();
 
-    $area =
-    $areaRepository->buscarAtivaPorSlug(
-        $slug
+$stmt =
+    $pdo->prepare(
+        $sql
     );
 
-    /* ========================================================
-       ÁREA INVÁLIDA
-    ======================================================== */
 
-    if ($area === null) {
+$stmt->execute(
+    [
+        ':id' =>
+            $areaId,
+    ]
+);
 
-        header(
-            'Location: /github/desafiodomilhao/public/areas.php?retorno=' .
-            urlencode($retorno),
-            true,
-            302
-        );
 
-        exit;
-    }
-
-    /* ========================================================
-       SALVA ÁREA
-    ======================================================== */
-
-    $_SESSION['area'] = [
-
-        'id'    =>
-        (int) $area['id'],
-
-        'nome'  =>
-        (string) $area['nome'],
-
-        'slug'  =>
-        (string) $area['slug'],
-
-        'icone' =>
-        (string) $area['icone'],
-
-    ];
-
-    /* ========================================================
-       DESTINO
-    ======================================================== */
-
-    switch ($retorno) {
-
-        /* HOME */
-
-        case 'inicio':
-
-            header(
-                'Location: /github/desafiodomilhao/public/',
-                true,
-                302
-            );
-
-            break;
-
-        /* COMPETIÇÃO */
-
-        case 'competicao':
-
-            header(
-                'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=competicao',
-                true,
-                302
-            );
-
-            break;
-
-        /* JOGO INDIVIDUAL */
-
-        case 'jogo':
-
-        default:
-
-            header(
-                'Location: /github/desafiodomilhao/public/configurar-partida.php?modo=individual',
-                true,
-                302
-            );
-
-            break;
-
-    }
-
-    exit;
-
-} catch (Throwable $erro) {
-
-    error_log(
-        '[Desafio do Milhão - Seleção de Área] ' .
-        $erro->getMessage()
+$area =
+    $stmt->fetch(
+        PDO::FETCH_ASSOC
     );
+
+
+/* ============================================================
+   ÁREA NÃO EXISTE OU ESTÁ INATIVA
+============================================================ */
+
+if (!$area) {
+
+    unset(
+        $_SESSION['area']
+    );
+
 
     header(
-        'Location: /github/desafiodomilhao/public/areas.php?retorno=' .
-        urlencode($retorno),
+        'Location: ' .
+        urlProjeto(
+            'areas.php'
+        ),
         true,
-        302
+        303
     );
 
     exit;
 }
+
+
+/* ============================================================
+   SALVA ÁREA NA SESSÃO
+============================================================ */
+
+$_SESSION['area'] = [
+
+    'id' =>
+        (int) $area['id'],
+
+    'nome' =>
+        (string) $area['nome'],
+
+    'slug' =>
+        (string) $area['slug'],
+
+    'descricao' =>
+        (string) (
+            $area['descricao']
+            ?? ''
+        ),
+
+    'icone' =>
+        (string) (
+            $area['icone']
+            ?? 'fa-solid fa-layer-group'
+        ),
+];
+
+
+/* ============================================================
+   REMOVE PARTIDA ANTERIOR
+
+   Ao selecionar uma nova área, uma partida antiga não deve
+   continuar utilizando perguntas da área anterior.
+============================================================ */
+
+unset(
+    $_SESSION['partida'],
+    $_SESSION['pergunta_atual']
+);
+
+
+/* ============================================================
+   DESTINO
+
+   Se areas.php foi aberta para retornar diretamente ao jogo,
+   respeitamos o retorno.
+
+   No fluxo normal, voltamos para a página inicial.
+============================================================ */
+
+if ($retorno === 'jogo') {
+
+    header(
+        'Location: ' .
+        urlProjeto(
+            'configurar-partida.php'
+        ),
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* ============================================================
+   FLUXO NORMAL
+============================================================ */
+
+header(
+    'Location: ' .
+    urlProjeto(),
+    true,
+    303
+);
+
+exit;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../includes/url.php';
+
 /* =========================================================
    AUTENTICAÇÃO NORMAL
 ========================================================= */
@@ -483,7 +485,7 @@ require_once __DIR__ .
         </div>
 
 
-<a href="/desafiodomilhao/public/logout.php" class="botao-sair-admin-areas">
+<a href="<?php echo urlProjeto('logout.php'); ?>" class="botao-sair-admin-areas">
     <i class="fa-solid fa-right-from-bracket"></i>
     SAIR
 </a>

@@ -2,110 +2,105 @@
 
 declare(strict_types=1);
 
-/* =========================================================
+/* ============================================================
    SESSÃO
-========================================================= */
+============================================================ */
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
 
-/* =========================================================
-   CONEXÃO
-========================================================= */
+/* ============================================================
+   DEPENDÊNCIAS
+============================================================ */
+
+require_once __DIR__ . '/includes/url.php';
 
 require_once __DIR__ . '/includes/conexao.php';
+
+
+/* ============================================================
+   CONEXÃO
+============================================================ */
 
 $pdo = conectarBanco();
 
 
-/* =========================================================
-   BASE URL DINÂMICA
-========================================================= */
+/* ============================================================
+   FUNÇÃO ESCAPE LOCAL
+============================================================ */
 
-$scriptName =
-    str_replace(
-        '\\',
-        '/',
-        (string) (
-            $_SERVER['SCRIPT_NAME']
-            ?? ''
-        )
+function escaparAreaPublica(string $valor): string
+{
+    return htmlspecialchars(
+        $valor,
+        ENT_QUOTES,
+        'UTF-8'
     );
-
-$baseUrl =
-    rtrim(
-        dirname($scriptName),
-        '/'
-    );
-
-if (
-    $baseUrl === '.' ||
-    $baseUrl === '/'
-) {
-    $baseUrl = '';
 }
 
 
-/* =========================================================
-   LISTA ÁREAS ATIVAS
-========================================================= */
+/* ============================================================
+   RETORNO
+============================================================ */
 
-$sqlAreas = '
+$retorno = trim(
+    (string) ($_GET['retorno'] ?? '')
+);
+
+
+/* ============================================================
+   BUSCA ÁREAS ATIVAS
+============================================================ */
+
+$sql = '
     SELECT
         id,
         nome,
         slug,
         descricao,
         icone,
-        ativo,
         ordem
-
     FROM areas
-
     WHERE ativo = 1
-
     ORDER BY
         ordem ASC,
         nome ASC
 ';
 
-$stmtAreas =
-    $pdo->query(
-        $sqlAreas
-    );
+$stmt = $pdo->query($sql);
 
-$areas =
-    $stmtAreas->fetchAll(
-        PDO::FETCH_ASSOC
-    );
+$areas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
+/* ============================================================
+   CONFIGURAÇÕES DA PÁGINA
+============================================================ */
 
 $siteSubtitulo =
-    'Escolha sua área';
+    'Escolha sua Área';
 
 $paginaTitulo =
     'Escolha sua Área - Desafio do Milhão';
 
 $paginaDescricao =
-    'Escolha uma área de conhecimento para iniciar o desafio.';
+    'Selecione uma área de conhecimento para iniciar o desafio.';
+
+$paginaTipo =
+    'website';
 
 $paginaCss =
-    $baseUrl .
-    '/assets/css/areas.css';
+    urlProjeto(
+        'assets/css/areas.css'
+    );
 
 
-/* =========================================================
+/* ============================================================
    HEADER
-========================================================= */
+============================================================ */
 
-require_once __DIR__ .
-    '/includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 
 ?>
 
@@ -119,11 +114,19 @@ require_once __DIR__ .
 
     <section class="cabecalho-areas">
 
+
         <img
-            src="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/assets/img/logo/favicon.png"
+            src="<?php
+            echo escaparAreaPublica(
+                urlProjeto(
+                    'assets/img/logo/favicon.png'
+                )
+            );
+            ?>"
             alt="Desafio do Milhão"
             class="logo-areas"
         >
+
 
         <span class="rotulo-areas">
 
@@ -133,13 +136,16 @@ require_once __DIR__ .
 
         </span>
 
+
         <h1>
             ESCOLHA SUA ÁREA
         </h1>
 
+
         <p>
             Selecione uma área de conhecimento para iniciar o desafio.
         </p>
+
 
     </section>
 
@@ -148,28 +154,37 @@ require_once __DIR__ .
          BARRA SUPERIOR
     ====================================================== -->
 
-    <section class="acoes-superiores-areas">
+    <section class="barra-superior-areas">
 
 
-        <div class="titulo-acoes-areas">
+        <div class="contador-areas">
+
 
             <span>
                 ÁREAS DISPONÍVEIS
             </span>
 
+
             <strong>
 
-                <?php echo count($areas); ?>
-
-                área(s)
+                <?php
+                echo count($areas);
+                ?> área(s)
 
             </strong>
+
 
         </div>
 
 
         <a
-            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/login.php?destino=areas"
+            href="<?php
+            echo escaparAreaPublica(
+                urlProjeto(
+                    'login.php?destino=areas'
+                )
+            );
+            ?>"
             class="botao-gerenciar-areas"
         >
 
@@ -184,7 +199,7 @@ require_once __DIR__ .
 
 
     <!-- =====================================================
-         ÁREAS
+         LISTA DE ÁREAS
     ====================================================== -->
 
     <section class="grade-areas">
@@ -193,17 +208,21 @@ require_once __DIR__ .
         <?php if (empty($areas)): ?>
 
 
-            <div class="areas-vazias">
+            <div class="estado-vazio-areas">
 
-                <i class="fa-solid fa-layer-group"></i>
 
-                <strong>
-                    Nenhuma área disponível
-                </strong>
+                <i class="fa-solid fa-circle-exclamation"></i>
 
-                <span>
-                    Não existem áreas ativas para iniciar uma partida.
-                </span>
+
+                <h2>
+                    NENHUMA ÁREA DISPONÍVEL
+                </h2>
+
+
+                <p>
+                    Não existem áreas ativas cadastradas no momento.
+                </p>
+
 
             </div>
 
@@ -222,11 +241,15 @@ require_once __DIR__ .
                         ?? 0
                     );
 
+
                 $areaNome =
-                    (string) (
-                        $area['nome']
-                        ?? 'Área'
+                    trim(
+                        (string) (
+                            $area['nome']
+                            ?? 'Área'
+                        )
                     );
+
 
                 $areaDescricao =
                     trim(
@@ -236,99 +259,109 @@ require_once __DIR__ .
                         )
                     );
 
+
                 $areaIcone =
                     trim(
                         (string) (
                             $area['icone']
-                            ?? ''
+                            ?? 'fa-solid fa-layer-group'
                         )
                     );
 
-                if ($areaIcone === '') {
-                    $areaIcone =
-                        'fa-solid fa-layer-group';
+
+                $parametrosSelecao = [
+                    'id' =>
+                        $areaId,
+                ];
+
+
+                if ($retorno !== '') {
+
+                    $parametrosSelecao['retorno'] =
+                        $retorno;
                 }
+
+
+                $urlSelecionar =
+                    urlProjeto(
+                        'selecionar-area.php?' .
+                        http_build_query(
+                            $parametrosSelecao
+                        )
+                    );
 
                 ?>
 
 
-                <form
-                    action="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/selecionar-area.php"
-                    method="POST"
-                    class="form-area"
+                <a
+                    href="<?php
+                    echo escaparAreaPublica(
+                        $urlSelecionar
+                    );
+                    ?>"
+                    class="card-area"
                 >
 
-                    <input
-                        type="hidden"
-                        name="area_id"
-                        value="<?php echo $areaId; ?>"
-                    >
+
+                    <!-- ÍCONE -->
+
+                    <div class="icone-card-area">
+
+                        <i
+                            class="<?php
+                            echo escaparAreaPublica(
+                                $areaIcone
+                            );
+                            ?>"
+                        ></i>
+
+                    </div>
 
 
-                    <button
-                        type="submit"
-                        class="card-area"
-                    >
+                    <!-- CONTEÚDO -->
+
+                    <div class="conteudo-card-area">
 
 
-                        <span class="icone-area">
+                        <h2>
 
-                            <i
-                                class="<?php
-                                echo htmlspecialchars(
-                                    $areaIcone,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                );
-                                ?>"
-                            ></i>
+                            <?php
+                            echo escaparAreaPublica(
+                                $areaNome
+                            );
+                            ?>
 
-                        </span>
+                        </h2>
 
 
-                        <span class="conteudo-area">
+                        <?php if ($areaDescricao !== ''): ?>
 
-
-                            <strong>
+                            <p>
 
                                 <?php
-                                echo htmlspecialchars(
-                                    $areaNome,
-                                    ENT_QUOTES,
-                                    'UTF-8'
+                                echo escaparAreaPublica(
+                                    $areaDescricao
                                 );
                                 ?>
 
-                            </strong>
+                            </p>
+
+                        <?php endif; ?>
 
 
-                            <small>
-
-                                <?php
-                                echo htmlspecialchars(
-                                    $areaDescricao,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                );
-                                ?>
-
-                            </small>
+                    </div>
 
 
-                        </span>
+                    <!-- SETA -->
+
+                    <div class="seta-card-area">
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </div>
 
 
-                        <span class="seta-area">
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </span>
-
-
-                    </button>
-
-
-                </form>
+                </a>
 
 
             <?php endforeach; ?>
@@ -341,14 +374,18 @@ require_once __DIR__ .
 
 
     <!-- =====================================================
-         AÇÕES
+         AÇÕES INFERIORES
     ====================================================== -->
 
-    <section class="rodape-areas">
+    <section class="acoes-inferiores-areas">
 
 
         <a
-            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/"
+            href="<?php
+            echo escaparAreaPublica(
+                urlProjeto()
+            );
+            ?>"
             class="botao-voltar-areas"
         >
 
@@ -360,7 +397,13 @@ require_once __DIR__ .
 
 
         <a
-            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/login.php?destino=areas"
+            href="<?php
+            echo escaparAreaPublica(
+                urlProjeto(
+                    'login.php?destino=areas&acao=cadastrar'
+                )
+            );
+            ?>"
             class="botao-cadastrar-area"
         >
 
@@ -379,8 +422,7 @@ require_once __DIR__ .
 
 <?php
 
-require_once __DIR__ .
-    '/includes/footer.php';
+require_once __DIR__ . '/includes/footer.php';
 
 ?>
 

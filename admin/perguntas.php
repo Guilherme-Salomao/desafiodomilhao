@@ -2,6 +2,8 @@
 
     declare (strict_types = 1);
 
+    require_once __DIR__ . '/../includes/url.php';
+
     require_once __DIR__ .
     '/../includes/autenticacao.php';
 
@@ -399,7 +401,7 @@
 
     </div>
 
-<a href="/desafiodomilhao/public/logout.php" class="botao-sair-banco">
+<a href="<?php echo urlProjeto('logout.php'); ?>" class="botao-sair-banco">
     <i class="fa-solid fa-right-from-bracket"></i>
     SAIR
 </a>
