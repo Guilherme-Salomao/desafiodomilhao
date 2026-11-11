@@ -1,779 +1,766 @@
-/* =====================================================
-   PÁGINA - LOGIN
-===================================================== */
+/* =========================================================
+   PÁGINA DE LOGIN
+========================================================= */
 
 .pagina-login {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 
-  width: 100%;
-  max-width: 720px;
+    width: min(
+        650px,
+        calc(100% - 32px)
+    );
 
-  min-height: calc(100vh - 50px);
+    margin: 0 auto;
 
-  margin: 0 auto;
-
-  padding: 28px 35px 45px;
+    padding:
+        28px 0
+        50px;
 }
 
-/* =====================================================
+
+/* =========================================================
    CABEÇALHO
-===================================================== */
+========================================================= */
 
 .cabecalho-login {
-  width: 100%;
+    display: flex;
 
-  display: flex;
-  flex-direction: column;
+    flex-direction: column;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
 
-  margin-bottom: 28px;
+    justify-content: center;
 
-  text-align: center;
+    text-align: center;
+
+    margin-bottom: 26px;
 }
 
-/* =====================================================
-   LOGO
-===================================================== */
 
 .logo-login {
-  display: block;
+    width: 190px;
+    height: auto;
 
-  width: 100%;
-  max-width: 220px;
+    margin-bottom: 18px;
 
-  height: auto;
+    object-fit: contain;
 
-  margin: 0 auto 20px;
-
-  object-fit: contain;
-
-  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.3))
-    drop-shadow(0 0 18px rgba(255, 183, 0, 0.1));
+    filter:
+        drop-shadow(
+            0 0 16px
+            rgba(255, 195, 40, 0.30)
+        );
 }
 
-/* =====================================================
-   RÓTULO
-===================================================== */
 
 .rotulo-login {
-  display: inline-flex;
+    display: inline-flex;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
 
-  gap: 8px;
+    gap: 8px;
 
-  margin-bottom: 12px;
+    margin-bottom: 10px;
 
-  color: #ffc328;
+    color: #ffd35a;
 
-  font-size: 10px;
+    font-size: 11px;
 
-  font-weight: 800;
+    font-weight: 900;
 
-  letter-spacing: 1.7px;
+    letter-spacing: 0.08em;
 }
 
-/* =====================================================
-   TÍTULO
-===================================================== */
 
 .cabecalho-login h1 {
-  margin: 0;
+    margin: 0;
 
-  color: #ffffff;
+    color: #ffffff;
 
-  font-size: 29px;
+    font-size: 30px;
 
-  font-weight: 800;
+    font-weight: 900;
 
-  letter-spacing: 1.2px;
-
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+    line-height: 1;
 }
+
 
 .cabecalho-login p {
-  max-width: 500px;
+    margin:
+        12px 0 0;
 
-  margin: 10px auto 0;
+    color: #b6c8d3;
 
-  color: #aec3d2;
-
-  font-size: 13px;
-
-  line-height: 1.6;
+    font-size: 13px;
 }
 
-/* =====================================================
-   PAINEL
-===================================================== */
 
-.painel-login {
-  width: 100%;
+/* =========================================================
+   CONTAINER
+========================================================= */
 
-  padding: 30px;
+.container-login {
+    width: 100%;
 
-  border: 1px solid rgba(22, 142, 228, 0.72);
+    padding: 30px;
 
-  border-radius: 13px;
+    box-sizing: border-box;
 
-  background: linear-gradient(
-    145deg,
-    rgba(5, 27, 48, 0.96),
-    rgba(2, 14, 28, 0.96)
-  );
+    border:
+        1px solid
+        #168ee4;
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    border-radius: 12px;
+
+    background:
+        rgba(
+            2,
+            27,
+            47,
+            0.96
+        );
+
+    box-shadow:
+        0 18px 40px
+        rgba(
+            0,
+            0,
+            0,
+            0.30
+        );
 }
 
-/* =====================================================
-   MENSAGENS
-===================================================== */
 
-.mensagem-login {
-  position: relative;
-
-  width: 100%;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 13px;
-
-  margin-bottom: 22px;
-
-  padding: 15px 45px 15px 15px;
-
-  border-radius: 9px;
-}
-
-/* =====================================================
-   MENSAGEM - ERRO
-===================================================== */
-
-.mensagem-login.erro {
-  border: 1px solid rgba(255, 86, 86, 0.52);
-
-  background: linear-gradient(
-    90deg,
-    rgba(116, 17, 27, 0.34),
-    rgba(56, 7, 13, 0.22)
-  );
-}
-
-.mensagem-login.erro .icone-mensagem-login {
-  color: #ff6868;
-
-  border-color: rgba(255, 86, 86, 0.32);
-
-  background: rgba(255, 86, 86, 0.08);
-}
-
-.mensagem-login.erro .conteudo-mensagem-login strong {
-  color: #ff6868;
-}
-
-.mensagem-login.erro .conteudo-mensagem-login span {
-  color: #e4b9bc;
-}
-
-/* =====================================================
-   MENSAGEM - AVISO
-===================================================== */
-
-.mensagem-login.aviso {
-  border: 1px solid rgba(255, 195, 40, 0.45);
-
-  background: linear-gradient(
-    90deg,
-    rgba(110, 67, 5, 0.32),
-    rgba(51, 31, 2, 0.2)
-  );
-}
-
-.mensagem-login.aviso .icone-mensagem-login {
-  color: #ffc328;
-
-  border-color: rgba(255, 195, 40, 0.3);
-
-  background: rgba(255, 195, 40, 0.08);
-}
-
-.mensagem-login.aviso .conteudo-mensagem-login strong {
-  color: #ffc328;
-}
-
-.mensagem-login.aviso .conteudo-mensagem-login span {
-  color: #d6c79e;
-}
-
-/* =====================================================
-   ÍCONE DA MENSAGEM
-===================================================== */
-
-.icone-mensagem-login {
-  width: 42px;
-
-  height: 42px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  font-size: 18px;
-
-  border: 1px solid;
-
-  border-radius: 50%;
-}
-
-/* =====================================================
-   CONTEÚDO DA MENSAGEM
-===================================================== */
-
-.conteudo-mensagem-login {
-  min-width: 0;
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 4px;
-}
-
-.conteudo-mensagem-login strong {
-  font-size: 10px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.7px;
-}
-
-.conteudo-mensagem-login span {
-  font-size: 10px;
-
-  line-height: 1.5;
-}
-
-/* =====================================================
-   FECHAR MENSAGEM
-===================================================== */
-
-.fechar-mensagem-login {
-  position: absolute;
-
-  top: 50%;
-  right: 10px;
-
-  width: 30px;
-
-  height: 30px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  transform: translateY(-50%);
-
-  color: #8ea2b0;
-
-  font-size: 11px;
-
-  cursor: pointer;
-
-  border: 1px solid rgba(120, 150, 170, 0.2);
-
-  border-radius: 6px;
-
-  background: rgba(0, 0, 0, 0.1);
-
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.fechar-mensagem-login:hover {
-  color: #ffffff;
-
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-/* =====================================================
+/* =========================================================
    TÍTULO DO PAINEL
-===================================================== */
+========================================================= */
 
 .titulo-painel-login {
-  width: 100%;
+    display: grid;
 
-  display: flex;
+    grid-template-columns:
+        48px
+        minmax(0, 1fr);
 
-  align-items: center;
+    align-items: center;
 
-  gap: 14px;
+    gap: 14px;
 
-  margin-bottom: 25px;
+    padding-bottom: 20px;
 
-  padding-bottom: 20px;
+    margin-bottom: 22px;
 
-  border-bottom: 1px solid rgba(22, 142, 228, 0.13);
+    border-bottom:
+        1px solid
+        rgba(
+            22,
+            142,
+            228,
+            0.20
+        );
 }
 
-/* =====================================================
-   ÍCONE DO PAINEL
-===================================================== */
 
 .icone-painel-login {
-  width: 48px;
+    width: 46px;
+    height: 46px;
 
-  height: 48px;
+    display: grid;
 
-  display: flex;
+    place-items: center;
 
-  align-items: center;
+    border:
+        1px solid
+        rgba(
+            22,
+            142,
+            228,
+            0.50
+        );
 
-  justify-content: center;
+    border-radius: 9px;
 
-  flex-shrink: 0;
+    color: #55bfff;
 
-  color: #4db9ff;
+    background:
+        rgba(
+            7,
+            55,
+            89,
+            0.65
+        );
 
-  font-size: 19px;
-
-  border: 1px solid rgba(77, 185, 255, 0.24);
-
-  border-radius: 9px;
-
-  background: rgba(77, 185, 255, 0.07);
+    font-size: 20px;
 }
+
 
 .titulo-painel-login > div:last-child {
-  display: flex;
+    display: flex;
 
-  flex-direction: column;
+    flex-direction: column;
 
-  gap: 3px;
+    gap: 4px;
 }
+
 
 .titulo-painel-login strong {
-  color: #ffffff;
+    color: #ffffff;
 
-  font-size: 13px;
+    font-size: 13px;
 
-  letter-spacing: 0.5px;
+    font-weight: 900;
 }
+
 
 .titulo-painel-login span {
-  color: #839cac;
+    color: #9eb2bf;
 
-  font-size: 10px;
+    font-size: 10px;
 }
 
-/* =====================================================
+
+/* =========================================================
+   MENSAGENS
+========================================================= */
+
+.mensagem-login {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+    padding:
+        12px 14px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+
+.mensagem-login.erro {
+    color: #ffb4b4;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            83,
+            83,
+            0.32
+        );
+
+    background:
+        rgba(
+            107,
+            22,
+            30,
+            0.32
+        );
+}
+
+
+.mensagem-login.aviso {
+    color: #b9dcf1;
+
+    border:
+        1px solid
+        rgba(
+            72,
+            170,
+            229,
+            0.30
+        );
+
+    background:
+        rgba(
+            20,
+            78,
+            115,
+            0.28
+        );
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.formulario-login {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
    GRUPO DE CAMPO
-===================================================== */
+========================================================= */
 
-.grupo-campo-login {
-  width: 100%;
+.grupo-login {
+    display: flex;
 
-  margin-bottom: 20px;
+    flex-direction: column;
+
+    gap: 8px;
 }
 
-.grupo-campo-login label {
-  display: flex;
 
-  align-items: center;
+.grupo-login label {
+    display: inline-flex;
 
-  gap: 8px;
+    align-items: center;
 
-  margin-bottom: 8px;
+    gap: 7px;
 
-  color: #ffffff;
+    color: #ffffff;
 
-  font-size: 12px;
+    font-size: 12px;
 
-  font-weight: 700;
+    font-weight: 800;
 }
 
-.grupo-campo-login label i {
-  color: #4db9ff;
+
+.grupo-login label i {
+    color: #55bfff;
+
+    width: 14px;
+
+    text-align: center;
 }
 
-/* =====================================================
-   CAMPO COM ÍCONE
-===================================================== */
 
-.campo-login-com-icone,
+/* =========================================================
+   CAMPO
+========================================================= */
+
+.campo-login {
+    min-height: 50px;
+
+    display: grid;
+
+    grid-template-columns:
+        42px
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        #168ee4;
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            4,
+            27,
+            47,
+            0.90
+        );
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.campo-login:focus-within {
+    border-color:
+        #ffd35a;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(
+            255,
+            211,
+            90,
+            0.10
+        );
+}
+
+
+.campo-login > i {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 100%;
+
+    color: #63c6ff;
+
+    font-size: 14px;
+}
+
+
+.campo-login input {
+    width: 100%;
+
+    height: 48px;
+
+    padding:
+        0 14px 0 0;
+
+    box-sizing: border-box;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+}
+
+
+.campo-login input::placeholder {
+    color: #718b9b;
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   SENHA
+========================================================= */
+
 .campo-senha-login {
-  position: relative;
-
-  width: 100%;
+    grid-template-columns:
+        42px
+        minmax(0, 1fr)
+        46px;
 }
 
-.campo-login-com-icone > i,
-.icone-campo-senha {
-  position: absolute;
 
-  top: 50%;
+.mostrar-senha-login {
+    width: 46px;
+    height: 48px;
 
-  left: 14px;
+    display: grid;
 
-  transform: translateY(-50%);
+    place-items: center;
 
-  color: #4d8db5;
+    padding: 0;
 
-  font-size: 12px;
+    border: 0;
 
-  pointer-events: none;
+    cursor: pointer;
+
+    color: #8ca6b5;
+
+    background: transparent;
+
+    font-size: 14px;
+
+    transition:
+        color 0.18s ease;
 }
 
-.campo-login-com-icone input,
-.campo-senha-login input {
-  width: 100%;
 
-  height: 50px;
-
-  padding: 0 48px 0 40px;
-
-  color: #ffffff;
-
-  font-family: inherit;
-
-  font-size: 13px;
-
-  outline: none;
-
-  border: 1px solid rgba(22, 142, 228, 0.62);
-
-  border-radius: 7px;
-
-  background: rgba(1, 15, 29, 0.85);
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+.mostrar-senha-login:hover {
+    color: #ffffff;
 }
 
-.campo-login-com-icone input::placeholder,
-.campo-senha-login input::placeholder {
-  color: #6f889a;
+
+/* =========================================================
+   AVISO
+========================================================= */
+
+.aviso-acesso-login {
+    min-height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding:
+        10px 13px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(
+            22,
+            142,
+            228,
+            0.28
+        );
+
+    border-radius: 7px;
+
+    color: #9db2bf;
+
+    background:
+        rgba(
+            7,
+            49,
+            79,
+            0.34
+        );
+
+    font-size: 10px;
 }
 
-.campo-login-com-icone input:focus,
-.campo-senha-login input:focus {
-  border-color: #ffc328;
 
-  background: rgba(2, 20, 38, 0.95);
+.aviso-acesso-login i {
+    color: #55bfff;
 
-  box-shadow: 0 0 0 3px rgba(255, 195, 40, 0.07);
+    flex-shrink: 0;
 }
 
-/* =====================================================
-   MOSTRAR SENHA
-===================================================== */
 
-.botao-mostrar-senha-login {
-  position: absolute;
-
-  top: 50%;
-  right: 7px;
-
-  width: 36px;
-
-  height: 36px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  transform: translateY(-50%);
-
-  color: #7996a9;
-
-  cursor: pointer;
-
-  border: 0;
-
-  border-radius: 6px;
-
-  background: transparent;
-
-  transition:
-    color 0.2s ease,
-    background 0.2s ease;
-}
-
-.botao-mostrar-senha-login:hover {
-  color: #ffc328;
-
-  background: rgba(255, 195, 40, 0.06);
-}
-
-/* =====================================================
-   INFORMAÇÃO
-===================================================== */
-
-.informacao-login {
-  width: 100%;
-
-  display: flex;
-
-  align-items: flex-start;
-
-  gap: 9px;
-
-  margin: 4px 0 25px;
-
-  padding: 12px 14px;
-
-  color: #86a0b1;
-
-  font-size: 9px;
-
-  line-height: 1.5;
-
-  border: 1px solid rgba(22, 142, 228, 0.2);
-
-  border-radius: 7px;
-
-  background: rgba(18, 79, 119, 0.07);
-}
-
-.informacao-login i {
-  margin-top: 2px;
-
-  color: #4db9ff;
-}
-
-/* =====================================================
+/* =========================================================
    AÇÕES
-===================================================== */
+========================================================= */
 
 .acoes-login {
-  width: 100%;
+    display: flex;
 
-  display: flex;
+    align-items: center;
 
-  align-items: center;
+    justify-content: space-between;
 
-  justify-content: space-between;
+    gap: 14px;
 
-  gap: 15px;
+    margin-top: 2px;
 }
 
-/* =====================================================
+
+.botao-voltar-login,
+.botao-entrar-login {
+    min-height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding:
+        0 20px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+/* =========================================================
    VOLTAR
-===================================================== */
+========================================================= */
 
 .botao-voltar-login {
-  min-height: 48px;
+    color: #dce7ed;
 
-  display: inline-flex;
+    border:
+        1px solid
+        #168ee4;
 
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 8px;
-
-  padding: 0 22px;
-
-  color: #c5d7e3;
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  text-decoration: none;
-
-  border: 1px solid #168ee4;
-
-  border-radius: 7px;
-
-  background: rgba(3, 22, 40, 0.9);
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease;
+    background:
+        rgba(
+            7,
+            44,
+            70,
+            0.80
+        );
 }
 
-.botao-voltar-login:hover {
-  color: #ffffff;
 
-  transform: translateY(-1px);
-
-  border-color: #4db9ff;
-}
-
-/* =====================================================
+/* =========================================================
    ENTRAR
-===================================================== */
+========================================================= */
 
 .botao-entrar-login {
-  min-height: 52px;
+    min-width: 155px;
 
-  display: inline-flex;
+    cursor: pointer;
 
-  align-items: center;
+    color: #ffffff;
 
-  justify-content: center;
+    border:
+        2px solid
+        #ffc328;
 
-  gap: 10px;
+    background:
+        linear-gradient(
+            180deg,
+            #a66505,
+            #764300
+        );
 
-  padding: 0 34px;
-
-  color: #ffffff;
-
-  font-family: inherit;
-
-  font-size: 13px;
-
-  font-weight: 800;
-
-  letter-spacing: 0.5px;
-
-  cursor: pointer;
-
-  border: 2px solid #ffc328;
-
-  border-radius: 8px;
-
-  background: linear-gradient(90deg, #9b5c07, #553000);
-
-  box-shadow: 0 0 20px rgba(255, 183, 0, 0.2);
-
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow:
+        0 0 14px
+        rgba(
+            255,
+            195,
+            40,
+            0.12
+        );
 }
 
-.botao-entrar-login i {
-  color: #ffe075;
+
+.botao-voltar-login:hover,
+.botao-entrar-login:hover {
+    transform:
+        translateY(-2px);
 }
+
 
 .botao-entrar-login:hover {
-  transform: translateY(-2px);
-
-  border-color: #ffe075;
-
-  box-shadow: 0 0 27px rgba(255, 183, 0, 0.34);
+    box-shadow:
+        0 0 22px
+        rgba(
+            255,
+            195,
+            40,
+            0.22
+        );
 }
 
-/* =====================================================
+
+/* =========================================================
    RODAPÉ
-===================================================== */
+========================================================= */
 
 .rodape-login {
-  width: 100%;
+    display: flex;
 
-  display: flex;
+    align-items: center;
 
-  align-items: center;
+    justify-content: center;
 
-  justify-content: center;
+    flex-wrap: wrap;
 
-  gap: 8px;
+    gap: 7px;
 
-  margin-top: 25px;
+    margin-top: 24px;
 
-  padding-top: 20px;
+    padding-top: 22px;
 
-  color: #829cad;
-
-  font-size: 10px;
-
-  border-top: 1px solid rgba(22, 142, 228, 0.11);
+    border-top:
+        1px solid
+        rgba(
+            22,
+            142,
+            228,
+            0.18
+        );
 }
+
+
+.rodape-login span {
+    color: #839ba9;
+
+    font-size: 10px;
+}
+
 
 .rodape-login a {
-  display: inline-flex;
+    display: inline-flex;
 
-  align-items: center;
+    align-items: center;
 
-  gap: 6px;
+    gap: 6px;
 
-  color: #ffc328;
+    color: #ffd35a;
 
-  font-weight: 700;
+    text-decoration: none;
 
-  text-decoration: none;
+    font-size: 10px;
+
+    font-weight: 900;
 }
+
 
 .rodape-login a:hover {
-  color: #ffe075;
+    text-decoration: underline;
 }
 
-/* =====================================================
-   CELULAR
-===================================================== */
 
-@media (max-width: 600px) {
-  .pagina-login {
-    padding: 18px 12px 30px;
-  }
+/* =========================================================
+   RESPONSIVO
+========================================================= */
 
-  .logo-login {
-    max-width: 180px;
-  }
+@media (max-width: 700px) {
 
-  .cabecalho-login h1 {
-    font-size: 21px;
-  }
+    .pagina-login {
+        width:
+            calc(100% - 20px);
 
-  .cabecalho-login p {
-    font-size: 11px;
-  }
+        padding-top: 18px;
+    }
 
-  .painel-login {
-    padding: 18px;
-  }
 
-  .acoes-login {
-    flex-direction: column-reverse;
-  }
+    .logo-login {
+        width: 155px;
+    }
 
-  .botao-voltar-login,
-  .botao-entrar-login {
-    width: 100%;
-  }
+
+    .container-login {
+        padding: 22px 18px;
+    }
+
+
+    .acoes-login {
+        flex-direction: column;
+    }
+
+
+    .botao-voltar-login,
+    .botao-entrar-login {
+        width: 100%;
+    }
 }
 
-/* =====================================================
-   CELULAR PEQUENO
-===================================================== */
 
 @media (max-width: 420px) {
-  .pagina-login {
-    padding: 15px 9px 25px;
-  }
 
-  .logo-login {
-    max-width: 160px;
-  }
+    .titulo-painel-login {
+        grid-template-columns:
+            40px
+            minmax(0, 1fr);
+    }
 
-  .rotulo-login {
-    font-size: 9px;
-  }
 
-  .cabecalho-login h1 {
-    font-size: 19px;
-  }
+    .icone-painel-login {
+        width: 40px;
+        height: 40px;
+    }
 
-  .painel-login {
-    padding: 14px;
-  }
+
+    .cabecalho-login h1 {
+        font-size: 27px;
+    }
 }

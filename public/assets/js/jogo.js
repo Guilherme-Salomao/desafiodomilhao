@@ -70,6 +70,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const chaveEstadoPartida =
         "desafioMilhaoEstadoPartida";
 
+    const chaveTempoPartida =
+        "desafioMilhaoTempoPartida";
+
 
     /* =====================================================
        ESTADO
@@ -79,11 +82,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let partidaEncerrada = false;
 
-    let aguardandoProxima =
-        false;
+    let aguardandoProxima = false;
 
-    let intervaloCronometro =
-        null;
+    let intervaloCronometro = null;
+
+    let inicioQuestaoMs = null;
+
+
+    /* =====================================================
+       BASE URL
+    ===================================================== */
+
+    function obterBaseUrl() {
+
+        return (
+            window.APP_BASE_URL ||
+            "/github/desafiodomilhao/public"
+        );
+    }
 
 
     /* =====================================================
@@ -145,7 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 Number(
                     correspondencia[2]
                 ) || 10
-
         };
     }
 
@@ -156,8 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function obterPremios() {
 
-        const premios =
-            {};
+        const premios = {};
 
         document
             .querySelectorAll(
@@ -210,8 +224,10 @@ document.addEventListener("DOMContentLoaded", function () {
             obterPremios();
 
         return (
-            premios[dados.atual - 1]
-            || "R$ 0"
+            premios[
+                dados.atual - 1
+            ] ||
+            "R$ 0"
         );
     }
 
@@ -225,14 +241,34 @@ document.addEventListener("DOMContentLoaded", function () {
             obterPremios();
 
         return (
-            premios[dados.atual]
-            || "R$ 0"
+            premios[
+                dados.atual
+            ] ||
+            "R$ 0"
         );
     }
 
 
+    function converterPremioParaNumero(
+        valor
+    ) {
+
+        const numero =
+            String(
+                valor ?? ""
+            ).replace(
+                /[^0-9]/g,
+                ""
+            );
+
+        return numero
+            ? Number(numero)
+            : 0;
+    }
+
+
     /* =====================================================
-       HISTÓRICO
+       HISTÓRICO DAS AJUDAS
     ===================================================== */
 
     function carregarHistorico() {
@@ -300,224 +336,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =====================================================
-       ESTADO PERSISTENTE DA PARTIDA
-    ===================================================== */
-
-    function salvarEstadoPartida(
-        estado
-    ) {
-
-        try {
-
-            sessionStorage.setItem(
-                chaveEstadoPartida,
-                JSON.stringify(
-                    estado
-                )
-            );
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao salvar estado da partida:",
-                erro
-            );
-        }
-    }
-
-
-    function carregarEstadoPartida() {
-
-        try {
-
-            const dados =
-                sessionStorage.getItem(
-                    chaveEstadoPartida
-                );
-
-            if (!dados) {
-                return null;
-            }
-
-            const estado =
-                JSON.parse(dados);
-
-            return (
-                estado &&
-                typeof estado === "object"
-            )
-                ? estado
-                : null;
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao recuperar estado da partida:",
-                erro
-            );
-
-            return null;
-        }
-    }
-
-
-    function limparEstadoPartida() {
-
-        sessionStorage.removeItem(
-            chaveEstadoPartida
-        );
-    }
-
-
-    /* =====================================================
-       SNAPSHOT DA PERGUNTA FINAL
-    ===================================================== */
-
-    function capturarPerguntaAtual() {
-
-        return {
-
-            contador:
-                contadorPergunta
-                    ? contadorPergunta.innerHTML
-                    : "",
-
-            cartao:
-                cartaoPergunta
-                    ? cartaoPergunta.innerHTML
-                    : "",
-
-            alternativas:
-                alternativas
-                    ? alternativas.innerHTML
-                    : "",
-
-            correta:
-                alternativas
-                    ? alternativas.dataset.correta || ""
-                    : "",
-
-            resultado:
-                resultado
-                    ? resultado.innerHTML
-                    : "",
-
-            resultadoClasse:
-                resultado
-                    ? resultado.className
-                    : "resultado-jogo",
-
-            resultadoOculto:
-                resultado
-                    ? resultado.hidden
-                    : true,
-
-            cronometro:
-                cronometro
-                    ? cronometro.textContent
-                    : "0"
-
-        };
-    }
-
-
-    function restaurarPerguntaCongelada(
-        snapshot
-    ) {
-
-        if (
-            !snapshot ||
-            typeof snapshot !== "object"
-        ) {
-            return;
-        }
-
-
-        /* =================================================
-           CONTADOR
-        ================================================= */
-
-        if (
-            contadorPergunta &&
-            snapshot.contador !== undefined
-        ) {
-
-            contadorPergunta.innerHTML =
-                snapshot.contador;
-        }
-
-
-        /* =================================================
-           PERGUNTA
-        ================================================= */
-
-        if (
-            cartaoPergunta &&
-            snapshot.cartao
-        ) {
-
-            cartaoPergunta.innerHTML =
-                snapshot.cartao;
-        }
-
-
-        /* =================================================
-           ALTERNATIVAS
-        ================================================= */
-
-        if (
-            alternativas &&
-            snapshot.alternativas
-        ) {
-
-            alternativas.innerHTML =
-                snapshot.alternativas;
-
-            alternativas.dataset.correta =
-                snapshot.correta || "";
-        }
-
-
-        /* =================================================
-           RESULTADO
-        ================================================= */
-
-        if (
-            resultado &&
-            snapshot.resultado !== undefined
-        ) {
-
-            resultado.innerHTML =
-                snapshot.resultado;
-
-            resultado.className =
-                snapshot.resultadoClasse ||
-                "resultado-jogo";
-
-            resultado.hidden =
-                Boolean(
-                    snapshot.resultadoOculto
-                );
-        }
-
-
-        /* =================================================
-           CRONÔMETRO
-        ================================================= */
-
-        if (cronometro) {
-
-            cronometro.textContent =
-                snapshot.cronometro || "0";
-        }
-    }
-
-
-    /* =====================================================
-       HISTÓRICO DAS AJUDAS
-    ===================================================== */
-
     function salvarAjuda(
         registro
     ) {
@@ -571,6 +389,364 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    function obterResumoAjudas() {
+
+        const historico =
+            carregarHistorico();
+
+        const tipos =
+            new Set(
+                historico
+                    .map(
+                        function (item) {
+
+                            return item.tipo;
+                        }
+                    )
+                    .filter(Boolean)
+            );
+
+        return {
+
+            quantidade:
+                tipos.size,
+
+            cinquenta:
+                tipos.has(
+                    "cinquenta"
+                ),
+
+            tecnico:
+                tipos.has(
+                    "tecnico"
+                ),
+
+            turma:
+                tipos.has(
+                    "turma"
+                ),
+
+            trocar:
+                tipos.has(
+                    "trocar"
+                )
+        };
+    }
+
+
+    /* =====================================================
+       ESTADO PERSISTENTE
+    ===================================================== */
+
+    function salvarEstadoPartida(
+        estado
+    ) {
+
+        try {
+
+            sessionStorage.setItem(
+                chaveEstadoPartida,
+                JSON.stringify(
+                    estado
+                )
+            );
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao salvar estado da partida:",
+                erro
+            );
+        }
+    }
+
+
+    function carregarEstadoPartida() {
+
+        try {
+
+            const dados =
+                sessionStorage.getItem(
+                    chaveEstadoPartida
+                );
+
+            if (!dados) {
+
+                return null;
+            }
+
+            const estado =
+                JSON.parse(dados);
+
+            return (
+                estado &&
+                typeof estado ===
+                "object"
+            )
+                ? estado
+                : null;
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao recuperar estado:",
+                erro
+            );
+
+            return null;
+        }
+    }
+
+
+    function limparEstadoPartida() {
+
+        sessionStorage.removeItem(
+            chaveEstadoPartida
+        );
+    }
+
+
+    /* =====================================================
+       TEMPO DA PARTIDA
+    ===================================================== */
+
+    function carregarTempoPartida() {
+
+        const valor =
+            Number(
+                sessionStorage.getItem(
+                    chaveTempoPartida
+                ) || 0
+            );
+
+        if (
+            !Number.isFinite(
+                valor
+            )
+        ) {
+
+            return 0;
+        }
+
+        return Math.max(
+            0,
+            Math.round(valor)
+        );
+    }
+
+
+    function salvarTempoPartida(
+        tempo
+    ) {
+
+        sessionStorage.setItem(
+            chaveTempoPartida,
+            String(
+                Math.max(
+                    0,
+                    Math.round(
+                        tempo
+                    )
+                )
+            )
+        );
+    }
+
+
+    function limparTempoPartida() {
+
+        sessionStorage.removeItem(
+            chaveTempoPartida
+        );
+
+        inicioQuestaoMs =
+            null;
+    }
+
+
+    function iniciarTempoQuestao() {
+
+        if (
+            partidaEncerrada ||
+            respondida
+        ) {
+
+            return;
+        }
+
+        inicioQuestaoMs =
+            Date.now();
+    }
+
+
+    function consolidarTempoQuestao() {
+
+        if (
+            inicioQuestaoMs ===
+            null
+        ) {
+
+            return carregarTempoPartida();
+        }
+
+        const agora =
+            Date.now();
+
+        const decorrido =
+            Math.max(
+                0,
+                agora -
+                inicioQuestaoMs
+            );
+
+        const total =
+            carregarTempoPartida() +
+            decorrido;
+
+        salvarTempoPartida(
+            total
+        );
+
+        inicioQuestaoMs =
+            null;
+
+        return total;
+    }
+
+
+    /* =====================================================
+       SNAPSHOT DA PERGUNTA FINAL
+    ===================================================== */
+
+    function capturarPerguntaAtual() {
+
+        return {
+
+            contador:
+                contadorPergunta
+                    ? contadorPergunta.innerHTML
+                    : "",
+
+            cartao:
+                cartaoPergunta
+                    ? cartaoPergunta.innerHTML
+                    : "",
+
+            alternativas:
+                alternativas
+                    ? alternativas.innerHTML
+                    : "",
+
+            correta:
+                alternativas
+                    ? (
+                        alternativas.dataset
+                            .correta || ""
+                    )
+                    : "",
+
+            resultado:
+                resultado
+                    ? resultado.innerHTML
+                    : "",
+
+            resultadoClasse:
+                resultado
+                    ? resultado.className
+                    : "resultado-jogo",
+
+            resultadoOculto:
+                resultado
+                    ? resultado.hidden
+                    : true,
+
+            cronometro:
+                cronometro
+                    ? cronometro.textContent
+                    : "0"
+        };
+    }
+
+
+    function restaurarPerguntaCongelada(
+        snapshot
+    ) {
+
+        if (
+            !snapshot ||
+            typeof snapshot !==
+            "object"
+        ) {
+
+            return;
+        }
+
+
+        if (
+            contadorPergunta &&
+            snapshot.contador !==
+            undefined
+        ) {
+
+            contadorPergunta.innerHTML =
+                snapshot.contador;
+        }
+
+
+        if (
+            cartaoPergunta &&
+            snapshot.cartao
+        ) {
+
+            cartaoPergunta.innerHTML =
+                snapshot.cartao;
+        }
+
+
+        if (
+            alternativas &&
+            snapshot.alternativas
+        ) {
+
+            alternativas.innerHTML =
+                snapshot.alternativas;
+
+            alternativas.dataset.correta =
+                snapshot.correta ||
+                "";
+        }
+
+
+        if (
+            resultado &&
+            snapshot.resultado !==
+            undefined
+        ) {
+
+            resultado.innerHTML =
+                snapshot.resultado;
+
+            resultado.className =
+                snapshot.resultadoClasse ||
+                "resultado-jogo";
+
+            resultado.hidden =
+                Boolean(
+                    snapshot
+                        .resultadoOculto
+                );
+        }
+
+
+        if (cronometro) {
+
+            cronometro.textContent =
+                snapshot.cronometro ||
+                "0";
+        }
+    }
+
+
     /* =====================================================
        MENU
     ===================================================== */
@@ -619,13 +795,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =====================================================
-       LIBERA SOMENTE JOGAR
-    ===================================================== */
-
     function liberarJogarProximaPergunta() {
 
         if (!botaoJogar) {
+
             return;
         }
 
@@ -645,10 +818,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            (
-                window.APP_BASE_URL ||
-                "/github/desafiodomilhao/public"
-            ) +
+            obterBaseUrl() +
             "/proxima-pergunta.php";
 
         const titulo =
@@ -675,13 +845,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =====================================================
-       NOVA PARTIDA
-    ===================================================== */
-
     function liberarJogarNovaPartida() {
 
         if (!botaoJogar) {
+
             return;
         }
 
@@ -698,10 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         botaoJogar.href =
-            (
-                window.APP_BASE_URL ||
-                "/github/desafiodomilhao/public"
-            ) +
+            obterBaseUrl() +
             "/configurar-partida.php?modo=individual";
 
         botaoJogar.dataset.novaPartida =
@@ -754,12 +918,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /* =========================================
-                       NOVA PARTIDA
-                    ========================================= */
-
                     if (
-                        link.dataset.novaPartida ===
+                        link.dataset
+                            .novaPartida ===
                         "true"
                     ) {
 
@@ -767,13 +928,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         limparEstadoPartida();
 
+                        limparTempoPartida();
+
                         return;
                     }
 
-
-                    /* =========================================
-                       PRÓXIMA PERGUNTA
-                    ========================================= */
 
                     if (
                         aguardandoProxima &&
@@ -784,15 +943,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /* =========================================
-                       SAIU DO ENCERRAMENTO
-                    ========================================= */
-
-                    if (partidaEncerrada) {
+                    if (
+                        partidaEncerrada
+                    ) {
 
                         limparHistorico();
 
                         limparEstadoPartida();
+
+                        limparTempoPartida();
                     }
                 }
             );
@@ -801,7 +960,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       ENCERRAMENTO DA PARTIDA
+       CARD FINAL
     ===================================================== */
 
     function criarEncerramento(
@@ -811,6 +970,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         if (!menuLateral) {
+
             return;
         }
 
@@ -829,10 +989,11 @@ document.addEventListener("DOMContentLoaded", function () {
             painel.id =
                 "gameOverJogo";
 
-            menuLateral.insertAdjacentElement(
-                "afterend",
-                painel
-            );
+            menuLateral
+                .insertAdjacentElement(
+                    "afterend",
+                    painel
+                );
         }
 
 
@@ -901,175 +1062,198 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function encerrarPartida(
-        valorPremio,
-        mensagem,
-        sucesso = false
+    /* =====================================================
+       DADOS PARA O RANKING
+    ===================================================== */
+
+    function montarDadosRanking(
+        sucesso,
+        valorPremio
     ) {
 
-        partidaEncerrada =
-            true;
+        const dados =
+            obterDadosPergunta();
 
-        respondida =
-            true;
+        const ajudas =
+            obterResumoAjudas();
 
-        aguardandoProxima =
-            false;
-
-
-        if (intervaloCronometro) {
-
-            clearInterval(
-                intervaloCronometro
+        const perguntaFinal =
+            Math.max(
+                1,
+                dados.atual
             );
 
-            intervaloCronometro =
-                null;
-        }
+        return {
 
+            resultado:
+                sucesso
+                    ? "vencedor"
+                    : "game_over",
 
-        bloquearAlternativas();
+            pergunta_final:
+                perguntaFinal,
 
-        desabilitarAjudas();
+            perguntas_respondidas:
+                perguntaFinal,
 
-        liberarTodosMenu();
+            acertos:
+                sucesso
+                    ? perguntaFinal
+                    : Math.max(
+                        0,
+                        perguntaFinal - 1
+                    ),
 
-        liberarJogarNovaPartida();
+            erros:
+                sucesso
+                    ? 0
+                    : 1,
 
+            tempo_total_ms:
+                carregarTempoPartida(),
 
-        /* =================================================
-           CAPTURA A PERGUNTA EXATAMENTE COMO ESTÁ
-        ================================================= */
+            ajuda_cinquenta:
+                ajudas.cinquenta
+                    ? 1
+                    : 0,
 
-        const snapshot =
-            capturarPerguntaAtual();
+            ajuda_tecnico:
+                ajudas.tecnico
+                    ? 1
+                    : 0,
 
+            ajuda_turma:
+                ajudas.turma
+                    ? 1
+                    : 0,
 
-        /* =================================================
-           SALVA O ESTADO COMPLETO
-        ================================================= */
+            ajuda_trocar:
+                ajudas.trocar
+                    ? 1
+                    : 0,
 
-        salvarEstadoPartida({
-
-            encerrada:
-                true,
-
-            sucesso:
-                Boolean(
-                    sucesso
-                ),
-
-            valorPremio:
-                valorPremio,
-
-            mensagem:
-                mensagem,
-
-            pergunta:
-                snapshot
-
-        });
-
-
-        criarEncerramento(
-            valorPremio,
-            mensagem,
-            sucesso
-        );
+            premio:
+                converterPremioParaNumero(
+                    valorPremio
+                )
+        };
     }
 
 
     /* =====================================================
-       RESTAURA PARTIDA ENCERRADA
+       GRAVA RESULTADO
     ===================================================== */
 
-    function restaurarEstadoPartida() {
-
-        const estado =
-            carregarEstadoPartida();
+    async function registrarResultadoRanking(
+        estado
+    ) {
 
         if (
             !estado ||
-            estado.encerrada !== true
+            estado.rankingRegistrado ===
+            true ||
+            !estado.dadosRanking
         ) {
 
-            return false;
+            return;
         }
 
+        try {
 
-        /* =================================================
-           BLOQUEIA A PARTIDA
-        ================================================= */
+            const resposta =
+                await fetch(
+                    obterBaseUrl() +
+                    "/api/resultado.php",
+                    {
 
-        partidaEncerrada =
-            true;
+                        method:
+                            "POST",
 
-        respondida =
-            true;
+                        headers: {
 
-        aguardandoProxima =
-            false;
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                estado.dadosRanking
+                            )
+                    }
+                );
+
+            const retorno =
+                await resposta.json();
 
 
-        /* =================================================
-           RESTAURA A PERGUNTA QUE TERMINOU A PARTIDA
+            if (
+                !resposta.ok ||
+                !retorno.sucesso
+            ) {
 
-           O PHP pode ter carregado outra pergunta,
-           mas ela é imediatamente substituída pela
-           pergunta congelada.
-        ================================================= */
+                console.error(
+                    "Erro ao gravar ranking:",
+                    retorno
+                );
 
-        if (estado.pergunta) {
+                return;
+            }
 
-            restaurarPerguntaCongelada(
-                estado.pergunta
+
+            estado.rankingRegistrado =
+                true;
+
+            salvarEstadoPartida(
+                estado
+            );
+
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao registrar ranking:",
+                erro
             );
         }
-
-
-        /* =================================================
-           BLOQUEIA ALTERNATIVAS
-        ================================================= */
-
-        bloquearAlternativas();
-
-        desabilitarAjudas();
-
-
-        /* =================================================
-           MENUS
-        ================================================= */
-
-        liberarTodosMenu();
-
-        liberarJogarNovaPartida();
-
-
-        /* =================================================
-           CARD FINAL
-        ================================================= */
-
-        criarEncerramento(
-
-            estado.valorPremio ||
-            "R$ 0",
-
-            estado.mensagem ||
-            "Partida encerrada.",
-
-            Boolean(
-                estado.sucesso
-            )
-        );
-
-
-        return true;
     }
 
 
     /* =====================================================
-       BOTÕES DE AJUDA
+       BLOQUEAR ALTERNATIVAS / AJUDAS
     ===================================================== */
+
+    function bloquearAlternativas() {
+
+        if (!alternativas) {
+
+            return;
+        }
+
+        alternativas
+            .querySelectorAll(
+                ".alternativa-jogo"
+            )
+            .forEach(
+                function (opcao) {
+
+                    opcao.disabled =
+                        true;
+                }
+            );
+    }
+
+
+    function desabilitarAjudas() {
+
+        botoesAjuda.forEach(
+            function (botao) {
+
+                botao.disabled =
+                    true;
+            }
+        );
+    }
+
 
     function restaurarEstadoBotoesAjuda() {
 
@@ -1093,20 +1277,193 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function desabilitarAjudas() {
+    /* =====================================================
+       ENCERRA PARTIDA
+    ===================================================== */
 
-        botoesAjuda.forEach(
-            function (botao) {
+    function encerrarPartida(
+        valorPremio,
+        mensagem,
+        sucesso = false
+    ) {
 
-                botao.disabled =
-                    true;
-            }
+        partidaEncerrada =
+            true;
+
+        respondida =
+            true;
+
+        aguardandoProxima =
+            false;
+
+
+        if (
+            intervaloCronometro
+        ) {
+
+            clearInterval(
+                intervaloCronometro
+            );
+
+            intervaloCronometro =
+                null;
+        }
+
+
+        consolidarTempoQuestao();
+
+        bloquearAlternativas();
+
+        desabilitarAjudas();
+
+        liberarTodosMenu();
+
+        liberarJogarNovaPartida();
+
+
+        const snapshot =
+            capturarPerguntaAtual();
+
+
+        const dadosRanking =
+            montarDadosRanking(
+                sucesso,
+                valorPremio
+            );
+
+
+        const estadoFinal = {
+
+            encerrada:
+                true,
+
+            sucesso:
+                Boolean(
+                    sucesso
+                ),
+
+            valorPremio:
+                valorPremio,
+
+            mensagem:
+                mensagem,
+
+            pergunta:
+                snapshot,
+
+            dadosRanking:
+                dadosRanking,
+
+            rankingRegistrado:
+                false
+        };
+
+
+        salvarEstadoPartida(
+            estadoFinal
+        );
+
+
+        criarEncerramento(
+            valorPremio,
+            mensagem,
+            sucesso
+        );
+
+
+        registrarResultadoRanking(
+            estadoFinal
         );
     }
 
 
     /* =====================================================
-       CARD DE AJUDA
+       RESTAURA PARTIDA ENCERRADA
+    ===================================================== */
+
+    function restaurarEstadoPartida() {
+
+        const estado =
+            carregarEstadoPartida();
+
+        if (
+            !estado ||
+            estado.encerrada !==
+            true
+        ) {
+
+            return false;
+        }
+
+
+        partidaEncerrada =
+            true;
+
+        respondida =
+            true;
+
+        aguardandoProxima =
+            false;
+
+
+        if (
+            estado.pergunta
+        ) {
+
+            restaurarPerguntaCongelada(
+                estado.pergunta
+            );
+        }
+
+
+        bloquearAlternativas();
+
+        desabilitarAjudas();
+
+        liberarTodosMenu();
+
+        liberarJogarNovaPartida();
+
+
+        criarEncerramento(
+            estado.valorPremio ||
+            "R$ 0",
+
+            estado.mensagem ||
+            "Partida encerrada.",
+
+            Boolean(
+                estado.sucesso
+            )
+        );
+
+
+        /*
+         * Se a gravação falhou antes
+         * do F5, tenta novamente.
+         *
+         * O partida_token UNIQUE no banco
+         * impede duplicidade.
+         */
+
+        if (
+            estado.dadosRanking &&
+            estado.rankingRegistrado !==
+            true
+        ) {
+
+            registrarResultadoRanking(
+                estado
+            );
+        }
+
+
+        return true;
+    }
+
+
+    /* =====================================================
+       CARDS DAS AJUDAS
     ===================================================== */
 
     function criarCardAjuda(
@@ -1116,6 +1473,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         if (!painelAjuda) {
+
             return null;
         }
 
@@ -1147,6 +1505,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
         }
 
+
         card.innerHTML =
             '<div class="titulo-card-ajuda">' +
 
@@ -1168,6 +1527,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             '<div class="conteudo-card-ajuda"></div>';
 
+
         return card;
     }
 
@@ -1188,6 +1548,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (!card) {
+
             return;
         }
 
@@ -1199,36 +1560,41 @@ document.addEventListener("DOMContentLoaded", function () {
         let alternativasHtml =
             "";
 
-        registro.alternativas.forEach(
-            function (alternativa) {
 
-                const classe =
-                    alternativa.removida
-                        ? " mini-alternativa-removida"
-                        : "";
+        registro.alternativas
+            .forEach(
+                function (alternativa) {
 
-                alternativasHtml +=
-                    '<div class="mini-alternativa' +
-                    classe +
-                    '">' +
+                    const classe =
+                        alternativa.removida
+                            ? " mini-alternativa-removida"
+                            : "";
 
-                        '<strong>' +
-                        escaparHtml(
-                            alternativa.letra
-                        ) +
-                        '</strong>' +
+                    alternativasHtml +=
 
-                        '<span>' +
-                        escaparHtml(
-                            alternativa.texto
-                        ) +
-                        '</span>' +
+                        '<div class="mini-alternativa' +
+                        classe +
+                        '">' +
 
-                    '</div>';
-            }
-        );
+                            '<strong>' +
+                            escaparHtml(
+                                alternativa.letra
+                            ) +
+                            '</strong>' +
+
+                            '<span>' +
+                            escaparHtml(
+                                alternativa.texto
+                            ) +
+                            '</span>' +
+
+                        '</div>';
+                }
+            );
+
 
         conteudo.innerHTML =
+
             '<span class="numero-historico-ajuda">' +
             escaparHtml(
                 registro.numero
@@ -1255,11 +1621,12 @@ document.addEventListener("DOMContentLoaded", function () {
             !alternativas ||
             !tituloPergunta
         ) {
+
             return;
         }
 
-        const lista =
-            [];
+        const lista = [];
+
 
         alternativas
             .querySelectorAll(
@@ -1276,21 +1643,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     lista.push({
 
                         letra:
-                            opcao.dataset.letra || "",
+                            opcao.dataset.letra ||
+                            "",
 
                         texto:
                             texto
-                                ? texto.textContent.trim()
+                                ? texto.textContent
+                                    .trim()
                                 : "",
 
                         removida:
                             removidas.includes(
                                 opcao.dataset.letra
                             )
-
                     });
                 }
             );
+
 
         const registro = {
 
@@ -1315,8 +1684,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alternativas:
                 lista
-
         };
+
 
         salvarAjuda(
             registro
@@ -1344,6 +1713,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (!card) {
+
             return;
         }
 
@@ -1352,7 +1722,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 ".conteudo-card-ajuda"
             );
 
+
         conteudo.innerHTML =
+
             '<p class="rotulo-tecnico">' +
             'O técnico diz:' +
             '</p>' +
@@ -1374,8 +1746,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             mensagem:
                 "Analise atentamente o enunciado e identifique qual alternativa é tecnicamente mais adequada."
-
         };
+
 
         salvarAjuda(
             registro
@@ -1403,6 +1775,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (!card) {
+
             return;
         }
 
@@ -1410,6 +1783,7 @@ document.addEventListener("DOMContentLoaded", function () {
             card.querySelector(
                 ".conteudo-card-ajuda"
             );
+
 
         const html =
             Object.entries(
@@ -1419,6 +1793,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     function (item) {
 
                         return (
+
                             '<span>' +
 
                                 '<b>' +
@@ -1449,7 +1824,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 )
                 .join("");
 
+
         conteudo.innerHTML =
+
             '<p>' +
             'Veja como a turma votou:' +
             '</p>' +
@@ -1462,6 +1839,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function registrarTurma() {
 
+        if (!alternativas) {
+
+            return;
+        }
+
         const correta =
             alternativas.dataset.correta;
 
@@ -1471,11 +1853,12 @@ document.addEventListener("DOMContentLoaded", function () {
             B: 14,
             C: 7,
             D: 9
-
         };
+
 
         votos[correta] =
             71;
+
 
         const registro = {
 
@@ -1484,8 +1867,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             votos:
                 votos
-
         };
+
 
         salvarAjuda(
             registro
@@ -1513,6 +1896,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         if (!card) {
+
             return;
         }
 
@@ -1524,29 +1908,34 @@ document.addEventListener("DOMContentLoaded", function () {
         let alternativasHtml =
             "";
 
-        registro.alternativas.forEach(
-            function (alternativa) {
 
-                alternativasHtml +=
-                    '<div class="mini-alternativa">' +
+        registro.alternativas
+            .forEach(
+                function (alternativa) {
 
-                        '<strong>' +
-                        escaparHtml(
-                            alternativa.letra
-                        ) +
-                        '</strong>' +
+                    alternativasHtml +=
 
-                        '<span>' +
-                        escaparHtml(
-                            alternativa.texto
-                        ) +
-                        '</span>' +
+                        '<div class="mini-alternativa">' +
 
-                    '</div>';
-            }
-        );
+                            '<strong>' +
+                            escaparHtml(
+                                alternativa.letra
+                            ) +
+                            '</strong>' +
+
+                            '<span>' +
+                            escaparHtml(
+                                alternativa.texto
+                            ) +
+                            '</span>' +
+
+                        '</div>';
+                }
+            );
+
 
         conteudo.innerHTML =
+
             '<span class="numero-historico-ajuda">' +
             escaparHtml(
                 registro.numero
@@ -1571,11 +1960,12 @@ document.addEventListener("DOMContentLoaded", function () {
             !alternativas ||
             !tituloPergunta
         ) {
+
             return;
         }
 
-        const lista =
-            [];
+        const lista = [];
+
 
         alternativas
             .querySelectorAll(
@@ -1592,16 +1982,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     lista.push({
 
                         letra:
-                            opcao.dataset.letra || "",
+                            opcao.dataset.letra ||
+                            "",
 
                         texto:
                             texto
-                                ? texto.textContent.trim()
+                                ? texto.textContent
+                                    .trim()
                                 : ""
-
                     });
                 }
             );
+
 
         const registro = {
 
@@ -1626,8 +2018,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alternativas:
                 lista
-
         };
+
 
         salvarAjuda(
             registro
@@ -1640,13 +2032,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       RESTAURAR HISTÓRICO
+       RESTAURA HISTÓRICO
     ===================================================== */
 
     function restaurarHistorico() {
 
         const historico =
             carregarHistorico();
+
 
         historico.forEach(
             function (registro) {
@@ -1696,30 +2089,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       BLOQUEAR ALTERNATIVAS
-    ===================================================== */
-
-    function bloquearAlternativas() {
-
-        if (!alternativas) {
-            return;
-        }
-
-        alternativas
-            .querySelectorAll(
-                ".alternativa-jogo"
-            )
-            .forEach(
-                function (opcao) {
-
-                    opcao.disabled =
-                        true;
-                }
-            );
-    }
-
-
-    /* =====================================================
        INICIALIZAÇÃO
     ===================================================== */
 
@@ -1730,15 +2099,35 @@ document.addEventListener("DOMContentLoaded", function () {
     restaurarEstadoBotoesAjuda();
 
 
-    /* =====================================================
-       PRIMEIRO RESTAURA O ESTADO FINAL
+    const partidaFinalizadaAoCarregar =
+        restaurarEstadoPartida();
 
-       Se houver GAME OVER ou PARABÉNS salvo,
-       substitui imediatamente qualquer pergunta nova
-       que o PHP tenha carregado.
+
+    if (
+        !partidaFinalizadaAoCarregar
+    ) {
+
+        iniciarTempoQuestao();
+    }
+
+
+    /* =====================================================
+       ATUALIZAÇÃO / F5
     ===================================================== */
 
-    restaurarEstadoPartida();
+    window.addEventListener(
+        "beforeunload",
+        function () {
+
+            if (
+                !partidaEncerrada &&
+                !respondida
+            ) {
+
+                consolidarTempoQuestao();
+            }
+        }
+    );
 
 
     /* =====================================================
@@ -1754,6 +2143,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 limparHistorico();
 
                 limparEstadoPartida();
+
+                limparTempoPartida();
             }
         );
     }
@@ -1763,13 +2154,17 @@ document.addEventListener("DOMContentLoaded", function () {
        CRONÔMETRO
     ===================================================== */
 
-    if (cronometro) {
+    if (
+        cronometro &&
+        !partidaEncerrada
+    ) {
 
         let tempo =
             Number(
                 cronometro.textContent
                     .trim()
             );
+
 
         intervaloCronometro =
             window.setInterval(
@@ -1784,7 +2179,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
+
                     tempo -= 1;
+
 
                     cronometro.textContent =
                         String(
@@ -1792,7 +2189,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         );
 
 
-                    if (tempo <= 5) {
+                    if (
+                        tempo <= 5
+                    ) {
 
                         cronometro
                             .classList
@@ -1802,20 +2201,29 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    if (tempo <= 0) {
+                    if (
+                        tempo <= 0
+                    ) {
 
                         const correta =
                             alternativas
-                                ? alternativas.dataset.correta
+                                ? (
+                                    alternativas
+                                        .dataset
+                                        .correta ||
+                                    ""
+                                )
                                 : "";
+
 
                         const alternativaCorreta =
                             alternativas
-                                ? alternativas.querySelector(
-                                    '.alternativa-jogo[data-letra="' +
-                                    correta +
-                                    '"]'
-                                )
+                                ? alternativas
+                                    .querySelector(
+                                        '.alternativa-jogo[data-letra="' +
+                                        correta +
+                                        '"]'
+                                    )
                                 : null;
 
 
@@ -1839,15 +2247,23 @@ document.addEventListener("DOMContentLoaded", function () {
                             resultado.className =
                                 "resultado-jogo incorreta";
 
+
                             resultado.innerHTML =
+
                                 '<strong>' +
-                                '<i class="fa-solid fa-clock"></i> ' +
-                                'TEMPO ESGOTADO!' +
+
+                                    '<i class="fa-solid fa-clock"></i> ' +
+
+                                    'TEMPO ESGOTADO!' +
+
                                 '</strong>' +
 
                                 '<span>' +
-                                'A resposta correta era: ' +
-                                '<b></b>' +
+
+                                    'A resposta correta era: ' +
+
+                                    '<b></b>' +
+
                                 '</span>' +
 
                                 '<p></p>';
@@ -1861,10 +2277,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                         )
                                     : null;
 
+
                             const campo =
-                                resultado.querySelector(
-                                    "b"
-                                );
+                                resultado
+                                    .querySelector(
+                                        "b"
+                                    );
+
 
                             if (campo) {
 
@@ -1873,24 +2292,29 @@ document.addEventListener("DOMContentLoaded", function () {
                                     ") " +
                                     (
                                         texto
-                                            ? texto.textContent
+                                            ? texto
+                                                .textContent
                                             : ""
                                     );
                             }
 
 
                             const campoExplicacao =
-                                resultado.querySelector(
-                                    "p"
-                                );
+                                resultado
+                                    .querySelector(
+                                        "p"
+                                    );
+
 
                             if (
                                 campoExplicacao
                             ) {
 
-                                campoExplicacao.textContent =
+                                campoExplicacao
+                                    .textContent =
                                     explicacao
-                                        ? explicacao.textContent
+                                        ? explicacao
+                                            .textContent
                                         : "";
                             }
                         }
@@ -1939,9 +2363,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (
                             respondida ||
                             partidaEncerrada ||
-                            botao.classList.contains(
-                                "removida"
-                            )
+                            botao.classList
+                                .contains(
+                                    "removida"
+                                )
                         ) {
 
                             return;
@@ -1949,17 +2374,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                         const correta =
-                            alternativas.dataset.correta;
+                            alternativas
+                                .dataset
+                                .correta;
+
 
                         const letra =
-                            botao.dataset.letra;
+                            botao.dataset
+                                .letra;
+
 
                         const alternativaCorreta =
-                            alternativas.querySelector(
-                                '.alternativa-jogo[data-letra="' +
-                                correta +
-                                '"]'
-                            );
+                            alternativas
+                                .querySelector(
+                                    '.alternativa-jogo[data-letra="' +
+                                    correta +
+                                    '"]'
+                                );
 
 
                         if (
@@ -1991,9 +2422,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             respondida =
                                 true;
 
-                            botao.classList.add(
-                                "correta"
-                            );
+
+                            botao.classList
+                                .add(
+                                    "correta"
+                                );
+
 
                             resultado.hidden =
                                 false;
@@ -2001,28 +2435,36 @@ document.addEventListener("DOMContentLoaded", function () {
                             resultado.className =
                                 "resultado-jogo correta";
 
+
                             resultado.innerHTML =
+
                                 '<strong>' +
-                                '<i class="fa-solid fa-circle-check"></i> ' +
-                                'CORRETO!' +
+
+                                    '<i class="fa-solid fa-circle-check"></i> ' +
+
+                                    'CORRETO!' +
+
                                 '</strong>' +
 
                                 '<p></p>';
 
 
                             const campoExplicacao =
-                                resultado.querySelector(
-                                    "p"
-                                );
+                                resultado
+                                    .querySelector(
+                                        "p"
+                                    );
 
 
                             if (
                                 campoExplicacao
                             ) {
 
-                                campoExplicacao.textContent =
+                                campoExplicacao
+                                    .textContent =
                                     explicacao
-                                        ? explicacao.textContent
+                                        ? explicacao
+                                            .textContent
                                         : "";
                             }
 
@@ -2051,8 +2493,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                             /* =================================================
-                               AINDA EXISTEM PERGUNTAS
+                               PRÓXIMA PERGUNTA
                             ================================================= */
+
+                            consolidarTempoQuestao();
 
                             liberarJogarProximaPergunta();
 
@@ -2064,9 +2508,10 @@ document.addEventListener("DOMContentLoaded", function () {
                            ERRO
                         ================================================= */
 
-                        botao.classList.add(
-                            "incorreta"
-                        );
+                        botao.classList
+                            .add(
+                                "incorreta"
+                            );
 
 
                         if (
@@ -2087,15 +2532,23 @@ document.addEventListener("DOMContentLoaded", function () {
                         resultado.className =
                             "resultado-jogo incorreta";
 
+
                         resultado.innerHTML =
+
                             '<strong>' +
-                            '<i class="fa-solid fa-circle-xmark"></i> ' +
-                            'INCORRETO!' +
+
+                                '<i class="fa-solid fa-circle-xmark"></i> ' +
+
+                                'INCORRETO!' +
+
                             '</strong>' +
 
                             '<span>' +
-                            'A resposta correta é: ' +
-                            '<b></b>' +
+
+                                'A resposta correta é: ' +
+
+                                '<b></b>' +
+
                             '</span>' +
 
                             '<p></p>';
@@ -2123,25 +2576,29 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ") " +
                                 (
                                     texto
-                                        ? texto.textContent
+                                        ? texto
+                                            .textContent
                                         : ""
                                 );
                         }
 
 
                         const campoExplicacao =
-                            resultado.querySelector(
-                                "p"
-                            );
+                            resultado
+                                .querySelector(
+                                    "p"
+                                );
 
 
                         if (
                             campoExplicacao
                         ) {
 
-                            campoExplicacao.textContent =
+                            campoExplicacao
+                                .textContent =
                                 explicacao
-                                    ? explicacao.textContent
+                                    ? explicacao
+                                        .textContent
                                     : "";
                         }
 
@@ -2185,14 +2642,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const resposta =
                             await fetch(
-
-                                (
-                                    window.APP_BASE_URL ||
-                                    "/github/desafiodomilhao/public"
-                                ) +
-
+                                obterBaseUrl() +
                                 "/api/jogo.php",
-
                                 {
 
                                     method:
@@ -2202,7 +2653,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         "Content-Type":
                                             "application/x-www-form-urlencoded"
-
                                     },
 
                                     body:
@@ -2212,7 +2662,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     ajuda
                                             }
                                         )
-
                                 }
                             );
 
@@ -2224,6 +2673,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (
                             !retorno.sucesso
                         ) {
+
+                            console.error(
+                                retorno
+                            );
 
                             return;
                         }
@@ -2258,14 +2711,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                     function (opcao) {
 
                                         if (
-                                            removidas.includes(
-                                                opcao.dataset.letra
-                                            )
+                                            removidas
+                                                .includes(
+                                                    opcao
+                                                        .dataset
+                                                        .letra
+                                                )
                                         ) {
 
-                                            opcao.classList.add(
-                                                "removida"
-                                            );
+                                            opcao
+                                                .classList
+                                                .add(
+                                                    "removida"
+                                                );
 
                                             opcao.disabled =
                                                 true;
@@ -2323,7 +2781,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             registrarTrocar();
 
-                            window.location.reload();
+                            /*
+                             * O tempo gasto na pergunta
+                             * descartada também conta.
+                             */
+
+                            consolidarTempoQuestao();
+
+                            window.location
+                                .reload();
 
                             return;
                         }

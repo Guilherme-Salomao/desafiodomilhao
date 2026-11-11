@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 /* =========================================================
    SESSÃO
@@ -10,69 +10,114 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+
 /* =========================================================
    SOMENTE POST
 ========================================================= */
 
 if (
-    ($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST'
+    ($_SERVER['REQUEST_METHOD'] ?? '')
+    !== 'POST'
 ) {
 
     header(
-        'Location: /github/desafiodomilhao/public/login.php',
+        'Location: login.php',
         true,
-        302
+        303
     );
 
     exit;
 }
 
+
 /* =========================================================
-   REPOSITORY
+   CONEXÃO
 ========================================================= */
 
 require_once __DIR__ .
-    '/includes/repositories/UsuarioRepository.php';
+    '/includes/conexao.php';
+
+$pdo =
+    conectarBanco();
+
+
+/* =========================================================
+   DESTINO
+========================================================= */
+
+$destino =
+    trim(
+        (string) (
+            $_POST['destino']
+            ?? $_SESSION['destino_login']
+            ?? 'perguntas'
+        )
+    );
+
+
+$destinosPermitidos = [
+    'perguntas',
+    'areas',
+];
+
+
+if (
+    !in_array(
+        $destino,
+        $destinosPermitidos,
+        true
+    )
+) {
+
+    $destino =
+        'perguntas';
+}
+
 
 /* =========================================================
    DADOS RECEBIDOS
 ========================================================= */
 
-$login = trim(
-    mb_strtolower(
-        (string) ($_POST['login'] ?? '')
-    )
-);
+$login =
+    trim(
+        (string) (
+            $_POST['login']
+            ?? ''
+        )
+    );
 
-$senha =
-(string) ($_POST['senha'] ?? '');
+
+$senhaDigitada =
+    (string) (
+        $_POST['senha']
+        ?? ''
+    );
+
 
 /* =========================================================
-   PRESERVA LOGIN
-
-   A senha nunca é armazenada na sessão.
+   SALVA LOGIN PARA REEXIBIÇÃO
 ========================================================= */
 
 $_SESSION['login_anterior'] =
     $login;
 
+
 /* =========================================================
-   FUNÇÃO - ERRO
+   VALIDA CAMPOS
 ========================================================= */
 
-function retornarLoginComErro(
-    string $mensagem
-): never {
+if (
+    $login === '' ||
+    $senhaDigitada === ''
+) {
 
     $_SESSION['erro_login'] =
-        $mensagem;
+        'Informe o login e a senha.';
 
-    unset(
-        $_SESSION['aviso_login']
-    );
 
     header(
-        'Location: /github/desafiodomilhao/public/login.php',
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
         true,
         303
     );
@@ -80,23 +125,46 @@ function retornarLoginComErro(
     exit;
 }
 
+
 /* =========================================================
-   FUNÇÃO - AVISO
+   DESCOBRE A COLUNA DE SENHA DA TABELA USUARIOS
+
+   Compatível com:
+   - senha_hash
+   - password_hash
+   - senha
+   - password
 ========================================================= */
 
-function retornarLoginComAviso(
-    string $mensagem
-): never {
+try {
 
-    $_SESSION['aviso_login'] =
-        $mensagem;
+    $stmtEstrutura =
+        $pdo->query(
+            'SHOW COLUMNS FROM usuarios'
+        );
 
-    unset(
-        $_SESSION['erro_login']
+
+    $colunasUsuarios =
+        $stmtEstrutura->fetchAll(
+            PDO::FETCH_COLUMN
+        );
+
+
+} catch (Throwable $erro) {
+
+    error_log(
+        '[Login - estrutura usuários] ' .
+        $erro->getMessage()
     );
 
+
+    $_SESSION['erro_login'] =
+        'Não foi possível validar os dados de acesso.';
+
+
     header(
-        'Location: /github/desafiodomilhao/public/login.php',
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
         true,
         303
     );
@@ -104,243 +172,451 @@ function retornarLoginComAviso(
     exit;
 }
 
+
 /* =========================================================
-   VALIDA LOGIN
+   LOCALIZA COLUNA DE SENHA
+========================================================= */
+
+$colunaSenha =
+    null;
+
+
+$possiveisColunasSenha = [
+    'senha_hash',
+    'password_hash',
+    'senha',
+    'password',
+];
+
+
+foreach (
+    $possiveisColunasSenha
+    as $possivelColuna
+) {
+
+    if (
+        in_array(
+            $possivelColuna,
+            $colunasUsuarios,
+            true
+        )
+    ) {
+
+        $colunaSenha =
+            $possivelColuna;
+
+        break;
+    }
+}
+
+
+/* =========================================================
+   COLUNA NÃO LOCALIZADA
+========================================================= */
+
+if ($colunaSenha === null) {
+
+    error_log(
+        '[Login] Nenhuma coluna de senha reconhecida foi encontrada na tabela usuarios.'
+    );
+
+
+    $_SESSION['erro_login'] =
+        'A estrutura de autenticação do sistema está inválida.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* =========================================================
+   VALIDA COLUNAS NECESSÁRIAS
+========================================================= */
+
+$colunasObrigatorias = [
+    'id',
+    'login',
+    'nome',
+    'ativo',
+];
+
+
+foreach (
+    $colunasObrigatorias
+    as $colunaObrigatoria
+) {
+
+    if (
+        !in_array(
+            $colunaObrigatoria,
+            $colunasUsuarios,
+            true
+        )
+    ) {
+
+        error_log(
+            '[Login] Coluna obrigatória ausente em usuarios: ' .
+            $colunaObrigatoria
+        );
+
+
+        $_SESSION['erro_login'] =
+            'A estrutura de usuários do sistema está incompleta.';
+
+
+        header(
+            'Location: login.php?destino=' .
+            rawurlencode($destino),
+            true,
+            303
+        );
+
+        exit;
+    }
+}
+
+
+/* =========================================================
+   BUSCA USUÁRIO
+
+   O nome da coluna foi validado acima antes de entrar
+   no SQL.
+========================================================= */
+
+$sqlUsuario =
+    '
+        SELECT
+            id,
+            login,
+            nome,
+            ativo,
+            `' . $colunaSenha . '` AS senha_armazenada
+
+        FROM usuarios
+
+        WHERE login = :login
+
+        LIMIT 1
+    ';
+
+
+try {
+
+    $stmtUsuario =
+        $pdo->prepare(
+            $sqlUsuario
+        );
+
+
+    $stmtUsuario->execute(
+        [
+            ':login' =>
+                $login,
+        ]
+    );
+
+
+    $usuario =
+        $stmtUsuario->fetch(
+            PDO::FETCH_ASSOC
+        );
+
+
+} catch (Throwable $erro) {
+
+    error_log(
+        '[Login - consulta usuário] ' .
+        $erro->getMessage()
+    );
+
+
+    $_SESSION['erro_login'] =
+        'Não foi possível validar o acesso.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* =========================================================
+   USUÁRIO NÃO ENCONTRADO
+========================================================= */
+
+if (!$usuario) {
+
+    $_SESSION['erro_login'] =
+        'Login ou senha inválidos.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* =========================================================
+   STATUS
 ========================================================= */
 
 if (
-    mb_strlen($login) < 3 ||
-    mb_strlen($login) > 80
+    (int) (
+        $usuario['ativo']
+        ?? 0
+    ) !== 1
 ) {
 
-    retornarLoginComErro(
-        'Informe um login válido.'
+    $_SESSION['erro_login'] =
+        'Seu cadastro ainda não está autorizado para acessar o sistema.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
     );
+
+    exit;
 }
 
-/* =========================================================
-   FORMATO DO LOGIN
-========================================================= */
-
-if (
-    ! preg_match(
-        '/^[a-z0-9._-]+$/',
-        $login
-    )
-) {
-
-    retornarLoginComErro(
-        'Informe um login válido.'
-    );
-}
 
 /* =========================================================
    VALIDA SENHA
 ========================================================= */
 
+$senhaArmazenada =
+    (string) (
+        $usuario['senha_armazenada']
+        ?? ''
+    );
+
+
 if (
-    $senha === '' ||
-    strlen($senha) > 72
+    $senhaArmazenada === '' ||
+    !password_verify(
+        $senhaDigitada,
+        $senhaArmazenada
+    )
 ) {
 
-    retornarLoginComErro(
-        'Informe sua senha.'
-    );
-}
+    $_SESSION['erro_login'] =
+        'Login ou senha inválidos.';
 
-/* =========================================================
-   PROCESSAMENTO
-========================================================= */
-
-try {
-
-    $usuarioRepository =
-    new UsuarioRepository();
-
-    /* =====================================================
-       BUSCA USUÁRIO PELO LOGIN
-    ===================================================== */
-
-    $usuario =
-    $usuarioRepository
-        ->buscarPorLogin(
-            $login
-        );
-
-    /* =====================================================
-       USUÁRIO NÃO ENCONTRADO
-
-       Mantemos mensagem genérica para não revelar
-       se determinada conta existe.
-    ===================================================== */
-
-    if (! $usuario) {
-
-        retornarLoginComErro(
-            'Login ou senha inválidos.'
-        );
-    }
-
-    /* =====================================================
-       VERIFICA SENHA
-    ===================================================== */
-
-    $senhaHash =
-    (string) (
-        $usuario['senha_hash'] ?? ''
-    );
-
-    if (
-        $senhaHash === '' ||
-        ! password_verify(
-            $senha,
-            $senhaHash
-        )
-    ) {
-
-        retornarLoginComErro(
-            'Login ou senha inválidos.'
-        );
-    }
-
-    /* =====================================================
-       VERIFICA SE USUÁRIO ESTÁ ATIVO
-    ===================================================== */
-
-    if (
-        (int) ($usuario['ativo'] ?? 0) !== 1
-    ) {
-
-        retornarLoginComAviso(
-            'Seu cadastro foi realizado, mas o acesso ainda não foi liberado pelo administrador.'
-        );
-    }
-
-    /* =====================================================
-       CARREGA ÁREAS AUTORIZADAS
-    ===================================================== */
-
-    $areas =
-    $usuarioRepository
-        ->listarAreasDoUsuario(
-            (int) $usuario['id']
-        );
-
-    /* =====================================================
-       USUÁRIO ATIVO SEM ÁREAS
-    ===================================================== */
-
-    if (empty($areas)) {
-
-        retornarLoginComErro(
-            'Sua conta está ativa, mas não possui nenhuma área autorizada. Entre em contato com o administrador.'
-        );
-    }
-
-    /* =====================================================
-       REGENERA ID DA SESSÃO
-
-       Proteção contra session fixation.
-    ===================================================== */
-
-    session_regenerate_id(
-        true
-    );
-
-    /* =====================================================
-       MONTA ÁREAS DA SESSÃO
-    ===================================================== */
-
-    $areasSessao = [];
-
-    foreach ($areas as $area) {
-
-        $areasSessao[] = [
-
-            'id'    =>
-            (int) $area['id'],
-
-            'nome'  =>
-            (string) $area['nome'],
-
-            'slug'  =>
-            (string) $area['slug'],
-
-            'icone' =>
-            (string) $area['icone'],
-
-        ];
-
-    }
-
-    /* =====================================================
-       CRIA SESSÃO DO USUÁRIO
-    ===================================================== */
-
-    $_SESSION['usuario'] = [
-
-        'id'    =>
-        (int) $usuario['id'],
-
-        'nome'  =>
-        (string) $usuario['nome'],
-
-        'login' =>
-        (string) $usuario['login'],
-
-        'areas' =>
-        $areasSessao,
-
-    ];
-
-    /* =====================================================
-       LIMPA MENSAGENS ANTIGAS
-    ===================================================== */
-
-    unset(
-        $_SESSION['erro_login'],
-        $_SESSION['aviso_login'],
-        $_SESSION['login_anterior']
-    );
-
-    /* =====================================================
-       ATUALIZA ÚLTIMO LOGIN
-    ===================================================== */
-
-    $usuarioRepository
-        ->atualizarUltimoLogin(
-            (int) $usuario['id']
-        );
-
-    /* =====================================================
-       REDIRECIONA PARA O BANCO DE QUESTÕES
-    ===================================================== */
 
     header(
-        'Location: /github/desafiodomilhao/public/admin/perguntas.php',
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
         true,
         303
     );
 
     exit;
+}
+
+
+/* =========================================================
+   ÁREAS AUTORIZADAS
+========================================================= */
+
+$sqlAreas =
+    '
+        SELECT
+            a.id,
+            a.nome,
+            a.slug,
+            a.descricao,
+            a.icone
+
+        FROM usuario_areas ua
+
+        INNER JOIN areas a
+            ON a.id = ua.area_id
+
+        WHERE
+            ua.usuario_id = :usuario_id
+            AND a.ativo = 1
+
+        ORDER BY
+            a.ordem ASC,
+            a.nome ASC
+    ';
+
+
+try {
+
+    $stmtAreas =
+        $pdo->prepare(
+            $sqlAreas
+        );
+
+
+    $stmtAreas->execute(
+        [
+            ':usuario_id' =>
+                (int) $usuario['id'],
+        ]
+    );
+
+
+    $areasUsuario =
+        $stmtAreas->fetchAll(
+            PDO::FETCH_ASSOC
+        );
+
 
 } catch (Throwable $erro) {
 
-    /* =====================================================
-       LOG INTERNO
-    ===================================================== */
-
     error_log(
-        '[Desafio do Milhão - Login] ' .
+        '[Login - áreas usuário] ' .
         $erro->getMessage()
     );
 
-    /* =====================================================
-       ERRO GENÉRICO
-    ===================================================== */
 
-    retornarLoginComErro(
-        'Não foi possível realizar o login. Tente novamente.'
+    $_SESSION['erro_login'] =
+        'Não foi possível verificar suas áreas autorizadas.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
     );
 
+    exit;
 }
+
+
+/* =========================================================
+   SEM ÁREAS
+========================================================= */
+
+if (empty($areasUsuario)) {
+
+    $_SESSION['erro_login'] =
+        'Sua conta não possui nenhuma área autorizada. Entre em contato com o administrador.';
+
+
+    header(
+        'Location: login.php?destino=' .
+        rawurlencode($destino),
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* =========================================================
+   REGENERA SESSÃO
+========================================================= */
+
+session_regenerate_id(
+    true
+);
+
+
+/* =========================================================
+   SESSÃO DO USUÁRIO
+========================================================= */
+
+$_SESSION['usuario'] = [
+
+    'id' =>
+        (int) $usuario['id'],
+
+    'login' =>
+        (string) $usuario['login'],
+
+    'nome' =>
+        (string) $usuario['nome'],
+
+    'areas' =>
+        $areasUsuario,
+];
+
+
+/* =========================================================
+   LIMPA TEMPORÁRIOS
+========================================================= */
+
+unset(
+    $_SESSION['erro_login'],
+    $_SESSION['aviso_login'],
+    $_SESSION['login_anterior'],
+    $_SESSION['destino_login']
+);
+
+
+/* =========================================================
+   GERENCIAMENTO DE ÁREAS
+========================================================= */
+
+if ($destino === 'areas') {
+
+    /*
+     * Confirma que a senha foi digitada especificamente
+     * para entrar no gerenciamento de áreas.
+     */
+
+    $_SESSION['areas_autorizado'] = [
+
+        'usuario_id' =>
+            (int) $usuario['id'],
+
+        'autorizado_em' =>
+            time(),
+    ];
+
+
+    header(
+        'Location: admin/areas.php',
+        true,
+        303
+    );
+
+    exit;
+}
+
+
+/* =========================================================
+   BANCO DE QUESTÕES
+========================================================= */
+
+/*
+ * O acesso normal ao Banco de Questões não concede
+ * automaticamente permissão para gerenciamento de áreas.
+ */
+
+unset(
+    $_SESSION['areas_autorizado']
+);
+
+
+header(
+    'Location: admin/perguntas.php',
+    true,
+    303
+);
+
+exit;

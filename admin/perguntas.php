@@ -399,10 +399,10 @@
 
     </div>
 
-    <a href="/github/desafiodomilhao/public/" class="botao-sair-banco">
-      <i class="fa-solid fa-right-from-bracket"></i>
-      SAIR
-    </a>
+<a href="/desafiodomilhao/public/logout.php" class="botao-sair-banco">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    SAIR
+</a>
 
   </section>
 

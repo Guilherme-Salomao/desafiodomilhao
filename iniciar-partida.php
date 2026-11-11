@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 /* ============================================================
    SESSÃO
@@ -9,6 +9,7 @@ declare (strict_types = 1);
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
+
 
 /* ============================================================
    SOMENTE POST
@@ -27,11 +28,13 @@ if (
     exit;
 }
 
+
 /* ============================================================
    ÁREA
 ============================================================ */
 
-$area = $_SESSION['area'] ?? null;
+$area =
+    $_SESSION['area'] ?? null;
 
 if (
     ! is_array($area) ||
@@ -49,13 +52,18 @@ if (
     exit;
 }
 
+
 /* ============================================================
    MODO
 ============================================================ */
 
-$modo = trim(
-    (string) ($_POST['modo'] ?? 'individual')
-);
+$modo =
+    trim(
+        (string) (
+            $_POST['modo']
+            ?? 'individual'
+        )
+    );
 
 $modosPermitidos = [
     'individual',
@@ -70,8 +78,10 @@ if (
     )
 ) {
 
-    $modo = 'individual';
+    $modo =
+        'individual';
 }
+
 
 /* ============================================================
    QUANTIDADE DE PERGUNTAS
@@ -79,10 +89,10 @@ if (
 
 $quantidadePerguntas =
     filter_input(
-    INPUT_POST,
-    'quantidade_perguntas',
-    FILTER_VALIDATE_INT
-);
+        INPUT_POST,
+        'quantidade_perguntas',
+        FILTER_VALIDATE_INT
+    );
 
 $quantidadesPermitidas = [
     10,
@@ -100,16 +110,22 @@ if (
     )
 ) {
 
-    $quantidadePerguntas = 10;
+    $quantidadePerguntas =
+        10;
 }
+
 
 /* ============================================================
    DIFICULDADE
 ============================================================ */
 
-$dificuldade = trim(
-    (string) ($_POST['dificuldade'] ?? 'mista')
-);
+$dificuldade =
+    trim(
+        (string) (
+            $_POST['dificuldade']
+            ?? 'mista'
+        )
+    );
 
 $dificuldadesPermitidas = [
     'facil',
@@ -125,8 +141,10 @@ if (
     )
 ) {
 
-    $dificuldade = 'mista';
+    $dificuldade =
+        'mista';
 }
+
 
 /* ============================================================
    TEMPO AUTOMÁTICO
@@ -145,19 +163,22 @@ if (
 
 $temposPorDificuldade = [
 
-    'facil'   =>
-    20,
+    'facil' =>
+        20,
 
-    'mista'   =>
-    30,
+    'mista' =>
+        30,
 
     'dificil' =>
-    45,
+        45,
 
 ];
 
 $tempoPergunta =
-    $temposPorDificuldade[$dificuldade];
+    $temposPorDificuldade[
+        $dificuldade
+    ];
+
 
 /* ============================================================
    ESTRATÉGIA DE PERGUNTAS
@@ -176,18 +197,56 @@ $tempoPergunta =
  * utiliza "facil", "medio" e "dificil".
  */
 
-$estrategiaPerguntas = match ($dificuldade) {
+$estrategiaPerguntas =
+    match ($dificuldade) {
 
-    'facil'   =>
-    'somente_facil',
+        'facil' =>
+            'somente_facil',
 
-    'dificil' =>
-    'somente_dificil',
+        'dificil' =>
+            'somente_dificil',
 
-    default   =>
-    'progressiva'
+        default =>
+            'progressiva'
 
-};
+    };
+
+
+/* ============================================================
+   TOKEN ÚNICO DA PARTIDA
+============================================================ */
+
+/*
+ * Cada partida precisa possuir um identificador único.
+ *
+ * Esse token será salvo na tabela resultados.
+ *
+ * A coluna partida_token possui UNIQUE no banco,
+ * impedindo que F5 ou múltiplas requisições gravem
+ * o mesmo resultado várias vezes.
+ */
+
+try {
+
+    $partidaToken =
+        bin2hex(
+            random_bytes(32)
+        );
+
+} catch (Throwable $erro) {
+
+    $partidaToken =
+        hash(
+            'sha256',
+            session_id() .
+            microtime(true) .
+            random_int(
+                100000,
+                999999
+            )
+        );
+}
+
 
 /* ============================================================
    CONFIGURAÇÃO DA PARTIDA
@@ -195,88 +254,223 @@ $estrategiaPerguntas = match ($dificuldade) {
 
 $configuracao = [
 
-    /* ÁREA */
+    /* ========================================================
+       IDENTIFICAÇÃO DA PARTIDA
+    ======================================================== */
 
-    'area_id'              =>
-    (int) $area['id'],
+    'partida_token' =>
+        $partidaToken,
 
-    'area_nome'            =>
-    (string) $area['nome'],
 
-    'area_slug'            =>
-    (string) $area['slug'],
+    /* ========================================================
+       ÁREA
+    ======================================================== */
 
-    /* MODO */
+    'area_id' =>
+        (int) $area['id'],
 
-    'modo'                 =>
-    $modo,
+    'area_nome' =>
+        (string) $area['nome'],
 
-    /* PERGUNTAS */
+    'area_slug' =>
+        (string) $area['slug'],
+
+
+    /* ========================================================
+       MODO
+    ======================================================== */
+
+    'modo' =>
+        $modo,
+
+
+    /* ========================================================
+       PERGUNTAS
+    ======================================================== */
 
     'quantidade_perguntas' =>
-    (int) $quantidadePerguntas,
+        (int) $quantidadePerguntas,
 
-    /* DIFICULDADE */
+    'pergunta_atual' =>
+        1,
 
-    'dificuldade'          =>
-    $dificuldade,
+    /*
+     * IDs das perguntas já utilizadas
+     * durante esta partida.
+     */
 
-    /* ESTRATÉGIA */
+    'perguntas_usadas' =>
+        [],
+
+    /*
+     * Quantidade de questões efetivamente
+     * respondidas.
+     */
+
+    'perguntas_respondidas' =>
+        0,
+
+
+    /* ========================================================
+       DIFICULDADE
+    ======================================================== */
+
+    'dificuldade' =>
+        $dificuldade,
+
+
+    /* ========================================================
+       ESTRATÉGIA
+    ======================================================== */
 
     'estrategia_perguntas' =>
-    $estrategiaPerguntas,
+        $estrategiaPerguntas,
 
-    /* TEMPO */
 
-    'tempo_pergunta'       =>
-    $tempoPergunta,
+    /* ========================================================
+       TEMPO
+    ======================================================== */
 
-    /* CONTROLE DO JOGO */
+    'tempo_pergunta' =>
+        $tempoPergunta,
 
-    'pergunta_atual'       =>
-    1,
+    /*
+     * Tempo total utilizado na partida.
+     *
+     * O JavaScript calculará em milissegundos.
+     */
 
-    'acertos'              =>
-    0,
+    'tempo_total_ms' =>
+        0,
 
-    'erros'                =>
-    0,
 
-    'pontuacao'            =>
-    0,
+    /* ========================================================
+       RESULTADO / RANKING
+    ======================================================== */
 
-    'ajudas'               => [
-        'cinquenta' => false,
-        'tecnico' => false,
-        'turma' => false,
-        'trocar' => false,
+    'acertos' =>
+        0,
+
+    'erros' =>
+        0,
+
+    'pontuacao' =>
+        0,
+
+    /*
+     * Prêmio acumulado em valor numérico.
+     *
+     * Exemplo:
+     *
+     * 0
+     * 1000
+     * 2000
+     * 200000
+     * 1000000
+     */
+
+    'premio' =>
+        0,
+
+    /*
+     * Total de tipos de ajuda utilizados.
+     */
+
+    'ajudas_usadas' =>
+        0,
+
+    /*
+     * Impede registro duplicado do ranking.
+     */
+
+    'resultado_gravado' =>
+        false,
+
+    /*
+     * Resultado final.
+     *
+     * null enquanto a partida está acontecendo.
+     *
+     * Depois poderá ser:
+     *
+     * game_over
+     * vencedor
+     */
+
+    'resultado' =>
+        null,
+
+
+    /* ========================================================
+       AJUDAS
+    ======================================================== */
+
+    'ajudas' => [
+
+        'cinquenta' =>
+            false,
+
+        'tecnico' =>
+            false,
+
+        'turma' =>
+            false,
+
+        'trocar' =>
+            false,
+
     ],
 
-    /* DATA */
 
-    'criada_em'            =>
-    time(),
+    /* ========================================================
+       DATA / HORÁRIO
+    ======================================================== */
+
+    'criada_em' =>
+        time(),
+
+    /*
+     * Momento inicial com maior precisão.
+     *
+     * Útil para auditoria e futuras estatísticas.
+     */
+
+    'iniciada_em_ms' =>
+        (int) round(
+            microtime(true) * 1000
+        ),
 
 ];
+
 
 /* ============================================================
    JOGADOR INDIVIDUAL
 ============================================================ */
 
-if ($modo === 'individual') {
+if (
+    $modo ===
+    'individual'
+) {
 
-    $nomeJogador = trim(
-        (string) ($_POST['nome_jogador'] ?? '')
-    );
+    $nomeJogador =
+        trim(
+            (string) (
+                $_POST['nome_jogador']
+                ?? ''
+            )
+        );
 
-    $nomeJogador = mb_substr(
-        $nomeJogador,
-        0,
-        60
-    );
+    $nomeJogador =
+        mb_substr(
+            $nomeJogador,
+            0,
+            60
+        );
 
     if (
-        mb_strlen($nomeJogador) < 2
+        mb_strlen(
+            $nomeJogador
+        ) < 2
     ) {
 
         header(
@@ -288,44 +482,67 @@ if ($modo === 'individual') {
         exit;
     }
 
-    $configuracao['nome_jogador'] =
+    $configuracao[
+        'nome_jogador'
+    ] =
         $nomeJogador;
 
 }
+
 
 /* ============================================================
    COMPETIÇÃO
 ============================================================ */
 
-if ($modo === 'competicao') {
+if (
+    $modo ===
+    'competicao'
+) {
 
-    $equipe1 = trim(
-        (string) ($_POST['equipe_1'] ?? '')
-    );
+    $equipe1 =
+        trim(
+            (string) (
+                $_POST['equipe_1']
+                ?? ''
+            )
+        );
 
-    $equipe2 = trim(
-        (string) ($_POST['equipe_2'] ?? '')
-    );
+    $equipe2 =
+        trim(
+            (string) (
+                $_POST['equipe_2']
+                ?? ''
+            )
+        );
 
-    $equipe1 = mb_substr(
-        $equipe1,
-        0,
-        60
-    );
 
-    $equipe2 = mb_substr(
-        $equipe2,
-        0,
-        60
-    );
+    $equipe1 =
+        mb_substr(
+            $equipe1,
+            0,
+            60
+        );
+
+
+    $equipe2 =
+        mb_substr(
+            $equipe2,
+            0,
+            60
+        );
+
 
     /* ========================================================
        VALIDA NOMES
     ======================================================== */
 
     if (
-        mb_strlen($equipe1) < 2 ||
-        mb_strlen($equipe2) < 2
+        mb_strlen(
+            $equipe1
+        ) < 2 ||
+        mb_strlen(
+            $equipe2
+        ) < 2
     ) {
 
         header(
@@ -336,14 +553,19 @@ if ($modo === 'competicao') {
 
         exit;
     }
+
 
     /* ========================================================
        NOMES NÃO PODEM SER IGUAIS
     ======================================================== */
 
     if (
-        mb_strtolower($equipe1) ===
-        mb_strtolower($equipe2)
+        mb_strtolower(
+            $equipe1
+        ) ===
+        mb_strtolower(
+            $equipe2
+        )
     ) {
 
         header(
@@ -355,56 +577,68 @@ if ($modo === 'competicao') {
         exit;
     }
 
+
     /* ========================================================
        EQUIPES
     ======================================================== */
 
-    $configuracao['equipes'] = [
+    $configuracao[
+        'equipes'
+    ] = [
 
         [
 
-            'nome'    =>
-            $equipe1,
+            'nome' =>
+                $equipe1,
 
-            'pontos'  =>
-            0,
+            'pontos' =>
+                0,
 
             'acertos' =>
-            0,
+                0,
 
         ],
 
         [
 
-            'nome'    =>
-            $equipe2,
+            'nome' =>
+                $equipe2,
 
-            'pontos'  =>
-            0,
+            'pontos' =>
+                0,
 
             'acertos' =>
-            0,
+                0,
 
         ],
 
     ];
 
+
     /* ========================================================
        PRIMEIRA EQUIPE
     ======================================================== */
 
-    $configuracao['equipe_atual'] =
+    $configuracao[
+        'equipe_atual'
+    ] =
         0;
 
 }
+
 
 /* ============================================================
    DISTRIBUIÇÃO DO MODO MISTO
 ============================================================ */
 
-if ($dificuldade === 'mista') {
+if (
+    $dificuldade ===
+    'mista'
+) {
 
-    switch ($quantidadePerguntas) {
+    switch (
+        $quantidadePerguntas
+    ) {
 
         /* ====================================================
            10 PERGUNTAS
@@ -416,20 +650,23 @@ if ($dificuldade === 'mista') {
 
         case 10:
 
-            $configuracao['distribuicao'] = [
+            $configuracao[
+                'distribuicao'
+            ] = [
 
-                'facil'   =>
-                3,
+                'facil' =>
+                    3,
 
-                'medio'   =>
-                4,
+                'medio' =>
+                    4,
 
                 'dificil' =>
-                3,
+                    3,
 
             ];
 
             break;
+
 
         /* ====================================================
            15 PERGUNTAS
@@ -441,20 +678,23 @@ if ($dificuldade === 'mista') {
 
         case 15:
 
-            $configuracao['distribuicao'] = [
+            $configuracao[
+                'distribuicao'
+            ] = [
 
-                'facil'   =>
-                5,
+                'facil' =>
+                    5,
 
-                'medio'   =>
-                5,
+                'medio' =>
+                    5,
 
                 'dificil' =>
-                5,
+                    5,
 
             ];
 
             break;
+
 
         /* ====================================================
            20 PERGUNTAS
@@ -466,16 +706,18 @@ if ($dificuldade === 'mista') {
 
         case 20:
 
-            $configuracao['distribuicao'] = [
+            $configuracao[
+                'distribuicao'
+            ] = [
 
-                'facil'   =>
-                7,
+                'facil' =>
+                    7,
 
-                'medio'   =>
-                7,
+                'medio' =>
+                    7,
 
                 'dificil' =>
-                6,
+                    6,
 
             ];
 
@@ -485,98 +727,201 @@ if ($dificuldade === 'mista') {
 
 }
 
+
 /* ============================================================
    MODO FÁCIL
 ============================================================ */
 
-if ($dificuldade === 'facil') {
+if (
+    $dificuldade ===
+    'facil'
+) {
 
-    $configuracao['distribuicao'] = [
+    $configuracao[
+        'distribuicao'
+    ] = [
 
-        'facil'   =>
-        $quantidadePerguntas,
+        'facil' =>
+            $quantidadePerguntas,
 
-        'medio'   =>
-        0,
+        'medio' =>
+            0,
 
         'dificil' =>
-        0,
+            0,
 
     ];
 
 }
+
 
 /* ============================================================
    MODO DIFÍCIL
 ============================================================ */
 
-if ($dificuldade === 'dificil') {
+if (
+    $dificuldade ===
+    'dificil'
+) {
 
-    $configuracao['distribuicao'] = [
+    $configuracao[
+        'distribuicao'
+    ] = [
 
-        'facil'   =>
-        0,
+        'facil' =>
+            0,
 
-        'medio'   =>
-        0,
+        'medio' =>
+            0,
 
         'dificil' =>
-        $quantidadePerguntas,
+            $quantidadePerguntas,
 
     ];
 
 }
 
+
 /* ============================================================
-   SALVA PARTIDA
+   SALVA HISTÓRICO DA PARTIDA ANTERIOR
 ============================================================ */
 
-$partidaAnterior = $_SESSION['partida'] ?? null;
+/*
+ * Mantém a lógica atual do projeto:
+ *
+ * antes de iniciar uma nova partida, as perguntas
+ * utilizadas anteriormente são armazenadas para evitar
+ * repetições excessivas entre partidas.
+ */
 
-if (is_array($partidaAnterior)) {
-    $perguntasAnteriores = array_map(
-        'intval',
-        is_array($partidaAnterior['perguntas_usadas'] ?? null)
-            ? $partidaAnterior['perguntas_usadas']
-            : []
-    );
+$partidaAnterior =
+    $_SESSION['partida']
+    ?? null;
 
-    $perguntaAtualAnterior = (int) ($partidaAnterior['pergunta_atual_id'] ?? 0);
+if (
+    is_array(
+        $partidaAnterior
+    )
+) {
 
-    if ($perguntaAtualAnterior > 0) {
-        $perguntasAnteriores[] = $perguntaAtualAnterior;
+    $perguntasAnteriores =
+        array_map(
+
+            'intval',
+
+            is_array(
+                $partidaAnterior[
+                    'perguntas_usadas'
+                ] ?? null
+            )
+
+                ? $partidaAnterior[
+                    'perguntas_usadas'
+                ]
+
+                : []
+
+        );
+
+
+    $perguntaAtualAnterior =
+        (int) (
+            $partidaAnterior[
+                'pergunta_atual_id'
+            ]
+            ?? 0
+        );
+
+
+    if (
+        $perguntaAtualAnterior > 0
+    ) {
+
+        $perguntasAnteriores[] =
+            $perguntaAtualAnterior;
     }
 
-    $perguntasAnteriores = array_values(
-        array_unique(
-            array_filter(
-                $perguntasAnteriores,
-                static fn (int $id): bool => $id > 0
+
+    $perguntasAnteriores =
+        array_values(
+
+            array_unique(
+
+                array_filter(
+
+                    $perguntasAnteriores,
+
+                    static fn (
+                        int $id
+                    ): bool =>
+                        $id > 0
+
+                )
+
             )
-        )
-    );
 
-    if ($perguntasAnteriores !== []) {
-        $historicoPartidas = $_SESSION['historico_partidas_perguntas'] ?? [];
-        $historicoPartidas = is_array($historicoPartidas) ? $historicoPartidas : [];
-        $historicoPartidas[] = $perguntasAnteriores;
-
-        // Mantém somente as últimas dez partidas desta sessão.
-        $_SESSION['historico_partidas_perguntas'] = array_slice(
-            $historicoPartidas,
-            -10
         );
+
+
+    if (
+        $perguntasAnteriores !== []
+    ) {
+
+        $historicoPartidas =
+            $_SESSION[
+                'historico_partidas_perguntas'
+            ]
+            ?? [];
+
+
+        $historicoPartidas =
+            is_array(
+                $historicoPartidas
+            )
+
+                ? $historicoPartidas
+
+                : [];
+
+
+        $historicoPartidas[] =
+            $perguntasAnteriores;
+
+
+        /*
+         * Mantém somente as últimas
+         * dez partidas desta sessão.
+         */
+
+        $_SESSION[
+            'historico_partidas_perguntas'
+        ] =
+            array_slice(
+                $historicoPartidas,
+                -10
+            );
     }
 }
 
-$_SESSION['partida'] =
+
+/* ============================================================
+   SALVA NOVA PARTIDA
+============================================================ */
+
+$_SESSION[
+    'partida'
+] =
     $configuracao;
+
 
 /* ============================================================
    REGENERA ID DA SESSÃO
 ============================================================ */
 
-session_regenerate_id(true);
+session_regenerate_id(
+    true
+);
+
 
 /* ============================================================
    REDIRECIONA PARA O JOGO

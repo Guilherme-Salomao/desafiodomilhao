@@ -502,27 +502,25 @@ require_once __DIR__ .
 
             </a>
 
-            <a href="/github/desafiodomilhao/public/ranking.php">
+<a href="/github/desafiodomilhao/public/ranking.php">
 
-                <span class="icone-menu-jogo">
+    <span class="icone-menu-jogo">
+        <i class="fa-solid fa-trophy"></i>
+    </span>
 
-                    <i class="fa-solid fa-trophy"></i>
+    <span class="texto-menu-jogo">
 
-                </span>
+        <strong>
+            RANKING
+        </strong>
 
-                <span class="texto-menu-jogo">
+        <small>
+            Veja os melhores jogadores
+        </small>
 
-                    <strong>
-                        RANKING
-                    </strong>
+    </span>
 
-                    <small>
-                        Veja os melhores jogadores
-                    </small>
-
-                </span>
-
-            </a>
+</a>
 
             <a href="/github/desafiodomilhao/public/configuracoes.php">
 

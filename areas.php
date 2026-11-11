@@ -1,326 +1,389 @@
 <?php
 
-    declare (strict_types = 1);
+declare(strict_types=1);
 
-    /* =========================================================
+/* =========================================================
    SESSÃO
 ========================================================= */
 
-    if (session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
-    }
+}
 
-    /* =========================================================
-   ÁREA ATUAL
+
+/* =========================================================
+   CONEXÃO
 ========================================================= */
 
-    $areaSelecionada = $_SESSION['area'] ?? null;
+require_once __DIR__ . '/includes/conexao.php';
 
-    /* =========================================================
-   CONFIGURAÇÕES DA PÁGINA
+$pdo = conectarBanco();
+
+
+/* =========================================================
+   BASE URL DINÂMICA
 ========================================================= */
 
-    $siteSubtitulo = 'Escolha uma área';
-
-    $paginaTitulo =
-    'Escolha uma Área - Desafio do Milhão';
-
-    $paginaDescricao =
-    'Escolha uma área de conhecimento para iniciar o Desafio do Milhão.';
-
-    $paginaUrl =
-    'https://www.guilhermeshorane.com.br/github/desafiodomilhao/public/areas.php';
-
-    $paginaTipo =
-    'website';
-
-    $paginaCss =
-    '/github/desafiodomilhao/public/assets/css/areas.css';
-
-    /* =========================================================
-   DESTINO APÓS A ESCOLHA
-========================================================= */
-
-    $retornosPermitidos = [
-    'inicio',
-    'jogo',
-    'competicao',
-    ];
-
-    $retorno = trim(
-    (string) ($_GET['retorno'] ?? 'inicio')
+$scriptName =
+    str_replace(
+        '\\',
+        '/',
+        (string) (
+            $_SERVER['SCRIPT_NAME']
+            ?? ''
+        )
     );
 
-    if (
-    ! in_array(
-        $retorno,
-        $retornosPermitidos,
-        true
-    )
-    ) {
-    $retorno = 'inicio';
-    }
-
-    /* =========================================================
-   REPOSITORY
-========================================================= */
-
-    require_once __DIR__ .
-    '/includes/repositories/AreaRepository.php';
-
-    /* =========================================================
-   CARREGA AS ÁREAS
-========================================================= */
-
-    $areas = [];
-
-    $erroBanco = false;
-
-    try {
-
-    $areaRepository =
-    new AreaRepository();
-
-    $areas =
-    $areaRepository->listarAtivas();
-
-    } catch (Throwable $erro) {
-
-    error_log(
-        '[Desafio do Milhão - Áreas] ' .
-        $erro->getMessage()
+$baseUrl =
+    rtrim(
+        dirname($scriptName),
+        '/'
     );
 
-    $erroBanco = true;
-    }
+if (
+    $baseUrl === '.' ||
+    $baseUrl === '/'
+) {
+    $baseUrl = '';
+}
 
-    /* =========================================================
+
+/* =========================================================
+   LISTA ÁREAS ATIVAS
+========================================================= */
+
+$sqlAreas = '
+    SELECT
+        id,
+        nome,
+        slug,
+        descricao,
+        icone,
+        ativo,
+        ordem
+
+    FROM areas
+
+    WHERE ativo = 1
+
+    ORDER BY
+        ordem ASC,
+        nome ASC
+';
+
+$stmtAreas =
+    $pdo->query(
+        $sqlAreas
+    );
+
+$areas =
+    $stmtAreas->fetchAll(
+        PDO::FETCH_ASSOC
+    );
+
+
+/* =========================================================
+   CONFIGURAÇÕES
+========================================================= */
+
+$siteSubtitulo =
+    'Escolha sua área';
+
+$paginaTitulo =
+    'Escolha sua Área - Desafio do Milhão';
+
+$paginaDescricao =
+    'Escolha uma área de conhecimento para iniciar o desafio.';
+
+$paginaCss =
+    $baseUrl .
+    '/assets/css/areas.css';
+
+
+/* =========================================================
    HEADER
 ========================================================= */
 
-    require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ .
+    '/includes/header.php';
 
 ?>
 
 
-<!-- =========================================================
-     CONTEÚDO PRINCIPAL
-========================================================= -->
-
 <main class="pagina-areas">
 
 
-  <!-- =====================================================
+    <!-- =====================================================
          CABEÇALHO
     ====================================================== -->
 
-  <section class="cabecalho-areas">
+    <section class="cabecalho-areas">
 
-    <img src="/github/desafiodomilhao/public/assets/img/logo/favicon.png" alt="Desafio do Milhão" class="logo-areas">
+        <img
+            src="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/assets/img/logo/favicon.png"
+            alt="Desafio do Milhão"
+            class="logo-areas"
+        >
 
-    <h1>
-      ESCOLHA SUA ÁREA
-    </h1>
+        <span class="rotulo-areas">
 
-    <p>
-      Selecione uma área de conhecimento para iniciar o desafio.
-    </p>
+            <i class="fa-solid fa-layer-group"></i>
 
+            SELEÇÃO DE ÁREA
 
-    <!-- =================================================
-             ÁREA ATUAL
-        ================================================== -->
+        </span>
 
-    <?php if ($areaSelecionada): ?>
-
-    <div class="area-selecionada-info">
-
-      <span class="rotulo-area-selecionada">
-        ÁREA ATUAL
-      </span>
-
-      <strong>
-        <?php echo escapar(
-                (string) ($areaSelecionada['nome'] ?? '')
-        ); ?>
-      </strong>
-
-      <a href="/github/desafiodomilhao/public/limpar-area.php?retorno=areas" class="trocar-area">
-
-        <i class="fa-solid fa-xmark"></i>
-
-        LIMPAR ÁREA SELECIONADA
-
-      </a>
-
-    </div>
-
-    <?php endif; ?>
-
-
-  </section>
-
-
-  <!-- =====================================================
-         ÁREAS DISPONÍVEIS
-    ====================================================== -->
-
-  <section class="grade-areas">
-
-
-    <?php if ($erroBanco): ?>
-
-
-    <div class="mensagem-areas">
-
-      <i class="fa-solid fa-triangle-exclamation"></i>
-
-      <strong>
-        Não foi possível carregar as áreas.
-      </strong>
-
-      <span>
-        Tente novamente em alguns instantes.
-      </span>
-
-    </div>
-
-
-    <?php elseif (empty($areas)): ?>
-
-
-    <div class="mensagem-areas">
-
-      <i class="fa-solid fa-circle-info"></i>
-
-      <strong>
-        Nenhuma área disponível.
-      </strong>
-
-      <span>
-        Ainda não existem áreas ativas cadastradas.
-      </span>
-
-    </div>
-
-
-    <?php else: ?>
-
-
-    <?php foreach ($areas as $area): ?>
-
-
-    <?php
-
-        $estaSelecionada =
-        $areaSelecionada &&
-        isset($areaSelecionada['id']) &&
-        (int) $areaSelecionada['id'] ===
-        (int) $area['id'];
-
-    ?>
-
-
-    <a href="/github/desafiodomilhao/public/selecionar-area.php?area=<?php
-                                                           echo urlencode(
-                                                               (string) $area['slug']
-                                                       );
-                                                       ?>&retorno=<?php
-         echo urlencode($retorno);
-         ?>" class="card-area">
-
-
-      <!-- ÍCONE -->
-
-      <div class="icone-area">
-
-        <i class="<?php echo escapar(
-                      (string) $area['icone']
-                  ); ?>" aria-hidden="true"></i>
-
-      </div>
-
-
-      <!-- CONTEÚDO -->
-
-      <div class="conteudo-area">
-
-        <h2>
-
-          <?php echo escapar(
-                  (string) $area['nome']
-          ); ?>
-
-
-          <?php if ($estaSelecionada): ?>
-
-          <i class="fa-solid fa-check" aria-hidden="true"></i>
-
-          <?php endif; ?>
-
-        </h2>
+        <h1>
+            ESCOLHA SUA ÁREA
+        </h1>
 
         <p>
-          <?php echo escapar(
-                  (string) ($area['descricao'] ?? '')
-          ); ?>
+            Selecione uma área de conhecimento para iniciar o desafio.
         </p>
 
-      </div>
+    </section>
 
 
-      <!-- SETA -->
-
-      <div class="seta-area">
-
-        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-
-      </div>
-
-
-    </a>
-
-
-    <?php endforeach; ?>
-
-
-    <?php endif; ?>
-
-
-  </section>
-
-
-  <!-- =====================================================
-         VOLTAR
+    <!-- =====================================================
+         BARRA SUPERIOR
     ====================================================== -->
 
-  <section class="area-voltar">
+    <section class="acoes-superiores-areas">
 
-    <a href="/github/desafiodomilhao/public/" class="botao-voltar" onclick="history.back(); return false;">
 
-      <i class="fa-solid fa-arrow-left"></i>
+        <div class="titulo-acoes-areas">
 
-      VOLTAR
+            <span>
+                ÁREAS DISPONÍVEIS
+            </span>
 
-    </a>
+            <strong>
 
-  </section>
+                <?php echo count($areas); ?>
+
+                área(s)
+
+            </strong>
+
+        </div>
+
+
+        <a
+            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/login.php?destino=areas"
+            class="botao-gerenciar-areas"
+        >
+
+            <i class="fa-solid fa-gear"></i>
+
+            GERENCIAR ÁREAS
+
+        </a>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         ÁREAS
+    ====================================================== -->
+
+    <section class="grade-areas">
+
+
+        <?php if (empty($areas)): ?>
+
+
+            <div class="areas-vazias">
+
+                <i class="fa-solid fa-layer-group"></i>
+
+                <strong>
+                    Nenhuma área disponível
+                </strong>
+
+                <span>
+                    Não existem áreas ativas para iniciar uma partida.
+                </span>
+
+            </div>
+
+
+        <?php else: ?>
+
+
+            <?php foreach ($areas as $area): ?>
+
+
+                <?php
+
+                $areaId =
+                    (int) (
+                        $area['id']
+                        ?? 0
+                    );
+
+                $areaNome =
+                    (string) (
+                        $area['nome']
+                        ?? 'Área'
+                    );
+
+                $areaDescricao =
+                    trim(
+                        (string) (
+                            $area['descricao']
+                            ?? ''
+                        )
+                    );
+
+                $areaIcone =
+                    trim(
+                        (string) (
+                            $area['icone']
+                            ?? ''
+                        )
+                    );
+
+                if ($areaIcone === '') {
+                    $areaIcone =
+                        'fa-solid fa-layer-group';
+                }
+
+                ?>
+
+
+                <form
+                    action="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/selecionar-area.php"
+                    method="POST"
+                    class="form-area"
+                >
+
+                    <input
+                        type="hidden"
+                        name="area_id"
+                        value="<?php echo $areaId; ?>"
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="card-area"
+                    >
+
+
+                        <span class="icone-area">
+
+                            <i
+                                class="<?php
+                                echo htmlspecialchars(
+                                    $areaIcone,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                );
+                                ?>"
+                            ></i>
+
+                        </span>
+
+
+                        <span class="conteudo-area">
+
+
+                            <strong>
+
+                                <?php
+                                echo htmlspecialchars(
+                                    $areaNome,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                );
+                                ?>
+
+                            </strong>
+
+
+                            <small>
+
+                                <?php
+                                echo htmlspecialchars(
+                                    $areaDescricao,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                );
+                                ?>
+
+                            </small>
+
+
+                        </span>
+
+
+                        <span class="seta-area">
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </span>
+
+
+                    </button>
+
+
+                </form>
+
+
+            <?php endforeach; ?>
+
+
+        <?php endif; ?>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         AÇÕES
+    ====================================================== -->
+
+    <section class="rodape-areas">
+
+
+        <a
+            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/"
+            class="botao-voltar-areas"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            VOLTAR
+
+        </a>
+
+
+        <a
+            href="<?php echo htmlspecialchars($baseUrl, ENT_QUOTES, 'UTF-8'); ?>/login.php?destino=areas"
+            class="botao-cadastrar-area"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            CADASTRAR ÁREA
+
+        </a>
+
+
+    </section>
 
 
 </main>
 
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
-
 <?php
 
-    require_once __DIR__ . '/includes/footer.php';
+require_once __DIR__ .
+    '/includes/footer.php';
 
 ?>
 
 
 </body>
-
 </html>

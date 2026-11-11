@@ -1,550 +1,623 @@
-/* =====================================================
-   PÁGINA - SELEÇÃO DE ÁREAS
-===================================================== */
+/* =========================================================
+   PÁGINA
+========================================================= */
 
 .pagina-areas {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 
-  width: 100%;
-  max-width: 1250px;
+    width: calc(100% - 52px);
+    max-width: 1720px;
 
-  min-height: calc(100vh - 50px);
+    margin: 0 auto;
 
-  margin: 0 auto;
-
-  padding: 30px 40px 50px;
+    padding:
+        26px 0
+        42px;
 }
 
-/* =====================================================
-   CABEÇALHO DA PÁGINA
-===================================================== */
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
 
 .cabecalho-areas {
-  width: 100%;
+    display: flex;
 
-  display: flex;
-  flex-direction: column;
+    flex-direction: column;
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
 
-  text-align: center;
+    justify-content: center;
 
-  margin-bottom: 35px;
+    text-align: center;
+
+    margin-bottom: 26px;
 }
 
-/* =====================================================
-   LOGO
-===================================================== */
 
 .logo-areas {
-  display: block;
+    width: 190px;
 
-  width: 100%;
-  max-width: 280px;
+    height: auto;
 
-  height: auto;
+    margin-bottom: 16px;
 
-  margin: 0 auto 18px;
+    object-fit: contain;
 
-  object-fit: contain;
-
-  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.35))
-    drop-shadow(0 0 20px rgba(255, 183, 0, 0.14));
+    filter:
+        drop-shadow(
+            0 0 16px
+            rgba(255, 195, 40, 0.32)
+        );
 }
 
-/* =====================================================
-   TÍTULO
-===================================================== */
+
+.rotulo-areas {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 9px;
+
+    color: #ffd35a;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.08em;
+}
+
 
 .cabecalho-areas h1 {
-  margin: 0;
+    margin: 0;
 
-  color: #ffffff;
+    color: #ffffff;
 
-  font-size: 28px;
+    font-size:
+        clamp(
+            32px,
+            3vw,
+            46px
+        );
 
-  font-weight: 800;
+    font-weight: 900;
 
-  letter-spacing: 1.8px;
-
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    line-height: 1;
 }
 
-/* =====================================================
-   DESCRIÇÃO
-===================================================== */
 
 .cabecalho-areas p {
-  width: 100%;
-  max-width: 620px;
+    margin:
+        12px 0 0;
 
-  margin-top: 10px;
+    color: #b7c9d4;
 
-  color: #c5d6e5;
-
-  font-size: 15px;
-
-  line-height: 1.6;
-
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    font-size: 14px;
 }
 
-/* =====================================================
-   GRADE DE ÁREAS
-===================================================== */
 
-.grade-areas {
-  width: 100%;
+/* =========================================================
+   AÇÕES SUPERIORES
+========================================================= */
 
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 16px;
-}
-
-/* =====================================================
-   CARD DE ÁREA
-===================================================== */
-
-.card-area {
-  position: relative;
-
-  width: 100%;
-
-  min-height: 120px;
-
-  display: grid;
-
-  grid-template-columns: 90px minmax(0, 1fr) 45px;
-
-  align-items: stretch;
-
-  color: #ffffff;
-
-  text-decoration: none;
-
-  overflow: hidden;
-
-  border: 1px solid #168ee4;
-
-  border-radius: 10px;
-
-  background: linear-gradient(
-    135deg,
-    rgba(5, 27, 49, 0.96),
-    rgba(2, 13, 26, 0.96)
-  );
-
-  backdrop-filter: blur(8px);
-
-  box-shadow:
-    0 7px 20px rgba(0, 0, 0, 0.25),
-    inset 0 0 12px rgba(0, 130, 255, 0.04);
-
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease;
-}
-
-/* =====================================================
-   CARD VISITADO
-===================================================== */
-
-.card-area:visited {
-  color: #ffffff;
-
-  text-decoration: none;
-}
-
-/* =====================================================
-   CARD HOVER
-===================================================== */
-
-.card-area:hover {
-  transform: translateY(-4px);
-
-  border-color: #ffc328;
-
-  background: linear-gradient(
-    135deg,
-    rgba(8, 40, 69, 0.98),
-    rgba(3, 20, 38, 0.98)
-  );
-
-  box-shadow:
-    0 0 22px rgba(255, 183, 0, 0.15),
-    0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* =====================================================
-   CARD ATIVO
-===================================================== */
-
-.card-area:active {
-  transform: translateY(-1px);
-}
-
-/* =====================================================
-   ÍCONE DA ÁREA
-===================================================== */
-
-.icone-area {
-  width: 90px;
-
-  min-height: 120px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 32px;
-
-  color: #4db9ff;
-
-  background: rgba(0, 93, 160, 0.1);
-
-  border-right: 1px solid rgba(60, 168, 255, 0.18);
-
-  transition:
-    color 0.25s ease,
-    background 0.25s ease;
-}
-
-.card-area:hover .icone-area {
-  color: #ffc328;
-
-  background: rgba(255, 183, 0, 0.05);
-}
-
-/* =====================================================
-   CONTEÚDO DA ÁREA
-===================================================== */
-
-.conteudo-area {
-  min-width: 0;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  padding: 18px 20px;
-}
-
-.conteudo-area h2 {
-  margin: 0 0 7px;
-
-  color: #ffffff;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  line-height: 1.25;
-}
-
-.conteudo-area p {
-  margin: 0;
-
-  color: #b9cad9;
-
-  font-size: 13px;
-
-  line-height: 1.5;
-}
-
-/* =====================================================
-   SETA
-===================================================== */
-
-.seta-area {
-  width: 45px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  color: #4db9ff;
-
-  font-size: 17px;
-
-  transition:
-    transform 0.25s ease,
-    color 0.25s ease;
-}
-
-.card-area:hover .seta-area {
-  color: #ffc328;
-
-  transform: translateX(3px);
-}
-
-/* =====================================================
-   BOTÃO VOLTAR
-===================================================== */
-
-.area-voltar {
-  width: 100%;
-
-  margin-top: 30px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-}
-
-.botao-voltar {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 9px;
-
-  padding: 11px 20px;
-
-  color: #ffffff;
-
-  text-decoration: none;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.7px;
-
-  border: 1px solid #168ee4;
-
-  border-radius: 7px;
-
-  background: rgba(4, 24, 43, 0.92);
-
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.botao-voltar:visited {
-  color: #ffffff;
-
-  text-decoration: none;
-}
-
-.botao-voltar:hover {
-  color: #ffc328;
-
-  border-color: #ffc328;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 0 15px rgba(255, 183, 0, 0.12);
-}
-
-.botao-voltar:active {
-  transform: translateY(0);
-}
-
-/* =====================================================
-   TABLETS
-===================================================== */
-
-@media (max-width: 950px) {
-  .pagina-areas {
-    max-width: 750px;
-
-    padding: 30px 25px 45px;
-  }
-
-  .grade-areas {
-    grid-template-columns: 1fr;
-
-    gap: 14px;
-  }
-
-  .logo-areas {
-    max-width: 240px;
-  }
-}
-
-/* =====================================================
-   CELULARES
-===================================================== */
-
-@media (max-width: 600px) {
-  .pagina-areas {
+.acoes-superiores-areas {
     width: 100%;
 
-    min-height: calc(100vh - 50px);
+    display: flex;
 
-    padding: 22px 14px 35px;
-  }
+    align-items: center;
 
-  /* CABEÇALHO */
+    justify-content: space-between;
 
-  .cabecalho-areas {
-    margin-bottom: 25px;
-  }
+    gap: 18px;
 
-  /* LOGO */
+    margin-bottom: 18px;
 
-  .logo-areas {
-    width: auto;
+    padding: 18px 20px;
 
-    max-width: 190px;
+    box-sizing: border-box;
 
-    max-height: 180px;
+    border:
+        1px solid
+        rgba(22, 142, 228, 0.42);
 
-    margin-bottom: 15px;
-  }
+    border-radius: 12px;
 
-  /* TÍTULO */
-
-  .cabecalho-areas h1 {
-    font-size: 22px;
-
-    letter-spacing: 1.2px;
-  }
-
-  /* DESCRIÇÃO */
-
-  .cabecalho-areas p {
-    max-width: 380px;
-
-    margin-top: 8px;
-
-    padding: 0 10px;
-
-    font-size: 13px;
-
-    line-height: 1.5;
-  }
-
-  /* GRADE */
-
-  .grade-areas {
-    grid-template-columns: 1fr;
-
-    gap: 11px;
-  }
-
-  /* CARD */
-
-  .card-area {
-    min-height: 95px;
-
-    grid-template-columns: 65px minmax(0, 1fr) 30px;
-
-    border-radius: 8px;
-  }
-
-  /* ÍCONE */
-
-  .icone-area {
-    width: 65px;
-
-    min-height: 95px;
-
-    font-size: 25px;
-  }
-
-  /* CONTEÚDO */
-
-  .conteudo-area {
-    padding: 13px 12px;
-  }
-
-  .conteudo-area h2 {
-    margin-bottom: 4px;
-
-    font-size: 15px;
-
-    line-height: 1.2;
-  }
-
-  .conteudo-area p {
-    font-size: 11px;
-
-    line-height: 1.4;
-  }
-
-  /* SETA */
-
-  .seta-area {
-    width: 30px;
-
-    font-size: 14px;
-  }
-
-  /* VOLTAR */
-
-  .area-voltar {
-    margin-top: 24px;
-  }
-
-  .botao-voltar {
-    padding: 10px 16px;
-
-    font-size: 11px;
-  }
+    background:
+        rgba(3, 24, 43, 0.92);
 }
 
-/* =====================================================
-   CELULARES PEQUENOS
-===================================================== */
 
-@media (max-width: 420px) {
-  .pagina-areas {
-    padding: 18px 10px 30px;
-  }
+.titulo-acoes-areas {
+    display: flex;
 
-  .logo-areas {
-    max-width: 165px;
+    flex-direction: column;
 
-    max-height: 160px;
-  }
+    gap: 4px;
+}
 
-  .cabecalho-areas h1 {
-    font-size: 19px;
-  }
 
-  .cabecalho-areas p {
+.titulo-acoes-areas span {
+    color: #ffd35a;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.07em;
+}
+
+
+.titulo-acoes-areas strong {
+    color: #ffffff;
+
+    font-size: 21px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   BOTÃO GERENCIAR
+========================================================= */
+
+.botao-gerenciar-areas {
+    min-height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding:
+        0 18px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid #168ee4;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background:
+        rgba(7, 48, 78, 0.94);
+
+    text-decoration: none;
+
     font-size: 12px;
-  }
 
-  .card-area {
-    grid-template-columns: 58px minmax(0, 1fr) 27px;
-  }
+    font-weight: 900;
 
-  .icone-area {
-    width: 58px;
+    transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background 0.18s ease;
+}
 
-    font-size: 22px;
-  }
 
-  .conteudo-area {
-    padding: 11px 10px;
-  }
+.botao-gerenciar-areas i {
+    color: #63c6ff;
+}
 
-  .conteudo-area h2 {
-    font-size: 14px;
-  }
 
-  .conteudo-area p {
-    font-size: 10.5px;
-  }
+.botao-gerenciar-areas:hover {
+    transform:
+        translateY(-2px);
 
-  .seta-area {
-    width: 27px;
-  }
+    border-color:
+        #64c6ff;
+
+    background:
+        rgba(10, 65, 104, 0.96);
+}
+
+
+/* =========================================================
+   GRADE
+========================================================= */
+
+.grade-areas {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+.form-area {
+    margin: 0;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card-area {
+    width: 100%;
+
+    min-height: 132px;
+
+    display: grid;
+
+    grid-template-columns:
+        86px
+        minmax(0, 1fr)
+        44px;
+
+    align-items: stretch;
+
+    padding: 0;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    border:
+        1px solid #168ee4;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(4, 38, 66, 0.96),
+            rgba(2, 24, 44, 0.96)
+        );
+
+    box-shadow:
+        0 10px 22px
+        rgba(0, 0, 0, 0.15);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.card-area:hover {
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #61c8ff;
+
+    box-shadow:
+        0 14px 28px
+        rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   ÍCONE
+========================================================= */
+
+.icone-area {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-right:
+        1px solid
+        rgba(22, 142, 228, 0.42);
+
+    background:
+        rgba(7, 51, 85, 0.60);
+}
+
+
+.icone-area i {
+    color: #55bfff;
+
+    font-size: 32px;
+}
+
+
+/* =========================================================
+   CONTEÚDO
+========================================================= */
+
+.conteudo-area {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        20px 18px;
+}
+
+
+.conteudo-area strong {
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+    line-height: 1.2;
+}
+
+
+.conteudo-area small {
+    color: #b6c9d4;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   SETA
+========================================================= */
+
+.seta-area {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #3eb8ff;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   VAZIO
+========================================================= */
+
+.areas-vazias {
+    grid-column: 1 / -1;
+
+    min-height: 280px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    border:
+        1px solid
+        rgba(22, 142, 228, 0.35);
+
+    border-radius: 12px;
+
+    background:
+        rgba(3, 24, 43, 0.90);
+
+    text-align: center;
+}
+
+
+.areas-vazias i {
+    color: #ffd35a;
+
+    font-size: 42px;
+}
+
+
+.areas-vazias strong {
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+
+.areas-vazias span {
+    color: #94a9b5;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.rodape-areas {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   BOTÕES
+========================================================= */
+
+.botao-voltar-areas,
+.botao-cadastrar-area {
+    min-height: 46px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        0 20px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        opacity 0.18s ease;
+}
+
+
+.botao-voltar-areas {
+    color: #ffffff;
+
+    border:
+        1px solid
+        rgba(119, 159, 184, 0.38);
+
+    background:
+        rgba(15, 35, 53, 0.92);
+}
+
+
+.botao-cadastrar-area {
+    color: #08131d;
+
+    border:
+        1px solid #ffd35a;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffd84f,
+            #efbd26
+        );
+}
+
+
+.botao-voltar-areas:hover,
+.botao-cadastrar-area:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .grade-areas {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+}
+
+
+@media (max-width: 780px) {
+
+    .pagina-areas {
+        width:
+            calc(100% - 20px);
+
+        padding-top: 18px;
+    }
+
+
+    .logo-areas {
+        width: 145px;
+    }
+
+
+    .acoes-superiores-areas {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .botao-gerenciar-areas {
+        width: 100%;
+    }
+
+
+    .grade-areas {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rodape-areas {
+        flex-direction: column;
+    }
+
+
+    .botao-voltar-areas,
+    .botao-cadastrar-area {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .card-area {
+        grid-template-columns:
+            68px
+            minmax(0, 1fr)
+            34px;
+    }
+
+
+    .icone-area i {
+        font-size: 26px;
+    }
+
+
+    .conteudo-area {
+        padding:
+            16px 12px;
+    }
+
+
+    .conteudo-area strong {
+        font-size: 16px;
+    }
 }
