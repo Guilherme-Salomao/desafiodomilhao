@@ -1,19 +1,17 @@
 /* =========================================================
-   PÁGINA
+   PÁGINA DE SELEÇÃO DE ÁREAS
 ========================================================= */
 
 .pagina-areas {
     position: relative;
     z-index: 1;
 
-    width: calc(100% - 52px);
+    width: calc(100% - 70px);
     max-width: 1720px;
 
     margin: 0 auto;
 
-    padding:
-        26px 0
-        42px;
+    padding: 20px 0 38px;
 }
 
 
@@ -23,32 +21,29 @@
 
 .cabecalho-areas {
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
 
-    margin-bottom: 26px;
+    margin-bottom: 24px;
 }
 
 
 .logo-areas {
-    width: 190px;
-
+    width: 170px;
     height: auto;
 
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     object-fit: contain;
 
     filter:
         drop-shadow(
-            0 0 16px
-            rgba(255, 195, 40, 0.32)
+            0 0 18px
+            rgba(255, 193, 7, 0.28)
         );
 }
 
@@ -60,11 +55,11 @@
 
     gap: 8px;
 
-    margin-bottom: 9px;
+    margin-bottom: 10px;
 
-    color: #ffd35a;
+    color: #ffd43b;
 
-    font-size: 12px;
+    font-size: 11px;
 
     font-weight: 900;
 
@@ -79,9 +74,9 @@
 
     font-size:
         clamp(
-            32px,
-            3vw,
-            46px
+            34px,
+            4vw,
+            52px
         );
 
     font-weight: 900;
@@ -91,29 +86,27 @@
 
 
 .cabecalho-areas p {
-    margin:
-        12px 0 0;
+    margin: 12px 0 0;
 
-    color: #b7c9d4;
+    color: #b9cad6;
 
-    font-size: 14px;
+    font-size: 13px;
 }
 
 
 /* =========================================================
-   AÇÕES SUPERIORES
+   BARRA SUPERIOR
 ========================================================= */
 
-.acoes-superiores-areas {
+.barra-superior-areas {
     width: 100%;
 
     display: flex;
 
     align-items: center;
-
     justify-content: space-between;
 
-    gap: 18px;
+    gap: 20px;
 
     margin-bottom: 18px;
 
@@ -123,16 +116,24 @@
 
     border:
         1px solid
-        rgba(22, 142, 228, 0.42);
+        rgba(22, 156, 235, 0.62);
 
     border-radius: 12px;
 
     background:
-        rgba(3, 24, 43, 0.92);
+        rgba(2, 25, 44, 0.92);
+
+    box-shadow:
+        0 10px 28px
+        rgba(0, 0, 0, 0.18);
 }
 
 
-.titulo-acoes-areas {
+/* =========================================================
+   CONTADOR
+========================================================= */
+
+.contador-areas {
     display: flex;
 
     flex-direction: column;
@@ -141,93 +142,92 @@
 }
 
 
-.titulo-acoes-areas span {
-    color: #ffd35a;
+.contador-areas span {
+    color: #ffd43b;
 
-    font-size: 11px;
+    font-size: 10px;
 
     font-weight: 900;
 
-    letter-spacing: 0.07em;
+    letter-spacing: 0.05em;
 }
 
 
-.titulo-acoes-areas strong {
+.contador-areas strong {
     color: #ffffff;
 
-    font-size: 21px;
+    font-size: 18px;
 
     font-weight: 900;
 }
 
 
 /* =========================================================
-   BOTÃO GERENCIAR
+   GERENCIAR ÁREAS
 ========================================================= */
 
 .botao-gerenciar-areas {
-    min-height: 44px;
+    min-height: 42px;
 
     display: inline-flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 9px;
 
-    padding:
-        0 18px;
+    padding: 0 18px;
 
     box-sizing: border-box;
 
     border:
-        1px solid #168ee4;
+        1px solid
+        rgba(34, 177, 255, 0.72);
 
     border-radius: 8px;
 
     color: #ffffff;
 
     background:
-        rgba(7, 48, 78, 0.94);
+        rgba(5, 62, 96, 0.78);
 
     text-decoration: none;
 
-    font-size: 12px;
+    font-size: 10px;
 
     font-weight: 900;
 
+    white-space: nowrap;
+
     transition:
-        border-color 0.18s ease,
         transform 0.18s ease,
-        background 0.18s ease;
+        background 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
 
 .botao-gerenciar-areas i {
-    color: #63c6ff;
+    color: #49c2ff;
 }
 
 
 .botao-gerenciar-areas:hover {
-    transform:
-        translateY(-2px);
-
-    border-color:
-        #64c6ff;
+    transform: translateY(-2px);
 
     background:
-        rgba(10, 65, 104, 0.96);
+        rgba(8, 78, 119, 0.95);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 155, 255, 0.12);
 }
 
 
 /* =========================================================
-   GRADE
+   GRADE DE ÁREAS
 ========================================================= */
 
 .grade-areas {
-    width: 100%;
-
     display: grid;
 
     grid-template-columns:
@@ -236,12 +236,9 @@
             minmax(0, 1fr)
         );
 
-    gap: 16px;
-}
+    gap: 14px;
 
-
-.form-area {
-    margin: 0;
+    width: 100%;
 }
 
 
@@ -250,47 +247,49 @@
 ========================================================= */
 
 .card-area {
-    width: 100%;
+    position: relative;
 
-    min-height: 132px;
+    min-height: 114px;
 
     display: grid;
 
     grid-template-columns:
-        86px
+        78px
         minmax(0, 1fr)
-        44px;
+        42px;
 
     align-items: stretch;
 
-    padding: 0;
+    box-sizing: border-box;
 
     overflow: hidden;
 
-    cursor: pointer;
-
-    text-align: left;
-
     border:
-        1px solid #168ee4;
+        1px solid
+        rgba(25, 174, 255, 0.76);
 
     border-radius: 10px;
 
     background:
         linear-gradient(
-            90deg,
-            rgba(4, 38, 66, 0.96),
-            rgba(2, 24, 44, 0.96)
+            110deg,
+            rgba(4, 43, 72, 0.96),
+            rgba(2, 29, 50, 0.96)
         );
 
+    text-decoration: none;
+
+    color: inherit;
+
     box-shadow:
-        0 10px 22px
-        rgba(0, 0, 0, 0.15);
+        0 8px 24px
+        rgba(0, 0, 0, 0.13);
 
     transition:
         transform 0.18s ease,
         border-color 0.18s ease,
-        box-shadow 0.18s ease;
+        box-shadow 0.18s ease,
+        background 0.18s ease;
 }
 
 
@@ -299,46 +298,71 @@
         translateY(-3px);
 
     border-color:
-        #61c8ff;
+        #55caff;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(6, 57, 92, 0.98),
+            rgba(3, 35, 59, 0.98)
+        );
 
     box-shadow:
-        0 14px 28px
-        rgba(0, 0, 0, 0.22);
+        0 12px 28px
+        rgba(0, 0, 0, 0.20);
+}
+
+
+/* REMOVE COMPORTAMENTO PADRÃO DE LINK */
+
+.card-area,
+.card-area:hover,
+.card-area:visited,
+.card-area:active {
+    text-decoration: none;
 }
 
 
 /* =========================================================
-   ÍCONE
+   ÍCONE DO CARD
 ========================================================= */
 
-.icone-area {
+.icone-card-area {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-right:
         1px solid
-        rgba(22, 142, 228, 0.42);
+        rgba(25, 174, 255, 0.30);
 
     background:
-        rgba(7, 51, 85, 0.60);
+        rgba(6, 72, 111, 0.42);
+
+    color: #4cc4ff;
+
+    font-size: 30px;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
 }
 
 
-.icone-area i {
-    color: #55bfff;
+.card-area:hover .icone-card-area {
+    background:
+        rgba(9, 87, 132, 0.58);
 
-    font-size: 32px;
+    color: #72d2ff;
 }
 
 
 /* =========================================================
-   CONTEÚDO
+   CONTEÚDO DO CARD
 ========================================================= */
 
-.conteudo-area {
+.conteudo-card-area {
     min-width: 0;
 
     display: flex;
@@ -347,32 +371,40 @@
 
     justify-content: center;
 
-    gap: 7px;
-
-    padding:
-        20px 18px;
+    padding: 18px 16px;
 }
 
 
-.conteudo-area strong {
+.conteudo-card-area h2 {
+    margin: 0 0 7px;
+
     color: #ffffff;
 
-    font-size: 18px;
+    font-size: 17px;
 
     font-weight: 900;
 
-    line-height: 1.2;
+    line-height: 1.15;
+
+    text-decoration: none;
 }
 
 
-.conteudo-area small {
-    color: #b6c9d4;
+.conteudo-card-area p {
+    margin: 0;
 
-    font-size: 12px;
+    color: #aebfcb;
 
-    font-weight: 500;
+    font-size: 11px;
 
-    line-height: 1.55;
+    line-height: 1.45;
+
+    text-decoration: none;
+}
+
+
+.card-area:hover .conteudo-card-area h2 {
+    color: #ffffff;
 }
 
 
@@ -380,163 +412,213 @@
    SETA
 ========================================================= */
 
-.seta-area {
+.seta-card-area {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
-    color: #3eb8ff;
+    color: #2bbaff;
 
-    font-size: 19px;
+    font-size: 17px;
+
+    transition:
+        transform 0.18s ease,
+        color 0.18s ease;
+}
+
+
+.card-area:hover .seta-card-area {
+    transform:
+        translateX(3px);
+
+    color: #78d8ff;
 }
 
 
 /* =========================================================
-   VAZIO
+   ESTADO VAZIO
 ========================================================= */
 
-.areas-vazias {
+.estado-vazio-areas {
     grid-column: 1 / -1;
 
-    min-height: 280px;
+    padding: 42px 20px;
 
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 10px;
+    text-align: center;
 
     border:
         1px solid
-        rgba(22, 142, 228, 0.35);
+        rgba(25, 174, 255, 0.38);
 
     border-radius: 12px;
 
     background:
-        rgba(3, 24, 43, 0.90);
-
-    text-align: center;
+        rgba(3, 27, 47, 0.88);
 }
 
 
-.areas-vazias i {
-    color: #ffd35a;
+.estado-vazio-areas > i {
+    margin-bottom: 12px;
 
-    font-size: 42px;
+    color: #ffd43b;
+
+    font-size: 34px;
 }
 
 
-.areas-vazias strong {
+.estado-vazio-areas h2 {
+    margin: 0 0 8px;
+
     color: #ffffff;
 
     font-size: 20px;
 }
 
 
-.areas-vazias span {
-    color: #94a9b5;
+.estado-vazio-areas p {
+    margin: 0;
 
-    font-size: 13px;
+    color: #aebfcb;
+
+    font-size: 12px;
 }
 
 
 /* =========================================================
-   RODAPÉ
+   AÇÕES INFERIORES
 ========================================================= */
 
-.rodape-areas {
-    width: 100%;
-
+.acoes-inferiores-areas {
     display: flex;
 
     align-items: center;
-
     justify-content: space-between;
 
     gap: 14px;
 
-    margin-top: 22px;
+    margin-top: 20px;
 }
 
 
 /* =========================================================
-   BOTÕES
+   BOTÃO VOLTAR
 ========================================================= */
 
-.botao-voltar-areas,
-.botao-cadastrar-area {
-    min-height: 46px;
+.botao-voltar-areas {
+    min-height: 42px;
 
     display: inline-flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 8px;
 
-    padding:
-        0 20px;
+    padding: 0 16px;
 
-    box-sizing: border-box;
+    border:
+        1px solid
+        rgba(123, 159, 183, 0.42);
 
     border-radius: 8px;
 
+    color: #ffffff;
+
+    background:
+        rgba(10, 37, 57, 0.92);
+
     text-decoration: none;
 
-    font-size: 12px;
+    font-size: 10px;
 
     font-weight: 900;
 
     transition:
         transform 0.18s ease,
-        border-color 0.18s ease,
-        opacity 0.18s ease;
+        border-color 0.18s ease;
 }
 
 
-.botao-voltar-areas {
-    color: #ffffff;
-
-    border:
-        1px solid
-        rgba(119, 159, 184, 0.38);
-
-    background:
-        rgba(15, 35, 53, 0.92);
-}
-
-
-.botao-cadastrar-area {
-    color: #08131d;
-
-    border:
-        1px solid #ffd35a;
-
-    background:
-        linear-gradient(
-            180deg,
-            #ffd84f,
-            #efbd26
-        );
-}
-
-
-.botao-voltar-areas:hover,
-.botao-cadastrar-area:hover {
+.botao-voltar-areas:hover {
     transform:
         translateY(-2px);
+
+    border-color:
+        rgba(84, 195, 255, 0.65);
 }
 
 
 /* =========================================================
-   RESPONSIVO
+   CADASTRAR ÁREA
+========================================================= */
+
+.botao-cadastrar-area {
+    min-height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 18px;
+
+    border:
+        1px solid
+        #ffd43b;
+
+    border-radius: 8px;
+
+    color: #0b1720;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffd94d,
+            #efbd23
+        );
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.botao-cadastrar-area:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(255, 195, 40, 0.18);
+}
+
+
+/* =========================================================
+   GARANTE QUE LINKS NÃO FIQUEM ROXOS
+========================================================= */
+
+.botao-gerenciar-areas:visited,
+.botao-voltar-areas:visited {
+    color: #ffffff;
+}
+
+
+.botao-cadastrar-area:visited {
+    color: #0b1720;
+}
+
+
+/* =========================================================
+   RESPONSIVO - NOTEBOOK
 ========================================================= */
 
 @media (max-width: 1200px) {
@@ -551,25 +633,22 @@
 }
 
 
-@media (max-width: 780px) {
+/* =========================================================
+   RESPONSIVO - TABLET
+========================================================= */
+
+@media (max-width: 800px) {
 
     .pagina-areas {
         width:
-            calc(100% - 20px);
-
-        padding-top: 18px;
+            calc(100% - 24px);
     }
 
 
-    .logo-areas {
-        width: 145px;
-    }
-
-
-    .acoes-superiores-areas {
-        flex-direction: column;
-
+    .barra-superior-areas {
         align-items: stretch;
+
+        flex-direction: column;
     }
 
 
@@ -582,9 +661,62 @@
         grid-template-columns:
             1fr;
     }
+}
 
 
-    .rodape-areas {
+/* =========================================================
+   RESPONSIVO - CELULAR
+========================================================= */
+
+@media (max-width: 560px) {
+
+    .pagina-areas {
+        padding-top: 16px;
+    }
+
+
+    .logo-areas {
+        width: 140px;
+    }
+
+
+    .cabecalho-areas h1 {
+        font-size: 30px;
+    }
+
+
+    .card-area {
+        min-height: 104px;
+
+        grid-template-columns:
+            62px
+            minmax(0, 1fr)
+            34px;
+    }
+
+
+    .icone-card-area {
+        font-size: 24px;
+    }
+
+
+    .conteudo-card-area {
+        padding:
+            15px 12px;
+    }
+
+
+    .conteudo-card-area h2 {
+        font-size: 15px;
+    }
+
+
+    .conteudo-card-area p {
+        font-size: 10px;
+    }
+
+
+    .acoes-inferiores-areas {
         flex-direction: column;
     }
 
@@ -592,32 +724,5 @@
     .botao-voltar-areas,
     .botao-cadastrar-area {
         width: 100%;
-    }
-}
-
-
-@media (max-width: 520px) {
-
-    .card-area {
-        grid-template-columns:
-            68px
-            minmax(0, 1fr)
-            34px;
-    }
-
-
-    .icone-area i {
-        font-size: 26px;
-    }
-
-
-    .conteudo-area {
-        padding:
-            16px 12px;
-    }
-
-
-    .conteudo-area strong {
-        font-size: 16px;
     }
 }

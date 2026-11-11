@@ -2,167 +2,35 @@
 
 declare(strict_types=1);
 
-/* =========================================================
+
+/* ============================================================
    SESSÃO
-========================================================= */
+============================================================ */
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
 
-/* =========================================================
-   CONEXÃO
-========================================================= */
+/* ============================================================
+   DEPENDÊNCIAS
+============================================================ */
+
+require_once __DIR__ . '/includes/url.php';
 
 require_once __DIR__ . '/includes/conexao.php';
+
+
+/* ============================================================
+   CONEXÃO
+============================================================ */
 
 $pdo = conectarBanco();
 
 
-/* =========================================================
-   FILTRO DE ÁREA
-========================================================= */
-
-$areaFiltro =
-    filter_input(
-        INPUT_GET,
-        'area',
-        FILTER_VALIDATE_INT
-    );
-
-if (
-    $areaFiltro === false ||
-    $areaFiltro === null ||
-    $areaFiltro <= 0
-) {
-    $areaFiltro = null;
-}
-
-
-/* =========================================================
-   LISTA DE ÁREAS
-========================================================= */
-
-$sqlAreas = '
-    SELECT
-        id,
-        nome
-    FROM areas
-    ORDER BY nome ASC
-';
-
-$stmtAreas =
-    $pdo->query($sqlAreas);
-
-$areas =
-    $stmtAreas->fetchAll(
-        PDO::FETCH_ASSOC
-    );
-
-
-/* =========================================================
-   SQL DO RANKING
-========================================================= */
-
-$sql = '
-    SELECT
-        r.id,
-        r.nome_jogador,
-        r.modo,
-        r.dificuldade,
-        r.quantidade_perguntas,
-        r.pergunta_final,
-        r.perguntas_respondidas,
-        r.acertos,
-        r.erros,
-        r.tempo_total_ms,
-        r.ajudas_usadas,
-        r.ajuda_cinquenta,
-        r.ajuda_tecnico,
-        r.ajuda_turma,
-        r.ajuda_trocar,
-        r.premio,
-        r.resultado,
-        r.concluida,
-        r.criado_em,
-
-        a.nome AS area_nome
-
-    FROM resultados r
-
-    INNER JOIN areas a
-        ON a.id = r.area_id
-';
-
-
-/* =========================================================
-   PARÂMETROS
-========================================================= */
-
-$parametros = [];
-
-
-/* =========================================================
-   FILTRO
-========================================================= */
-
-if ($areaFiltro !== null) {
-
-    $sql .= '
-        WHERE r.area_id = :area_id
-    ';
-
-    $parametros[':area_id'] =
-        $areaFiltro;
-}
-
-
-/* =========================================================
-   ORDENAÇÃO OFICIAL
-
-   1. Maior prêmio
-   2. Menor número de ajudas
-   3. Menor tempo
-   4. Registro mais antigo
-========================================================= */
-
-$sql .= '
-    ORDER BY
-        r.premio DESC,
-        r.ajudas_usadas ASC,
-        r.tempo_total_ms ASC,
-        r.criado_em ASC
-';
-
-
-/* =========================================================
-   LIMITE
-========================================================= */
-
-$sql .= '
-    LIMIT 100
-';
-
-
-/* =========================================================
-   EXECUTA CONSULTA
-========================================================= */
-
-$stmt =
-    $pdo->prepare($sql);
-
-$stmt->execute($parametros);
-
-$ranking =
-    $stmt->fetchAll(
-        PDO::FETCH_ASSOC
-    );
-
-
-/* =========================================================
+/* ============================================================
    FUNÇÃO ESCAPE
-========================================================= */
+============================================================ */
 
 function escaparRanking(string $valor): string
 {
@@ -174,14 +42,13 @@ function escaparRanking(string $valor): string
 }
 
 
-/* =========================================================
-   FORMATA PRÊMIO
-========================================================= */
+/* ============================================================
+   FORMATAR DINHEIRO
+============================================================ */
 
 function formatarPremioRanking(float $valor): string
 {
-    return
-        'R$ ' .
+    return 'R$ ' .
         number_format(
             $valor,
             0,
@@ -191,9 +58,11 @@ function formatarPremioRanking(float $valor): string
 }
 
 
-/* =========================================================
-   FORMATA TEMPO
-========================================================= */
+/* ============================================================
+   FORMATAR TEMPO
+
+   Banco armazena em milissegundos.
+============================================================ */
 
 function formatarTempoRanking(int $milissegundos): string
 {
@@ -228,16 +97,19 @@ function formatarTempoRanking(int $milissegundos): string
 }
 
 
-/* =========================================================
-   TEXTO DIFICULDADE
-========================================================= */
+/* ============================================================
+   TEXTO DA DIFICULDADE
+============================================================ */
 
-function textoDificuldadeRanking(string $dificuldade): string
+function dificuldadeRanking(string $dificuldade): string
 {
     return match ($dificuldade) {
 
         'facil' =>
             'Fácil',
+
+        'medio' =>
+            'Média',
 
         'mista' =>
             'Mista',
@@ -251,26 +123,236 @@ function textoDificuldadeRanking(string $dificuldade): string
 }
 
 
-/* =========================================================
+/* ============================================================
+   TEXTO DO RESULTADO
+============================================================ */
+
+function resultadoRanking(string $resultado): string
+{
+    return match ($resultado) {
+
+        'vencedor' =>
+            'VENCEDOR',
+
+        'game_over' =>
+            'GAME OVER',
+
+        default =>
+            strtoupper(
+                str_replace(
+                    '_',
+                    ' ',
+                    $resultado
+                )
+            ),
+    };
+}
+
+
+/* ============================================================
+   ÁREA PARA FILTRO
+============================================================ */
+
+$areaFiltro =
+    filter_input(
+        INPUT_GET,
+        'area',
+        FILTER_VALIDATE_INT
+    );
+
+
+if (
+    $areaFiltro === false ||
+    $areaFiltro === null ||
+    $areaFiltro <= 0
+) {
+    $areaFiltro = null;
+}
+
+
+/* ============================================================
+   BUSCA ÁREAS
+============================================================ */
+
+$stmtAreas =
+    $pdo->query(
+        '
+            SELECT
+                id,
+                nome
+            FROM areas
+            WHERE ativo = 1
+            ORDER BY
+                ordem ASC,
+                nome ASC
+        '
+    );
+
+
+$areas =
+    $stmtAreas->fetchAll(
+        PDO::FETCH_ASSOC
+    );
+
+
+/* ============================================================
+   RANKING
+
+   Critérios:
+   1. Maior prêmio
+   2. Menos ajudas
+   3. Menor tempo
+   4. Resultado mais antigo
+============================================================ */
+
+$sqlRanking = '
+    SELECT
+        r.id,
+        r.nome_jogador,
+        r.modo,
+        r.dificuldade,
+        r.quantidade_perguntas,
+        r.pergunta_final,
+        r.perguntas_respondidas,
+        r.acertos,
+        r.erros,
+        r.tempo_total_ms,
+        r.ajudas_usadas,
+        r.premio,
+        r.resultado,
+        r.concluida,
+        r.criado_em,
+
+        a.id AS area_id,
+        a.nome AS area_nome,
+        a.icone AS area_icone
+
+    FROM resultados r
+
+    INNER JOIN areas a
+        ON a.id = r.area_id
+
+    WHERE 1 = 1
+';
+
+
+$parametros =
+    [];
+
+
+if ($areaFiltro !== null) {
+
+    $sqlRanking .= '
+        AND r.area_id = :area_id
+    ';
+
+    $parametros[':area_id'] =
+        $areaFiltro;
+}
+
+
+$sqlRanking .= '
+    ORDER BY
+        r.premio DESC,
+        r.ajudas_usadas ASC,
+        r.tempo_total_ms ASC,
+        r.criado_em ASC
+
+    LIMIT 100
+';
+
+
+$stmtRanking =
+    $pdo->prepare(
+        $sqlRanking
+    );
+
+
+$stmtRanking->execute(
+    $parametros
+);
+
+
+$ranking =
+    $stmtRanking->fetchAll(
+        PDO::FETCH_ASSOC
+    );
+
+
+/* ============================================================
+   ESTATÍSTICAS
+============================================================ */
+
+$totalResultados =
+    count(
+        $ranking
+    );
+
+
+$totalVencedores =
+    0;
+
+
+$maiorPremio =
+    0.0;
+
+
+foreach ($ranking as $registro) {
+
+    if (
+        (string) (
+            $registro['resultado']
+            ?? ''
+        ) === 'vencedor'
+    ) {
+        $totalVencedores++;
+    }
+
+
+    $premioAtual =
+        (float) (
+            $registro['premio']
+            ?? 0
+        );
+
+
+    if ($premioAtual > $maiorPremio) {
+
+        $maiorPremio =
+            $premioAtual;
+    }
+}
+
+
+/* ============================================================
    CONFIGURAÇÕES DA PÁGINA
-========================================================= */
+============================================================ */
 
 $siteSubtitulo =
     'Ranking';
 
+
 $paginaTitulo =
     'Ranking - Desafio do Milhão';
 
+
 $paginaDescricao =
-    'Confira a classificação dos jogadores do Desafio do Milhão.';
+    'Confira os melhores resultados do Desafio do Milhão.';
+
+
+$paginaTipo =
+    'website';
+
 
 $paginaCss =
-    '/github/desafiodomilhao/public/assets/css/ranking.css';
+    urlProjeto(
+        'assets/css/ranking.css'
+    );
 
 
-/* =========================================================
+/* ============================================================
    HEADER
-========================================================= */
+============================================================ */
 
 require_once __DIR__ . '/includes/header.php';
 
@@ -286,54 +368,130 @@ require_once __DIR__ . '/includes/header.php';
 
     <section class="cabecalho-ranking">
 
+
         <img
-            src="/github/desafiodomilhao/public/assets/img/logo/favicon.png"
+            src="<?php
+            echo escaparRanking(
+                urlProjeto(
+                    'assets/img/logo/favicon.png'
+                )
+            );
+            ?>"
             alt="Desafio do Milhão"
             class="logo-ranking"
         >
 
-        <div>
 
-            <span class="rotulo-ranking">
+        <span class="rotulo-ranking">
 
-                <i class="fa-solid fa-trophy"></i>
+            <i class="fa-solid fa-trophy"></i>
 
-                CLASSIFICAÇÃO
+            CLASSIFICAÇÃO
 
-            </span>
+        </span>
 
-            <h1>
-                RANKING
-            </h1>
 
-            <p>
-                Os melhores jogadores do Desafio do Milhão.
-            </p>
+        <h1>
+            RANKING
+        </h1>
 
-        </div>
+
+        <p>
+            Os melhores resultados do Desafio do Milhão.
+        </p>
+
 
     </section>
 
 
     <!-- =====================================================
-         REGRA
+         ESTATÍSTICAS
     ====================================================== -->
 
-    <section class="regra-ranking">
+    <section class="grade-estatisticas-ranking">
 
-        <i class="fa-solid fa-circle-info"></i>
 
-        <div>
+        <article class="card-estatistica-ranking">
 
-            <strong>
-                Critério de classificação
-            </strong>
 
-            <span>
-                Maior prêmio, menor quantidade de ajudas e menor tempo total.
-            </span>
+            <div class="icone-estatistica-ranking">
 
-        </div>
+                <i class="fa-solid fa-ranking-star"></i>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    PARTICIPANTES
+                </span>
+
+                <strong>
+                    <?php echo $totalResultados; ?>
+                </strong>
+
+            </div>
+
+
+        </article>
+
+
+        <article class="card-estatistica-ranking">
+
+
+            <div class="icone-estatistica-ranking vencedor">
+
+                <i class="fa-solid fa-crown"></i>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    VENCEDORES
+                </span>
+
+                <strong>
+                    <?php echo $totalVencedores; ?>
+                </strong>
+
+            </div>
+
+
+        </article>
+
+
+        <article class="card-estatistica-ranking">
+
+
+            <div class="icone-estatistica-ranking premio">
+
+                <i class="fa-solid fa-sack-dollar"></i>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    MAIOR PRÊMIO
+                </span>
+
+                <strong>
+                    <?php
+                    echo formatarPremioRanking(
+                        $maiorPremio
+                    );
+                    ?>
+                </strong>
+
+            </div>
+
+
+        </article>
+
 
     </section>
 
@@ -342,213 +500,161 @@ require_once __DIR__ . '/includes/header.php';
          FILTRO
     ====================================================== -->
 
-    <section class="filtro-ranking">
+    <section class="painel-filtro-ranking">
+
 
         <form
-            action=""
             method="GET"
+            action="<?php
+            echo escaparRanking(
+                urlProjeto(
+                    'ranking.php'
+                )
+            );
+            ?>"
         >
 
-            <label for="areaRanking">
 
-                <i class="fa-solid fa-layer-group"></i>
-
-                Área
-
-            </label>
-
-            <select
-                name="area"
-                id="areaRanking"
-                onchange="this.form.submit()"
-            >
-
-                <option value="">
-                    Todas as áreas
-                </option>
+            <div class="campo-filtro-ranking">
 
 
-                <?php foreach ($areas as $area): ?>
+                <label for="area">
 
-                    <?php
+                    <i class="fa-solid fa-layer-group"></i>
 
-                    $idArea =
-                        (int) (
-                            $area['id']
-                            ?? 0
-                        );
+                    Área
 
-                    ?>
-
-                    <option
-                        value="<?php echo $idArea; ?>"
-                        <?php
-                        echo (
-                            $areaFiltro === $idArea
-                        )
-                            ? 'selected'
-                            : '';
-                        ?>
-                    >
-
-                        <?php
-                        echo escaparRanking(
-                            (string) (
-                                $area['nome']
-                                ?? ''
-                            )
-                        );
-                        ?>
-
-                    </option>
-
-                <?php endforeach; ?>
-
-            </select>
-
-        </form>
-
-    </section>
+                </label>
 
 
-    <!-- =====================================================
-         PÓDIO
-    ====================================================== -->
-
-    <?php if (!empty($ranking)): ?>
-
-        <section class="podio-ranking">
-
-            <?php
-
-            $topTres =
-                array_slice(
-                    $ranking,
-                    0,
-                    3
-                );
-
-            ?>
-
-            <?php foreach ($topTres as $indice => $jogador): ?>
-
-                <?php
-
-                $posicao =
-                    $indice + 1;
-
-                ?>
-
-                <article
-                    class="card-podio posicao-<?php echo $posicao; ?>"
+                <select
+                    name="area"
+                    id="area"
                 >
 
-                    <div class="numero-podio">
 
-                        <?php if ($posicao === 1): ?>
-
-                            <i class="fa-solid fa-crown"></i>
-
-                        <?php else: ?>
-
-                            <?php echo $posicao; ?>º
-
-                        <?php endif; ?>
-
-                    </div>
+                    <option value="">
+                        Todas as áreas
+                    </option>
 
 
-                    <strong class="nome-podio">
+                    <?php foreach ($areas as $area): ?>
+
 
                         <?php
-                        echo escaparRanking(
-                            (string) (
-                                $jogador['nome_jogador']
-                                ?? 'Jogador'
-                            )
-                        );
-                        ?>
 
-                    </strong>
-
-
-                    <span class="area-podio">
-
-                        <?php
-                        echo escaparRanking(
-                            (string) (
-                                $jogador['area_nome']
-                                ?? ''
-                            )
-                        );
-                        ?>
-
-                    </span>
-
-
-                    <span class="premio-podio">
-
-                        <?php
-                        echo formatarPremioRanking(
-                            (float) (
-                                $jogador['premio']
+                        $idArea =
+                            (int) (
+                                $area['id']
                                 ?? 0
-                            )
-                        );
+                            );
+
                         ?>
 
-                    </span>
 
-
-                    <div class="dados-podio">
-
-                        <span>
-
-                            <i class="fa-solid fa-clock"></i>
+                        <option
+                            value="<?php echo $idArea; ?>"
+                            <?php
+                            echo $areaFiltro === $idArea
+                                ? 'selected'
+                                : '';
+                            ?>
+                        >
 
                             <?php
-                            echo formatarTempoRanking(
-                                (int) (
-                                    $jogador['tempo_total_ms']
-                                    ?? 0
+                            echo escaparRanking(
+                                (string) (
+                                    $area['nome']
+                                    ?? ''
                                 )
                             );
                             ?>
 
-                        </span>
+                        </option>
 
 
-                        <span>
+                    <?php endforeach; ?>
 
-                            <i class="fa-solid fa-life-ring"></i>
 
-                            <?php
-                            echo (int) (
-                                $jogador['ajudas_usadas']
-                                ?? 0
-                            );
-                            ?>
+                </select>
 
-                            ajuda(s)
 
-                        </span>
+            </div>
 
-                    </div>
 
-                </article>
+            <button
+                type="submit"
+                class="botao-filtrar-ranking"
+            >
 
-            <?php endforeach; ?>
+                <i class="fa-solid fa-filter"></i>
 
-        </section>
+                FILTRAR
 
-    <?php endif; ?>
+            </button>
+
+
+            <?php if ($areaFiltro !== null): ?>
+
+                <a
+                    href="<?php
+                    echo escaparRanking(
+                        urlProjeto(
+                            'ranking.php'
+                        )
+                    );
+                    ?>"
+                    class="botao-limpar-ranking"
+                >
+
+                    <i class="fa-solid fa-eraser"></i>
+
+                    LIMPAR
+
+                </a>
+
+            <?php endif; ?>
+
+
+        </form>
+
+
+    </section>
 
 
     <!-- =====================================================
          RANKING
     ====================================================== -->
 
-    <section class="container-ranking">
+    <section class="painel-ranking">
+
+
+        <div class="cabecalho-lista-ranking">
+
+
+            <div>
+
+                <span>
+                    CLASSIFICAÇÃO GERAL
+                </span>
+
+                <h2>
+                    Melhores jogadores
+                </h2>
+
+            </div>
+
+
+            <span class="quantidade-ranking">
+
+                <?php echo $totalResultados; ?>
+
+                resultado(s)
+
+            </span>
+
+
+        </div>
 
 
         <?php if (empty($ranking)): ?>
@@ -556,15 +662,19 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="ranking-vazio">
 
+
                 <i class="fa-solid fa-trophy"></i>
 
-                <h2>
-                    Nenhum resultado registrado
-                </h2>
+
+                <h3>
+                    NENHUM RESULTADO ENCONTRADO
+                </h3>
+
 
                 <p>
-                    Finalize uma partida para aparecer no ranking.
+                    Ainda não existem partidas registradas para este filtro.
                 </p>
+
 
             </div>
 
@@ -574,14 +684,17 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="tabela-ranking-wrapper">
 
+
                 <table class="tabela-ranking">
 
+
                     <thead>
+
 
                         <tr>
 
                             <th>
-                                POS.
+                                POSIÇÃO
                             </th>
 
                             <th>
@@ -590,10 +703,6 @@ require_once __DIR__ . '/includes/header.php';
 
                             <th>
                                 ÁREA
-                            </th>
-
-                            <th>
-                                DIFICULDADE
                             </th>
 
                             <th>
@@ -609,10 +718,19 @@ require_once __DIR__ . '/includes/header.php';
                             </th>
 
                             <th>
+                                ACERTOS
+                            </th>
+
+                            <th>
+                                DIFICULDADE
+                            </th>
+
+                            <th>
                                 RESULTADO
                             </th>
 
                         </tr>
+
 
                     </thead>
 
@@ -620,7 +738,7 @@ require_once __DIR__ . '/includes/header.php';
                     <tbody>
 
 
-                        <?php foreach ($ranking as $indice => $jogador): ?>
+                        <?php foreach ($ranking as $indice => $registro): ?>
 
 
                             <?php
@@ -628,11 +746,38 @@ require_once __DIR__ . '/includes/header.php';
                             $posicao =
                                 $indice + 1;
 
-                            $resultadoPartida =
+
+                            $classePosicao =
+                                '';
+
+                            if ($posicao === 1) {
+
+                                $classePosicao =
+                                    ' primeiro';
+
+                            } elseif ($posicao === 2) {
+
+                                $classePosicao =
+                                    ' segundo';
+
+                            } elseif ($posicao === 3) {
+
+                                $classePosicao =
+                                    ' terceiro';
+                            }
+
+
+                            $resultado =
                                 (string) (
-                                    $jogador['resultado']
-                                    ?? 'game_over'
+                                    $registro['resultado']
+                                    ?? ''
                                 );
+
+
+                            $classeResultado =
+                                $resultado === 'vencedor'
+                                    ? 'vencedor'
+                                    : 'game-over';
 
                             ?>
 
@@ -640,63 +785,37 @@ require_once __DIR__ . '/includes/header.php';
                             <tr>
 
 
-                                <td class="coluna-posicao">
+                                <td>
 
 
-                                    <?php if ($posicao === 1): ?>
+                                    <span class="posicao-ranking<?php echo $classePosicao; ?>">
 
 
-                                        <span class="medalha ouro">
+                                        <?php if ($posicao === 1): ?>
 
                                             <i class="fa-solid fa-crown"></i>
 
-                                        </span>
+                                        <?php endif; ?>
 
 
-                                    <?php elseif ($posicao === 2): ?>
+                                        <?php echo $posicao; ?>º
 
 
-                                        <span class="medalha prata">
-
-                                            <i class="fa-solid fa-medal"></i>
-
-                                        </span>
-
-
-                                    <?php elseif ($posicao === 3): ?>
-
-
-                                        <span class="medalha bronze">
-
-                                            <i class="fa-solid fa-medal"></i>
-
-                                        </span>
-
-
-                                    <?php else: ?>
-
-
-                                        <strong>
-
-                                            <?php echo $posicao; ?>º
-
-                                        </strong>
-
-
-                                    <?php endif; ?>
+                                    </span>
 
 
                                 </td>
 
 
-                                <td class="coluna-jogador">
+                                <td>
 
-                                    <strong>
+
+                                    <strong class="nome-jogador-ranking">
 
                                         <?php
                                         echo escaparRanking(
                                             (string) (
-                                                $jogador['nome_jogador']
+                                                $registro['nome_jogador']
                                                 ?? 'Jogador'
                                             )
                                         );
@@ -705,73 +824,52 @@ require_once __DIR__ . '/includes/header.php';
                                     </strong>
 
 
-                                    <small>
+                                </td>
+
+
+                                <td>
+
+
+                                    <span class="area-ranking">
+
+
+                                        <i
+                                            class="<?php
+                                            echo escaparRanking(
+                                                (string) (
+                                                    $registro['area_icone']
+                                                    ?? 'fa-solid fa-layer-group'
+                                                )
+                                            );
+                                            ?>"
+                                        ></i>
+
 
                                         <?php
-                                        echo (int) (
-                                            $jogador['acertos']
-                                            ?? 0
-                                        );
-                                        ?>
-
-                                        acerto(s)
-
-                                    </small>
-
-                                </td>
-
-
-                                <td>
-
-                                    <?php
-                                    echo escaparRanking(
-                                        (string) (
-                                            $jogador['area_nome']
-                                            ?? ''
-                                        )
-                                    );
-                                    ?>
-
-                                </td>
-
-
-                                <td>
-
-                                    <span
-                                        class="tag-dificuldade dificuldade-<?php
                                         echo escaparRanking(
                                             (string) (
-                                                $jogador['dificuldade']
-                                                ?? ''
-                                            )
-                                        );
-                                        ?>"
-                                    >
-
-                                        <?php
-                                        echo escaparRanking(
-                                            textoDificuldadeRanking(
-                                                (string) (
-                                                    $jogador['dificuldade']
-                                                    ?? ''
-                                                )
+                                                $registro['area_nome']
+                                                ?? 'Área'
                                             )
                                         );
                                         ?>
+
 
                                     </span>
 
+
                                 </td>
 
 
-                                <td class="coluna-premio">
+                                <td>
 
-                                    <strong>
+
+                                    <strong class="premio-ranking">
 
                                         <?php
                                         echo formatarPremioRanking(
                                             (float) (
-                                                $jogador['premio']
+                                                $registro['premio']
                                                 ?? 0
                                             )
                                         );
@@ -779,37 +877,16 @@ require_once __DIR__ . '/includes/header.php';
 
                                     </strong>
 
+
                                 </td>
 
 
                                 <td>
 
-                                    <span class="quantidade-ajudas">
-
-                                        <i class="fa-solid fa-life-ring"></i>
-
-                                        <?php
-                                        echo (int) (
-                                            $jogador['ajudas_usadas']
-                                            ?? 0
-                                        );
-                                        ?>
-
-                                    </span>
-
-                                </td>
-
-
-                                <td class="coluna-tempo">
-
-                                    <i class="fa-solid fa-stopwatch"></i>
-
                                     <?php
-                                    echo formatarTempoRanking(
-                                        (int) (
-                                            $jogador['tempo_total_ms']
-                                            ?? 0
-                                        )
+                                    echo (int) (
+                                        $registro['ajudas_usadas']
+                                        ?? 0
                                     );
                                     ?>
 
@@ -819,29 +896,81 @@ require_once __DIR__ . '/includes/header.php';
                                 <td>
 
 
-                                    <?php if ($resultadoPartida === 'vencedor'): ?>
+                                    <span class="tempo-ranking">
+
+                                        <?php
+                                        echo formatarTempoRanking(
+                                            (int) (
+                                                $registro['tempo_total_ms']
+                                                ?? 0
+                                            )
+                                        );
+                                        ?>
+
+                                    </span>
 
 
-                                        <span class="resultado-ranking vencedor">
-
-                                            <i class="fa-solid fa-trophy"></i>
-
-                                            VENCEDOR
-
-                                        </span>
+                                </td>
 
 
-                                    <?php else: ?>
+                                <td>
 
 
-                                        <span class="resultado-ranking game-over">
+                                    <span class="acertos-ranking">
 
-                                            GAME OVER
+                                        <?php
+                                        echo (int) (
+                                            $registro['acertos']
+                                            ?? 0
+                                        );
+                                        ?>
 
-                                        </span>
+                                    </span>
 
 
-                                    <?php endif; ?>
+                                </td>
+
+
+                                <td>
+
+
+                                    <span class="dificuldade-ranking">
+
+
+                                        <?php
+                                        echo escaparRanking(
+                                            dificuldadeRanking(
+                                                (string) (
+                                                    $registro['dificuldade']
+                                                    ?? ''
+                                                )
+                                            )
+                                        );
+                                        ?>
+
+
+                                    </span>
+
+
+                                </td>
+
+
+                                <td>
+
+
+                                    <span
+                                        class="resultado-ranking <?php echo $classeResultado; ?>"
+                                    >
+
+                                        <?php
+                                        echo escaparRanking(
+                                            resultadoRanking(
+                                                $resultado
+                                            )
+                                        );
+                                        ?>
+
+                                    </span>
 
 
                                 </td>
@@ -855,7 +984,9 @@ require_once __DIR__ . '/includes/header.php';
 
                     </tbody>
 
+
                 </table>
+
 
             </div>
 
@@ -867,32 +998,24 @@ require_once __DIR__ . '/includes/header.php';
 
 
     <!-- =====================================================
-         AÇÕES
+         VOLTAR
     ====================================================== -->
 
     <section class="acoes-ranking">
 
 
         <a
-            href="/github/desafiodomilhao/public/"
+            href="<?php
+            echo escaparRanking(
+                urlProjeto()
+            );
+            ?>"
             class="botao-voltar-ranking"
         >
 
             <i class="fa-solid fa-arrow-left"></i>
 
-            VOLTAR AO INÍCIO
-
-        </a>
-
-
-        <a
-            href="/github/desafiodomilhao/public/configurar-partida.php?modo=individual"
-            class="botao-jogar-ranking"
-        >
-
-            <i class="fa-solid fa-play"></i>
-
-            NOVA PARTIDA
+            VOLTAR AO JOGO
 
         </a>
 
@@ -911,5 +1034,4 @@ require_once __DIR__ . '/includes/footer.php';
 
 
 </body>
-
 </html>
